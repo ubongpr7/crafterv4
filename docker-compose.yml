@@ -1,11 +1,11 @@
 services:
   web:
-    image: nas415/crafterv3:latest
+    image: nas415/crafterv5:latest
     env_file:
       - .env
-    environment:
-    PYTHONDONTWRITEBYTECODE: "1"
-    PYTHONUNBUFFERED: "1"
+    # environment:
+    # PYTHONDONTWRITEBYTECODE: "1"
+    # PYTHONUNBUFFERED: "1"
     command: >
       sh -c "
         python3.10 manage.py makemigrations &&
