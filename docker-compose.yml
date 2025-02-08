@@ -1,0 +1,41 @@
+services:
+  web:
+    image: nas415/crafterv3:latest
+    env_file:
+      - .env
+    environment:
+    PYTHONDONTWRITEBYTECODE: "1"
+    PYTHONUNBUFFERED: "1"
+    command: >
+      sh -c "
+        python3.10 manage.py makemigrations &&
+        python3.10 manage.py migrate &&
+        python3.10 manage.py runserver 0.0.0.0:7732
+      "
+    volumes:
+      - .:/app
+    ports:
+      - "7732:7732"
+
+      
+# version: "3.9"
+
+# services:
+#   django-app:
+#     build:
+#       context: .  # Build from the current directory
+#       dockerfile: Dockerfile  # Specify the Dockerfile if it's named differently
+#     container_name: django_app_container
+#     env_file:
+#       - .env
+#     ports:
+#       - "7732:7732" 
+#     volumes:
+#       - .:/app  
+#     environment:
+#       PYTHONDONTWRITEBYTECODE: "1"
+#       PYTHONUNBUFFERED: "1"
+#     command: >
+#       bash -c "python3.10 manage.py migrate &&
+#                 python3.10 manage.py migrate &&
+#                python3.10 manage.py runserver 0.0.0.0:7732"

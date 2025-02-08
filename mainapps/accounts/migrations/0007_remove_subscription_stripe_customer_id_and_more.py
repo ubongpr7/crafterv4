@@ -1,0 +1,48 @@
+from django.conf import settings
+from django.db import migrations, models
+import django.db.models.deletion
+
+
+class Migration(migrations.Migration):
+    dependencies = [
+        ("accounts", "0006_remove_subscription_stripe_customer_and_more"),
+    ]
+
+    operations = [
+        migrations.RemoveField(
+            model_name="subscription",
+            name="stripe_customer_id",
+        ),
+        migrations.CreateModel(
+            name="StripeCustomer",
+            fields=[
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("stripe_customer_id", models.CharField(max_length=255)),
+                (
+                    "user",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+            ],
+        ),
+        migrations.AddField(
+            model_name="subscription",
+            name="customer",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="accounts.stripecustomer",
+            ),
+        ),
+    ]
