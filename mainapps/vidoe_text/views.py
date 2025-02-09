@@ -1,3 +1,4 @@
+import json
 import subprocess
 import threading
 from django.shortcuts import render, redirect, get_object_or_404
@@ -28,6 +29,76 @@ import boto3
 from botocore.exceptions import NoCredentialsError, PartialCredentialsError
 from django.apps import apps
 import tempfile
+
+
+
+@csrf_exempt 
+def add_text_clip_line(request, textfile_id):
+    try:
+        textfile = TextFile.objects.get(id=textfile_id)
+    except TextFile.DoesNotExist:
+        return JsonResponse({"success": False, "error": "TextFile not found"}, status=404)
+
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)  # Parse the JSON body
+            slide_text = data.get('text')  # Retrieve the 'text' field from the JSON payload
+
+            if not slide_text:
+                return JsonResponse({"success": False, "error": "Slide text is required"}, status=400)
+            line_number=len(TextLineVideoClip.objects.filter(text_file=textfile)) +1
+            clip = TextLineVideoClip.objects.create(
+                text_file=textfile,
+                slide=slide_text,
+                remaining=slide_text,
+                line_number=line_number
+            )
+            return JsonResponse({"success": True, "id": clip.id,'new':True})
+
+        except json.JSONDecodeError:
+            return JsonResponse({"success": False, "error": "Invalid JSON payload"}, status=400)
+
+    return JsonResponse({"success": False, "error": "Invalid request method"}, status=405)
+
+
+@csrf_exempt 
+def edit_text_clip_line(request, id):
+    clip = TextLineVideoClip.objects.get(id=id )
+
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body) 
+            slide_text = data.get('text') 
+
+            if not slide_text:
+                return JsonResponse({"success": False, "error": "Slide text is required"}, status=400)
+            elif slide_text != clip.slide:
+                clip.slide=slide_text
+                clip.remaining=slide_text
+                clip.save()
+                for subclip in clip.subclips.all():
+                    subclip.delete()
+                return JsonResponse({"success": True, "id": clip.id,"changed":True})
+            return JsonResponse({"success": True, "id": clip.id,"changed":False})
+
+        except json.JSONDecodeError:
+            return JsonResponse({"success": False, "error": "Invalid JSON payload"}, status=400)
+
+    return JsonResponse({"success": False, "error": "Invalid request method"}, status=405)
+
+
+
+@require_http_methods(["DELETE"])
+def delete_clip(request, id):
+    try:
+        clip = get_object_or_404(TextLineVideoClip, id=id)
+        if clip.video_file:
+            clip.video_file.delete()
+        clip.delete()
+
+        return JsonResponse({"message": "Music deleted successfully!"}, status=200)
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=400)
 
 def get_subclip_data(request, subclip_id):
     text=request.GET.get('text')

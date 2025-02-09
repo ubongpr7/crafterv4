@@ -15,6 +15,14 @@ urlpatterns = [
         views.progress_page,
         name="progress_page",
     ),
+
+    path("add_text_clip_line/<str:textfile_id>/", views.add_text_clip_line, name="add_text_clip_line"),
+    path("edit_text_clip_line/<str:id>/", views.edit_text_clip_line, name="edit_text_clip_line"),
+    path(
+        "delete-clip/<int:id>/",
+        views.delete_clip,
+        name="delete_clip",
+    ),
     path("progress/<str:text_file_id>/", views.progress, name="progress"),
     path("add_subclip/<str:id>/", views.add_subclip, name="add_subclip"),
     path("edit_subcliphtmx/<str:id>/", views.edit_subcliphtmx, name="edit_subcliphtmx"),

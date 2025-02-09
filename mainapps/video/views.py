@@ -9,6 +9,8 @@ from django.urls import reverse
 from django.http import JsonResponse
 import tempfile
 from django.db.models import F, Func, Value, CharField
+from django.views.decorators.csrf import csrf_exempt
+
 
 def rename_video_clip(request, video_id):
     video_clip = get_object_or_404(VideoClip, id=video_id)
@@ -336,6 +338,7 @@ def add_video_clips(request, textfile_id):
     key = LogoModel.objects.get(id=2).logo.name
     existing_clips = TextLineVideoClip.objects.filter(text_file=text_file)
 
+    no_of_slides= len(existing_clips)
     if text_file.user != request.user:
         messages.error(
             request, "You Do Not Have Access To The Resources You Requested "
@@ -346,6 +349,7 @@ def add_video_clips(request, textfile_id):
 
         if text_file.text_file and request.POST.get("purpose") == "process":
             if text_file.video_clips.all():
+                text_file.text_file.delete(save=True)
                 with tempfile.NamedTemporaryFile(mode="w+", delete=False) as temp_file:
                     for clip in text_file.video_clips.all():
                         for subclip in clip.subclips.all():
@@ -356,6 +360,17 @@ def add_video_clips(request, textfile_id):
                     with open(temp_file.name, "rb") as file_to_save:
                         text_file.subclips_text_file.save(
                             f"{text_file.id}_subclips.txt", file_to_save, save=True
+                        )
+            
+                with tempfile.NamedTemporaryFile(mode="w+", delete=False) as temp_file:
+                    for clip in text_file.video_clips.all():
+                            temp_file.write(clip.slide + "\n")
+                    
+                    temp_file.flush() 
+
+                    with open(temp_file.name, "rb") as file_to_save:
+                        text_file.text_file.save(
+                            f"{text_file.id}_text_file.txt", file_to_save, save=True
                         )
             
 
@@ -424,11 +439,6 @@ def add_video_clips(request, textfile_id):
                     TextLineVideoClip.objects.bulk_create(video_clips)
                 return redirect(reverse("video:add_scenes", args=[textfile_id]))
 
-                # return render(
-                #     request,
-                #     "vlc/frontend/VLSMaker/sceneselection/index.html",
-                #     {'key':key, "video_clips": video_clips, "textfile_id": textfile_id},
-                # )
 
             messages.error(request, "You Did Not Upload Text File")
             return redirect(reverse("video:add_scenes", args=[textfile_id]))
@@ -440,7 +450,7 @@ def add_video_clips(request, textfile_id):
                 request,
                 # "vlc/frontend/VLSMaker/sceneselection/index.html",
                 "vlc//frontend/VLSMaker/test_scene/index.html",
-                {"key":key,"video_clips": video_clips,"textfile": text_file,'video_categories':list(video_categories)},
+                {"key":key,'no_of_slides':no_of_slides,"video_clips": video_clips,"textfile": text_file,'video_categories':list(video_categories)},
             )
         else:
              return render(
@@ -450,25 +460,12 @@ def add_video_clips(request, textfile_id):
                 { "key":key, "textfile": text_file},
             )
 
+
 @login_required
 def fetch_video_categories(request):
     categories = ClipCategory.objects.filter(user=request.user).values("id", "name", "parent_id")
     return JsonResponse(list(categories), safe=False)
 
-# def get_clip(request, cat_id):
-#     category = get_object_or_404(ClipCategory, id=cat_id)
-#     videos = VideoClip.objects.filter(category=category).values("id", "title", )
-#     return JsonResponse(list(videos), safe=False)
-
-# def get_clip(request, cat_id):
-#     category = get_object_or_404(ClipCategory, id=cat_id)
-#     videos = VideoClip.objects.filter(category=category).annotate(
-#         id_as_string=Func(F("id"), Value(""), function="CAST", output_field=CharField())
-#     ).values("id_as_string", "title")
-
-#     # Rename `id_as_string` to `id` for the response
-#     response_data = [{"id": video["id_as_string"], "title": video["title"]} for video in videos]
-#     return JsonResponse(response_data, safe=False)
 def get_clip(request, cat_id):
     category = get_object_or_404(ClipCategory, id=cat_id)
     videos = VideoClip.objects.filter(category=category)
