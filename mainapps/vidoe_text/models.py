@@ -218,6 +218,15 @@ class TextLineVideoClip(models.Model):
         unique_together = ("text_file", "line_number")
 
         ordering = ["line_number", "text_file"]
+    def save(self, *args, **kwargs):
+        if not self.line_number:
+            max_line_number = (
+                TextLineVideoClip.objects.filter(text_file=self.text_file)
+                .aggregate(max_line=models.Max('line_number'))['max_line'] or 0
+            )
+            self.line_number = max_line_number + 1
+        super().save(*args, **kwargs)
+
     def to_dict(self):
          
         if self.video_file:

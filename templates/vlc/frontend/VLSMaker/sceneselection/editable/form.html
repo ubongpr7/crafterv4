@@ -844,7 +844,7 @@ select::-webkit-dropdown-arrow {
                             <ul style="margin: 0;" id="list-of-tags_{{forloop.counter}}" class="list-of-tags">
     
                                 {% for subclip in clip.subclips.all %}
-                                <li data-id="{{subclip.id}}" class="subtitle_clip" style="font-size: 1.5rem; border-color: #3663FF;"  
+                                <li data-id="{{subclip.id}}" class="subtitle_clip" style="font-size: 1.5rem; border-color: #864AF9;"  
                                   data-current_file="{{subclip.get_video_file_name}}"
                                   id="saved_li_{{subclip.id}}"
                                       onclick="editCurrentLi(this)">
@@ -1281,6 +1281,8 @@ select::-webkit-dropdown-arrow {
                               li.innerText = selectedText;
                               li.dataset.id = cNumber;
                               li.disabled=true
+                              li.style.fontSize = "1.5rem";  
+                            li.style.borderColor = "#864AF9";
                               li.onclick = function () {
                                       editCurrentLi(li);
                                   };
@@ -1292,7 +1294,7 @@ select::-webkit-dropdown-arrow {
                               const remainingText = fullText.slice(selectedText.length).trim();
                               remainingInput.value = remainingText;
                               span.innerText = remainingText;
-                              openPopup(clip_Id, selectedText, remainingText,);
+                              openPopup(clip_Id, selectedText, remainingText,cNumber);
                               li.style.cursor='wait'
           
                               
@@ -1469,80 +1471,81 @@ select::-webkit-dropdown-arrow {
           }
       }
   }
-    function attachValidation(formId, cNumber,clipId) {
-      const li = document.getElementById(`current_li_${cNumber}`);
-      if (li) {
-          li.disabled = true;
-          li.style.cursor = 'wait';
-          console.log(li, ' has been disabled');
-      }
+    // function attachValidation(formId, cNumber,clipId) {
+    //   const li = document.getElementById(`current_li_${cNumber}`);
+    //   if (li) {
+    //       li.disabled = true;
+    //       li.style.cursor = 'wait';
+    //       console.log(li, ' has been disabled');
+    //   }
   
-      const form = document.getElementById(formId);
+    //   const form = document.getElementById(formId);
   
-      if (form) {
-          const fileInput = document.getElementById('slide_file');
+    //   if (form) {
+    //       const fileInput = document.getElementById('slide_file');
   
-          if (!fileInput.value || fileInput.value.trim() === ""){
-                  document.getElementById('upload-text').style.color='red'
-              }
+    //       if (!fileInput.value || fileInput.value.trim() === ""){
+    //               document.getElementById('upload-text').style.color='red'
+    //           }
   
-           else {
-              document.getElementById('upload-text').style.color='inherit'
+    //        else {
+    //           document.getElementById('upload-text').style.color='inherit'
               
-              const popup = document.getElementById('add-subclip-popup');
-              if (popup) {popup.style.display = 'none';}
-              const formData = new FormData(form);
-              const xhr = new XMLHttpRequest();
+    //           const popup = document.getElementById('add-subclip-popup');
+    //           if (popup) {popup.style.display = 'none';}
+    //           const formData = new FormData(form);
+    //           const xhr = new XMLHttpRequest();
   
-              xhr.addEventListener('load', function () {
-                  if (xhr.status === 200) {
-                      const response = JSON.parse(xhr.responseText);
+    //           xhr.addEventListener('load', function () {
+    //               if (xhr.status === 200) {
+    //                   const response = JSON.parse(xhr.responseText);
   
-                      if (response.success) {
-                          const newId = response.id;
+    //                   if (response.success) {
+    //                       const newId = response.id;
   
   
-                          // Update the li element
-                          if (li) {
-                              li.id = `saved_li_${newId}`;
-                              li.dataset.id = newId;
+    //                       // Update the li element
+    //                       if (li) {
+    //                           li.id = `saved_li_${newId}`;
+    //                           li.dataset.id = newId;
                   
-                              li.dataset.current_file=response.current_file
-                              li.disabled = false;
-                              li.style.cursor = 'pointer';
-                          }
+    //                           li.dataset.current_file=response.current_file
+    //                           li.disabled = false;
+    //                           li.style.cursor = 'pointer';
+    //                       }
                           
               
-                          showSuccessMessage('Clip Added Successfully!');
-                      } else {
-                          alert(response.error || 'Failed to add clip.');
-                      }
-                  } else {
-                      alert('An error occurred while saving the clip.');
-                  }
+    //                       showSuccessMessage('Clip Added Successfully!');
+    //                   } else {
+    //                       alert(response.error || 'Failed to add clip.');
+    //                   }
+    //               } else {
+    //                   alert('An error occurred while saving the clip.');
+    //               }
   
-                  if (li) {
-                      li.disabled = false;
-                      li.style.cursor = 'pointer';
-                  }
-              });
+    //               if (li) {
+    //                   li.disabled = false;
+    //                   li.style.cursor = 'pointer';
+    //               }
+    //           });
   
-              // Handle errors
-              xhr.addEventListener('error', function () {
-                  alert('An error occurred during the request.');
-                  if (li) {
-                      li.disabled = false;
-                      li.style.cursor = 'pointer';
-                  }
-              });
+    //           // Handle errors
+    //           xhr.addEventListener('error', function () {
+    //               alert('An error occurred during the request.');
+    //               if (li) {
+    //                   li.disabled = false;
+    //                   li.style.cursor = 'pointer';
+    //               }
+    //           });
   
-              // Open and send the request
-              xhr.open('POST', `/text/add_subcliphtmx/${clipId}/`);
-              xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
-              xhr.send(formData);
-          }
-      }}
-    function saveInput(inputElement) {
+    //           // Open and send the request
+    //           xhr.open('POST', `/text/add_subcliphtmx/${clipId}/`);
+    //           xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+    //           xhr.send(formData);
+    //       }
+    //   }}
+    
+      function saveInput(inputElement) {
               const uploadElement = document.getElementById('upload-text');
   
               if (inputElement.type === 'file') {
@@ -1839,7 +1842,7 @@ function fetchClipIds(textfileId) {
             .catch(error => console.error('Error fetching clip IDs:', error));
     }
 
-function openPopup(clipId, selectedText, remainingText) {
+function openPopup(clipId, selectedText, remainingText,cNumber) {
 const modalContainer = document.getElementById('modal-cont');
 const popup = document.getElementById('add-subclip-popup');
 
@@ -1925,7 +1928,7 @@ style="grid-template-columns: 0.7fr 1fr;width:100%;">
     popup.style.display = 'flex';
     document.getElementById(`add-subclip-form-${clipId}`).addEventListener('submit', (e) => {
         e.preventDefault();
-        attachValidation(`add-subclip-form-${clipId}`, clipId);
+        attachValidation(`add-subclip-form-${clipId}`, clipId,cNumber);
     })
     disableForFree()
 }
@@ -2114,8 +2117,8 @@ function populateVideoCategories(selectElementId, apiUrl) {
 //         });
 //     }
 
-function attachValidation(formId, clipId) {
-const li = document.getElementById(`current_li_${clipId}`);
+function attachValidation(formId, clipId,cNumber) {
+const li = document.getElementById(`current_li_${cNumber}`);
 if (li) {
     li.disabled = true;
     li.style.cursor = 'wait';
@@ -2223,6 +2226,7 @@ if (form) {
     }
 }
 }
+
 
 function editAttachValidation(formId, clipId,getUrl,li) {
 

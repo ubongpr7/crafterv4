@@ -46,12 +46,10 @@ def add_text_clip_line(request, textfile_id):
 
             if not slide_text:
                 return JsonResponse({"success": False, "error": "Slide text is required"}, status=400)
-            line_number=len(TextLineVideoClip.objects.filter(text_file=textfile)) +1
             clip = TextLineVideoClip.objects.create(
                 text_file=textfile,
                 slide=slide_text,
                 remaining=slide_text,
-                line_number=line_number
             )
             return JsonResponse({"success": True, "id": clip.id,'new':True})
 
