@@ -47,6 +47,22 @@ def update_subtitle_positions(request):
 
     return JsonResponse({"error": "Invalid request"}, status=400)
 
+# views.py
+
+def check_subtitles_length(request, text_file_id):
+    text_file = get_object_or_404(TextFile, id=text_file_id)
+
+    subtitles = text_file.video_clips.all()
+
+    if len(subtitles) > 40:
+        total_characters = sum(len(subtitle.slide) for subtitle in subtitles)
+
+        if total_characters > 5000:
+            return JsonResponse({'status': 'error', 'message': 'Character limit exceeded!'})
+        
+        return JsonResponse({'status': 'success', 'message': 'Character limit okay.'})
+    
+    return JsonResponse({'status': 'success', 'message': 'Subtitle count is less than 50.'})
 
 
 @csrf_exempt 
@@ -58,8 +74,9 @@ def add_text_clip_line(request, textfile_id):
 
     if request.method == "POST":
         try:
-            data = json.loads(request.body)  # Parse the JSON body
-            slide_text = data.get('text')  # Retrieve the 'text' field from the JSON payload
+            data = json.loads(request.body) 
+            slide_text = data.get('text')  
+            position = data.get('position')  
 
             if not slide_text:
                 return JsonResponse({"success": False, "error": "Slide text is required"}, status=400)
@@ -67,6 +84,7 @@ def add_text_clip_line(request, textfile_id):
                 text_file=textfile,
                 slide=slide_text,
                 remaining=slide_text,
+                position=position
             )
             return JsonResponse({"success": True, "id": clip.id,'new':True})
 

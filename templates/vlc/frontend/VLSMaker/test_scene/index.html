@@ -384,12 +384,30 @@
     
 
     <script>
+        const validateTextFile = async (file) => {
+    if (!file) return;
+
+    try {
+        const text = await file.text(); // Read file content
+        if (text.length > 5000) {
+            alert("The text file exceeds the 5000-character limit!");
+            return false;
+        }
+        return true;
+    } catch (error) {
+        console.error("Error reading file:", error);
+        alert("An error occurred while reading the file.");
+        return false;
+    }
+};
+
         const fileName = document.getElementById('fileName')
         const fileUpload = document.getElementById('fileUpload');
         fileUpload.addEventListener('change', (event) => {
             const file = event.target.files[0];
             if (file) {
                 fileName.textContent = `${file.name.slice(0, 15)}`;
+                validateTextFile(file)
             } else {
                 fileName.textContent = 'No file selected';
             }

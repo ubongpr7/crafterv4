@@ -15,6 +15,7 @@ urlpatterns = [
         views.progress_page,
         name="progress_page",
     ),
+    path('check-subtitles/<int:text_file_id>/', views.check_subtitles_length, name='check_subtitles_length'),
     path("update-subtitle-positions/", views.update_subtitle_positions, name="update_subtitle_positions"),
     path("add_text_clip_line/<str:textfile_id>/", views.add_text_clip_line, name="add_text_clip_line"),
     path("edit_text_clip_line/<str:id>/", views.edit_text_clip_line, name="edit_text_clip_line"),

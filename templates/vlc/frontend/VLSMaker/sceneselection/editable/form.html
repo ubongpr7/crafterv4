@@ -998,7 +998,34 @@ select::-webkit-dropdown-arrow {
         return document.querySelector("[name=csrfmiddlewaretoken]").value;
     }
 
-  
+    function checkSubtitlesLength() {
+        let tableBody = document.querySelector("#leadsTable tbody");
+        let rows = tableBody.getElementsByTagName("tr");
+        if (rows.length > 40) {
+                console.log(rows.length)
+                    $.ajax({
+                        url: `/text/check-subtitles/{{textfile.id}}/`,
+                        method: 'GET',
+                        success: function(response) {
+                            if (response.status === 'error') {
+                                alert(response.message); 
+                                return false 
+                            } else {
+                                console.log(response.message);
+                                return true
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Error checking subtitles:", error);
+                        }
+                    });
+                
+        }else {
+            return true
+        }
+    }
+
+
   </script>
     
 
@@ -1014,13 +1041,14 @@ select::-webkit-dropdown-arrow {
       const delete_ = document.getElementById(`delete_${currentNumber}`);
       const reset_ = document.getElementById(`reset_${currentNumber}`);
       let clip_id = slide_span.dataset.id;
-  
+
       if (textarea.value) {
           
   
           const payload = JSON.stringify({
               text: textarea.value, // Send the textarea value
           });
+          
   
           const xhr = new XMLHttpRequest();
   
@@ -1106,75 +1134,84 @@ select::-webkit-dropdown-arrow {
       const delete_ = document.getElementById(`delete_${currentNumber}`);
       const reset_ = document.getElementById(`reset_${currentNumber}`);
       let clip_id=slide_span.dataset.id
+      let tableBody = document.querySelector("#leadsTable tbody");
+      let rows = tableBody.getElementsByTagName("tr");
       textarea.addEventListener('keydown', function (event) {
           if (event.key === 'Enter') {
               event.preventDefault();
-  
-              if (textarea.value) {
-                  
-                  const payload = JSON.stringify({
-                      text: textarea.value, // Send the textarea value
-                  });
-  
-                  const xhr = new XMLHttpRequest();
-                  xhr.addEventListener('load', function () {
-                      if (xhr.status === 200) {
-                          const response = JSON.parse(xhr.responseText);
-                          if (!response.new){
-                            if (response.changed){
-                              slide_span.textContent = textarea.value;
-                              deleteAllLi(currentNumber)
-  
+              const check=checkSubtitlesLength();
+
+                if (check){
+
+                    if (textarea.value) {
+                        
+                        const payload = JSON.stringify({
+                            text: textarea.value,
+                            position:rows.length+1
+                        });
+        
+                        const xhr = new XMLHttpRequest();
+                        xhr.addEventListener('load', function () {
+                            if (xhr.status === 200) {
+                                const response = JSON.parse(xhr.responseText);
+                                if (!response.new){
+                                  if (response.changed){
+                                    slide_span.textContent = textarea.value;
+                                    deleteAllLi(currentNumber)
+        
+                                  }
+                                    textarea.style.display = 'none';
+                                    wrapper.style.display = 'flex';
+                                    edit_.style.display = 'flex';
+                                }
+                                else{
+                                  textarea.style.display = 'none';
+                                  wrapper.style.display = 'flex';
+                                  edit_.style.display = 'flex';
+                                  slide_span.textContent = textarea.value;
+                                }
+                                if (response.success) {
+                                    slide_span.dataset.id=response.id
+                                    clip_id=response.id
+                                    if (reset_){
+                                      reset_.onclick= function () {
+                                        subclipReset(clip_id);
+                                      };
+                                      reset_.style.display='flex'
+                                      delete_.onclick=function () {
+                                        deleteSavedSlide(clip_id,delete_);
+        
+                                    };
+                                  };
+        
+                                    showSuccessMessage(`Subtitle submitted successfully!`);
+        
+                                } else {
+                                    alert(response.error || 'Failed to submit the text.');
+                                }
+                            } else {
+                                alert('An error occurred while submitting the text.');
                             }
-                              textarea.style.display = 'none';
-                              wrapper.style.display = 'flex';
-                              edit_.style.display = 'flex';
-                          }
-                          else{
-                            textarea.style.display = 'none';
-                            wrapper.style.display = 'flex';
-                            edit_.style.display = 'flex';
-                            slide_span.textContent = textarea.value;
-                          }
-                          if (response.success) {
-                              slide_span.dataset.id=response.id
-                              clip_id=response.id
-                              if (reset_){
-                                reset_.onclick= function () {
-                                  subclipReset(clip_id);
-                                };
-                                reset_.style.display='flex'
-                                delete_.onclick=function () {
-                                  deleteSavedSlide(clip_id,delete_);
-  
-                              };
-                            };
-  
-                              showSuccessMessage(`Subtitle submitted successfully!`);
-  
-                          } else {
-                              alert(response.error || 'Failed to submit the text.');
-                          }
-                      } else {
-                          alert('An error occurred while submitting the text.');
-                      }
-                  });
-  
-                  xhr.addEventListener('error', function () {
-                      alert('An error occurred during the request.');
-                  });
-                  if (clip_id){
-                    
-                    xhr.open('POST', `/text/edit_text_clip_line/${clip_id}/`);
-                  }else{
-                    
-                    xhr.open('POST', `/text/add_text_clip_line/{{textfile.id}}/`);
-                  }
-                  xhr.setRequestHeader('Content-Type', 'application/json');
-                  xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
-                  xhr.send(payload);
-              }
-          }
+                        });
+        
+                        xhr.addEventListener('error', function () {
+                            alert('An error occurred during the request.');
+                        });
+                        if (clip_id){
+                          
+                          xhr.open('POST', `/text/edit_text_clip_line/${clip_id}/`);
+                        }else{
+                          
+                          xhr.open('POST', `/text/add_text_clip_line/{{textfile.id}}/`);
+                        }
+                        xhr.setRequestHeader('Content-Type', 'application/json');
+                        xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+                        xhr.send(payload);
+                    }
+               
+                }
+
+            }
       });
   }
     
