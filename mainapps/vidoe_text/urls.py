@@ -15,7 +15,7 @@ urlpatterns = [
         views.progress_page,
         name="progress_page",
     ),
-
+    path("update-subtitle-positions/", views.update_subtitle_positions, name="update_subtitle_positions"),
     path("add_text_clip_line/<str:textfile_id>/", views.add_text_clip_line, name="add_text_clip_line"),
     path("edit_text_clip_line/<str:id>/", views.edit_text_clip_line, name="edit_text_clip_line"),
     path(

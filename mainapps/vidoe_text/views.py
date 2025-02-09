@@ -31,6 +31,23 @@ from django.apps import apps
 import tempfile
 
 
+@csrf_exempt
+def update_subtitle_positions(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            subtitles = data.get("subtitles", [])
+
+            for subtitle in subtitles:
+                TextLineVideoClip.objects.filter(id=subtitle["id"]).update(position=subtitle["position"])
+
+            return JsonResponse({"message": "Success"}, status=200)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=400)
+
+    return JsonResponse({"error": "Invalid request"}, status=400)
+
+
 
 @csrf_exempt 
 def add_text_clip_line(request, textfile_id):

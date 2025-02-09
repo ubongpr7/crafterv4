@@ -844,8 +844,8 @@ select::-webkit-dropdown-arrow {
         <tbody>
           {% if video_clips %}
           {% for clip in video_clips %}
-          <tr style="height: 5rem;" id="tr_{{clip.id}}">
-            <td data-tooltip="Hold, Drag Reorder" style="width: 18%; text-wrap: nowrap; font-size: 1.8rem;">Subtitle {{ forloop.counter }}</td>
+          <tr data-id="{{clip.id}}" style="height: 5rem;" id="tr_{{clip.id}}">
+            <td data-tooltip="Hold, Drag To Reorder" style="width: 18%; text-wrap: nowrap; font-size: 1.8rem;">Subtitle {{ forloop.counter }}</td>
               <td id="highlightable_{{forloop.counter}}" style="width: 64%;">
                 <div>
                       <textarea style="display: none;"  name="slide_text" class="form-control tab-textarea" aria-describedby="textarea"  id="slide_text_{{forloop.counter}}"  >{{clip.slide}}</textarea>
@@ -952,11 +952,39 @@ select::-webkit-dropdown-arrow {
           handle: "td:first-child", 
           update: function (event, ui) {
               updateSubtitleNumbers(tableBody); 
+              updateBackendOrder();
           }
       });
   
   });
-  
+  function updateBackendOrder() {
+        let subtitles = [];
+        $("#leadsTable tbody tr").each(function (index) {
+            subtitles.push({
+                id: $(this).data("id"), 
+                position: index + 1
+            });
+        });
+
+        $.ajax({
+            url: "/text/update-subtitle-positions/", 
+            type: "POST",
+            data: JSON.stringify({ subtitles: subtitles }),
+            contentType: "application/json",
+            headers: { "X-CSRFToken": getCSRFToken() },
+            success: function (response) {
+                console.log("Positions updated successfully");
+            },
+            error: function (xhr, status, error) {
+                console.error("Error updating positions:", error);
+            }
+        });
+    }
+
+    function getCSRFToken() {
+        return document.querySelector("[name=csrfmiddlewaretoken]").value;
+    }
+
   
   </script>
     
@@ -2187,6 +2215,10 @@ if (form) {
                             li.dataset.name=response.video_clip.name
                             li.dataset.clipid=response.video_clip.id
                             li.dataset.cat_id=response.video_clip.cat_id
+                            const tr = li.closest("tr");
+                            if (tr) {
+                                tr.setAttribute("data-id", response.video_clip.id);
+                            }
                             
                             
                         };
