@@ -191,7 +191,9 @@ def add_video_clips(request, textfile_id):
     video_categories = ClipCategory.objects.filter(user=request.user).values("id", "name", "parent_id")
     if request.method == "POST":
 
-        if text_file.text_file and request.POST.get("purpose") == "process":
+        if  request.POST.get("purpose") == "process":
+            if text_file.text_file:
+                text_file.text_file.delete(save=True)
             if text_file.video_clips.all():
                 text_file.text_file.delete(save=True)
                 with tempfile.NamedTemporaryFile(mode="w+", delete=False) as temp_file:
