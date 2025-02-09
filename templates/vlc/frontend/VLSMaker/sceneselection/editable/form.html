@@ -919,17 +919,30 @@ select::-webkit-dropdown-arrow {
       {% endif %}
         </tbody>
       </table>
-
-      <div class="create-video d-flex justify-content-end">
-        <button type="button" onclick="highlightNoSubclipIcons()"  class="btn proceed-btn">
-          Proceed To Background Music Selection
-          <img class="btn-arrow" src="{% static 'lead-maker/images/btn-arrow.svg' %}" alt="arrow" />
-        </button>
-      </div>
-      
-    <form id="lead-form" class="lead-form" method="POST" action="."  enctype="multipart/form-data">
-      {% csrf_token %}
+      <form action="."  method="post" id="processFile">
+        {% csrf_token %}
+        <input type="text" name="purpose" value="process" hidden>
     </form>
+<br>
+<br>
+<br>
+    <div class="button"
+        style="margin-top: 60px;position: absolute; right: 20px; bottom: 16px;height: 24px; width: fit-content; display: flex; justify-content: flex-end;">
+        <div
+            style="display: flex; align-items: center; justify-content: center; border-radius: 8px; background: #864AF9; cursor: pointer;">
+            <button type="button" onclick="highlightNoSubclipIcons(this)" id="proceed-button"
+                style="text-decoration: none; padding: 10px 20px; color: white; font-family: Montserrat; font-size: 18px; font-weight: 500; line-height: 24px; text-align: left; background: none; border: none; cursor: pointer;">
+                Proceed To Background Music Selection
+            </button>
+            <svg width="24" height="24" type="button" viewBox="0 0 24 24" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="white" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+        </div>
+    </div>
+
+      
   </div>
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -1268,10 +1281,8 @@ select::-webkit-dropdown-arrow {
               });
           } else {
             updateBackendOrder();
-              const form = document.getElementById('lead-form');
+              const form = document.getElementById('processFile');
               if (form) {
-                  // Uncomment the line below if the button needs to be disabled
-                  // button.disabled = true
   
                   form.submit();
               } else {
@@ -2386,42 +2397,6 @@ if (form) {
     }
 }
 }
-function highlightNoSubclipIcons(button) {
-        fetchNoSubclipIds().then((ids) => {
-            if (Array.isArray(ids) && ids.length > 0) {
-                ids.forEach((id) => {
-                    const elementId = `icon_${id}`;
-                    const slide_span_ = document.getElementById(`slide_span_${id}`)
-                    const element = document.getElementById(elementId);
-
-                    if (element) {
-                        
-                        // element.style.border = '2px solid red';
-                        if (slide_span_.textContent ===''){
-                            
-                            document.getElementById(`error-message_${id}`).textContent = 'Please Wait For Clip To Process'
-                        }else{
-                            slide_span_.style.border = '2px solid red';
-                            document.getElementById(`error-message_${id}`).textContent = 'Add Clip To The Remaning Text'
-                        }
-                    } else {
-                        console.warn(`Element with ID ${elementId} not found.`);
-                    }
-                });
-            } else {
-                const form = document.getElementById('processFile');
-                if (form) {
-                    // button.disabled = true
-
-                    form.submit();
-                } else {
-                    console.error("Form with ID 'processFile' not found.");
-                }
-            }
-        }).catch((error) => {
-            console.error("Error fetching no subclip IDs:", error);
-        });
-    }
 
 
 function editCurrentLi(liItem) {  
