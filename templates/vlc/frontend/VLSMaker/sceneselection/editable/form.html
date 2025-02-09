@@ -946,16 +946,17 @@ select::-webkit-dropdown-arrow {
   </div>
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
 
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
   
   <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
   
   <script>
+
      $(document).ready(function () {
       let tableBody = document.querySelector("#leadsTable tbody");
   
@@ -1110,7 +1111,7 @@ select::-webkit-dropdown-arrow {
       }
   }
   //good
-          function deleteAllLi(cNumber) {
+    function deleteAllLi(cNumber) {
     const ul = document.getElementById(`list-of-tags_${cNumber}`); // Get the <ul> element by ID
     if (ul) {
       // Select all <li> elements within the <ul>
@@ -1250,33 +1251,7 @@ select::-webkit-dropdown-arrow {
 </script>
   <!-- subclip  -->
   <script>
-    async function fetchNoSubclipIds() {
-          try {
-              textfileId = "{{text_file.id}}"
-              const url = `/text/check_text_clip/${textfileId}/`;
-  
-              const response = await fetch(url, {
-                  method: 'GET',
-                  headers: {
-                      'Content-Type': 'application/json',
-                      'X-Requested-With': 'XMLHttpRequest',
-                  },
-              });
-  
-              if (!response.ok) {
-                  throw new Error(`HTTP error! Status: ${response.status}`);
-              }
-  
-              const idsOfNoSubclip = await response.json();
-  
-              console.log('IDs of clips with no subclips:', idsOfNoSubclip);
-  
-              return idsOfNoSubclip;
-          } catch (error) {
-              console.error('Error fetching no subclip IDs:', error);
-          }
-      }
-      
+    
     function highlightNoSubclipIcons(button) {
       const tagBoxes = document.querySelectorAll('.tag-box');
       const spanIds = [];
@@ -1334,92 +1309,87 @@ select::-webkit-dropdown-arrow {
     }
   
   }
-    function areAllTextareasHidden() {
-    // Select all textarea elements
+    
+  function areAllTextareasHidden() {
     const textareas = document.querySelectorAll('textarea');
   
-    // Loop through each textarea
     for (const textarea of textareas) {
-      // Get the computed style of the textarea
       const style = window.getComputedStyle(textarea);
   
-      // If any textarea's display is not 'none', return false
       if (style.display !== 'none') {
         return false;
       }
     }
   
-    // If the loop completes, all textareas are hidden
     return true;
   }
   
-  // Example usage
   if (areAllTextareasHidden()) {
     console.log("All textareas are hidden.");
   } else {
     console.log("At least one textarea is visible.");
   }
   
-  
+
     function handleSelection(cNumber) {
-                const wrapper = document.querySelector(`#wrapper_${cNumber}`);
-                  const span = wrapper.querySelector("span");
-                  const ul = wrapper.querySelector(`#list-of-tags_${cNumber}`);
-                  const remainingInput = wrapper.querySelector(`#remaining_${cNumber}`);
-                  const errorMessage =document.querySelector(`#error-message_${cNumber}`);
-                  // submitCheck=true
-  
-                  document.getElementById(`highlightable_${cNumber}`).addEventListener("mouseup", function () {
-                    const selection = window.getSelection();
-                    clip_Id=span.dataset.id
-                    console.log('clipid: ',clip_Id)
-                    if (document.getElementById(`slide_text_${cNumber}`).style.display === 'none'){
-  
-                      if (selection && selection.toString().trim() ) {
-                          const selectedText = selection.toString().trim();
-                          const fullText = span.innerText.trim();
-                          const words = fullText.split(/\s+/);
-                          const selectedWords = selectedText.split(/\s+/);
-          
-                          const startsCorrectly = fullText.startsWith(selectedText);
-                          const isWordAligned = selectedWords.every(word => words.includes(word));
-          
-                          if (startsCorrectly && isWordAligned) {
-                              errorMessage.innerText = "";
-          
-                              const li = document.createElement("li");
-                              li.innerText = selectedText;
-                              li.dataset.id = cNumber;
-                              li.disabled=true
-                              li.style.fontSize = "1.5rem";  
-                            li.style.borderColor = "#864AF9";
-                              li.onclick = function () {
-                                      editCurrentLi(li);
-                                  };
-                                  num = span.dataset.num
-                                  li.id=`current_li_${cNumber}`
-          
-                              ul.insertBefore(li, span);
-          
-                              const remainingText = fullText.slice(selectedText.length).trim();
-                              remainingInput.value = remainingText;
-                              span.innerText = remainingText;
-                              openPopup(clip_Id, selectedText, remainingText,cNumber);
-                              li.style.cursor='wait'
-          
-                              
-          
-          
-                          } else {
-                              // errorMessage.innerText = "Invalid highlighting. Highlight full words starting from the beginning.";
-                              errorMessage.innerText = "Highlighting Must Start From The First Unassigned Word Of The Sentence.";
-                          }
-                      }
-          
-                      selection.removeAllRanges();
-                    }else{
-                      
+        const wrapper = document.querySelector(`#wrapper_${cNumber}`);
+            const span = wrapper.querySelector("span");
+            const ul = wrapper.querySelector(`#list-of-tags_${cNumber}`);
+            const remainingInput = wrapper.querySelector(`#remaining_${cNumber}`);
+            const errorMessage =document.querySelector(`#error-message_${cNumber}`);
+
+            document.getElementById(`highlightable_${cNumber}`).addEventListener("mouseup", function () {
+            const selection = window.getSelection();
+            clip_Id=span.dataset.id
+            console.log('clipid: ',clip_Id)
+            if (document.getElementById(`slide_text_${cNumber}`).style.display === 'none'){
+
+                if (selection && selection.toString().trim() ) {
+                    const selectedText = selection.toString().trim();
+                    const fullText = span.innerText.trim();
+                    const words = fullText.split(/\s+/);
+                    const selectedWords = selectedText.split(/\s+/);
+    
+                    const startsCorrectly = fullText.startsWith(selectedText);
+                    const isWordAligned = selectedWords.every(word => words.includes(word));
+    
+                    if (startsCorrectly && isWordAligned) {
+                        errorMessage.innerText = "";
+    
+                        const li = document.createElement("li");
+                        li.innerText = selectedText;
+                        li.dataset.id = cNumber;
+                        li.disabled=true
+                        li.style.fontSize = "1.5rem";  
+                    li.style.borderColor = "#864AF9";
+                        li.onclick = function () {
+                                editCurrentLi(li);
+                            };
+                            num = span.dataset.num
+                            li.id=`current_li_${cNumber}`
+                            sessionStorage.setItem('cNumber',cNumber)
+                            console.log('li: ', li,'number: ',sessionStorage.getItem('cNumber',cNumber))
+    
+                        ul.insertBefore(li, span);
+    
+                        const remainingText = fullText.slice(selectedText.length).trim();
+                        remainingInput.value = remainingText;
+                        span.innerText = remainingText;
+                        openPopup(clip_Id, selectedText, remainingText,cNumber,li);
+                        li.style.cursor='wait'
+    
+                        
+    
+    
+                    } else {
+                        errorMessage.innerText = "Highlighting Must Start From The First Unassigned Word Of The Sentence.";
                     }
+                }
+    
+                selection.removeAllRanges();
+            }else{
+                
+            }
           });
       }
       
@@ -1512,148 +1482,6 @@ select::-webkit-dropdown-arrow {
     function clearCurrentFile(){
       document.getElementById('currentFile').innerHTML=''
   }
-    function editAttachValidation(formId, clipId,getUrl,li) {
-      
-      if (li) {
-          li.disabled = true;
-          console.log(li.dataset.id, ' has been disabled');
-      }
-  
-      const form = document.getElementById(formId);
-  
-      if (form) {
-          const fileInput = document.getElementById('slide_file');
-          const videoSelect = document.getElementById('videoSelect');
-  
-          if (!fileInput.value || fileInput.value.trim() === "") 
-             {
-               document.getElementById('upload-text').style.color='red'
-          } else {
-              document.getElementById('upload-text').style.color='black'
-  
-              const popup = document.getElementById('add-subclip-popup');
-              if (popup) popup.style.display = 'none';
-              const formData = new FormData(form);
-              const xhr = new XMLHttpRequest();
-  
-              xhr.addEventListener('load', function () {
-                  if (xhr.status === 200) {
-                      const response = JSON.parse(xhr.responseText);
-  
-                      if (response.success) {
-                          const newId = response.id;
-  
-                          if (li) {
-                              
-                              li.dataset.id = newId;
-                              li.dataset.current_file=response.current_file
-                              li.disabled = false;
-                              li.style.cursor = 'pointer';
-                          
-                          }
-                          showSuccessMessage('Clip Updated Successfully!')
-                      } else {
-                          alert(response.error || 'Failed to add clip.');
-                      }
-                  } else {
-                      alert('An error occurred while saving the clip.');
-                  }
-  
-                  if (li) {
-                      li.disabled = false;
-                      li.style.cursor = 'pointer';
-                  }
-              });
-  
-              // Handle errors
-              xhr.addEventListener('error', function () {
-                  alert('An error occurred during the request.');
-                  if (li) {
-                      li.disabled = false;
-                      li.style.cursor = 'pointer';
-                  }
-              });
-  
-              // Open and send the request
-              xhr.open('POST',getUrl);
-              xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
-              xhr.send(formData);
-          }
-      }
-  }
-    // function attachValidation(formId, cNumber,clipId) {
-    //   const li = document.getElementById(`current_li_${cNumber}`);
-    //   if (li) {
-    //       li.disabled = true;
-    //       li.style.cursor = 'wait';
-    //       console.log(li, ' has been disabled');
-    //   }
-  
-    //   const form = document.getElementById(formId);
-  
-    //   if (form) {
-    //       const fileInput = document.getElementById('slide_file');
-  
-    //       if (!fileInput.value || fileInput.value.trim() === ""){
-    //               document.getElementById('upload-text').style.color='red'
-    //           }
-  
-    //        else {
-    //           document.getElementById('upload-text').style.color='inherit'
-              
-    //           const popup = document.getElementById('add-subclip-popup');
-    //           if (popup) {popup.style.display = 'none';}
-    //           const formData = new FormData(form);
-    //           const xhr = new XMLHttpRequest();
-  
-    //           xhr.addEventListener('load', function () {
-    //               if (xhr.status === 200) {
-    //                   const response = JSON.parse(xhr.responseText);
-  
-    //                   if (response.success) {
-    //                       const newId = response.id;
-  
-  
-    //                       // Update the li element
-    //                       if (li) {
-    //                           li.id = `saved_li_${newId}`;
-    //                           li.dataset.id = newId;
-                  
-    //                           li.dataset.current_file=response.current_file
-    //                           li.disabled = false;
-    //                           li.style.cursor = 'pointer';
-    //                       }
-                          
-              
-    //                       showSuccessMessage('Clip Added Successfully!');
-    //                   } else {
-    //                       alert(response.error || 'Failed to add clip.');
-    //                   }
-    //               } else {
-    //                   alert('An error occurred while saving the clip.');
-    //               }
-  
-    //               if (li) {
-    //                   li.disabled = false;
-    //                   li.style.cursor = 'pointer';
-    //               }
-    //           });
-  
-    //           // Handle errors
-    //           xhr.addEventListener('error', function () {
-    //               alert('An error occurred during the request.');
-    //               if (li) {
-    //                   li.disabled = false;
-    //                   li.style.cursor = 'pointer';
-    //               }
-    //           });
-  
-    //           // Open and send the request
-    //           xhr.open('POST', `/text/add_subcliphtmx/${clipId}/`);
-    //           xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
-    //           xhr.send(formData);
-    //       }
-    //   }}
     
       function saveInput(inputElement) {
               const uploadElement = document.getElementById('upload-text');
@@ -1780,23 +1608,7 @@ select::-webkit-dropdown-arrow {
     function addSlide() {
       
         let currentNumber = document.getElementById('no_of_slides').value;
-        // if (currentNumber >0){
-        //   const slide_text_=document.getElementById(`slide_text_${currentNumber}`)
-        //   if (slide_text_){
-        //     if(slide_text_.style.display !='none'){
-        //       if (slide_text_.value === ''){
-        //         alert('Fill the Empty Text Area')
-        //         return
-        //       }else{
-        //         handleAutomateToHide(currentNumber)
-    
-    
-        //       }
-              
-        //     }
-    
-        //   }
-        // }
+       
       edit=true
     
         var table = document.getElementById('leadsTable').getElementsByTagName('tbody')[0];
@@ -1952,7 +1764,7 @@ function fetchClipIds(textfileId) {
             .catch(error => console.error('Error fetching clip IDs:', error));
     }
 
-function openPopup(clipId, selectedText, remainingText,cNumber) {
+function openPopup(clipId, selectedText, remainingText,cNumber,li) {
 const modalContainer = document.getElementById('modal-cont');
 const popup = document.getElementById('add-subclip-popup');
 
@@ -1960,7 +1772,7 @@ if (modalContainer && popup) {
     modalContainer.innerHTML=`
     
 <form   class="popup-content" method="POST" enctype="multipart/form-data"
-id="add-subclip-form-${clipId}"
+id="add-subclip-form"
 
 style="grid-template-columns: 0.7fr 1fr;width:100%;">
 <br>
@@ -2028,7 +1840,7 @@ style="grid-template-columns: 0.7fr 1fr;width:100%;">
 </form>
     `;
     const errorElements = document.querySelectorAll('[id^="error"]');
-    sessionStorage.clear();
+    // sessionStorage.clear();
 
     errorElements.forEach(element => {
         element.textContent = "";
@@ -2036,9 +1848,9 @@ style="grid-template-columns: 0.7fr 1fr;width:100%;">
     };
     
     popup.style.display = 'flex';
-    document.getElementById(`add-subclip-form-${clipId}`).addEventListener('submit', (e) => {
+    document.getElementById(`add-subclip-form`).addEventListener('submit', (e) => {
         e.preventDefault();
-        attachValidation(`add-subclip-form-${clipId}`, clipId,cNumber);
+        attachValidation(`add-subclip-form`, clipId,cNumber,li);
     })
     disableForFree()
 }
@@ -2090,7 +1902,6 @@ function clearErrorMessages(){
     });
 }
 function closeModal() {
-    sessionStorage.clear();
     clearErrorMessages();
    
     document.getElementById('add-subclip-popup').style.display = 'none';
@@ -2099,23 +1910,30 @@ function closeModal() {
     const ulElement = document.getElementById(`list-of-tags_${formClipID}`);
     const spanElement = document.getElementById(`slide_span_${formClipID}`);
     const liItem=document.getElementById(`saved_li_${formClipID}`);
-    if (ulElement && ulElement.children.length > 1) {
-        const secondToLastLi = ulElement.children[ulElement.children.length - 2];
-        const secondToLastLiText = secondToLastLi.textContent;
-
-        const spanText = spanElement.textContent.trim();
-        spanElement.textContent = `${secondToLastLiText} ${spanText}`
-        console.log("Last <li> text:", secondToLastLiText);
-
-        ulElement.removeChild(secondToLastLi);
-    } else if(liItem){
+    const current_li= document.getElementById(`current_li_${sessionStorage.getItem('cNumber')}`);
+    console.log(sessionStorage.getItem('cNumber'))
+    if(liItem){
         liItem.disabled=false
         liItem.style.cursor='pointer'
 
-    }else {
+    }else if (current_li) {
+    const text = current_li.textContent.trim(); 
+    const ul = current_li.closest("ul");
+    
+    if (ul) {
+        const span = ul.querySelector("span"); 
+        if (span) {
+            span.textContent = text + " " + span.textContent; 
+        }
+    }
+
+    current_li.remove(); 
+}
+    else {
         console.log("No <li> items found to remove.");
     }
 }
+
 function saveInput(inputElement) {
         const uploadElement = document.getElementById('upload-text');
 
@@ -2215,11 +2033,13 @@ function populateVideoCategories(selectElementId, apiUrl) {
 }
 
 
-function attachValidation(formId, clipId,cNumber) {
-const li = document.getElementById(`current_li_${cNumber}`);
+function attachValidation(formId, clipId,cNumber,li) {
+// const li = document.getElementById(`current_li_${cNumber}`);
+
 if (li) {
     li.disabled = true;
     li.style.cursor = 'wait';
+    li.id='processing_'+cNumber
     console.log(li, ' has been disabled');
 }
 
@@ -2328,6 +2148,76 @@ if (form) {
 }
 }
 
+// function editAttachValidation(formId, clipId,getUrl,li) {
+      
+//       if (li) {
+//           li.disabled = true;
+//           console.log(li.dataset.id, ' has been disabled');
+//       }
+  
+//       const form = document.getElementById(formId);
+  
+//       if (form) {
+//           const fileInput = document.getElementById('slide_file');
+//           const videoSelect = document.getElementById('videoSelect');
+  
+//           if (!fileInput.value || fileInput.value.trim() === "") 
+//              {
+//                document.getElementById('upload-text').style.color='red'
+//           } else {
+//               document.getElementById('upload-text').style.color='black'
+  
+//               const popup = document.getElementById('add-subclip-popup');
+//               if (popup) popup.style.display = 'none';
+//               const formData = new FormData(form);
+//               const xhr = new XMLHttpRequest();
+  
+//               xhr.addEventListener('load', function () {
+//                   if (xhr.status === 200) {
+//                       const response = JSON.parse(xhr.responseText);
+  
+//                       if (response.success) {
+//                           const newId = response.id;
+  
+//                           if (li) {
+                              
+//                               li.dataset.id = newId;
+//                               li.dataset.current_file=response.current_file
+//                               li.disabled = false;
+//                               li.style.cursor = 'pointer';
+                          
+//                           }
+//                           showSuccessMessage('Clip Updated Successfully!')
+//                       } else {
+//                           alert(response.error || 'Failed to add clip.');
+//                       }
+//                   } else {
+//                       alert('An error occurred while saving the clip.');
+//                   }
+  
+//                   if (li) {
+//                       li.disabled = false;
+//                       li.style.cursor = 'pointer';
+//                   }
+//               });
+  
+//               // Handle errors
+//               xhr.addEventListener('error', function () {
+//                   alert('An error occurred during the request.');
+//                   if (li) {
+//                       li.disabled = false;
+//                       li.style.cursor = 'pointer';
+//                   }
+//               });
+  
+//               // Open and send the request
+//               xhr.open('POST',getUrl);
+//               xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+//               xhr.send(formData);
+//           }
+//       }
+//   }
+   
 
 function editAttachValidation(formId, clipId,getUrl,li) {
 
@@ -2571,57 +2461,7 @@ function clearCurrentFile(){
 document.getElementById('currentFile').innerHTML=''
 }
 
-// function handleSelection(span, ul, remainingInput, errorMessage, clipId) {
-//     submitCheck=true
-//     document.getElementById(`grid_${clipId}`).addEventListener("mouseup", function () {
-//         const selection = window.getSelection();
-//         if (selection && selection.toString().trim()) {
-//             const selectedText = selection.toString().trim();
-//             const fullText = span.innerText.trim();
-//             const words = fullText.split(/\s+/);
-//             const selectedWords = selectedText.split(/\s+/);
-
-//             const startsCorrectly = fullText.startsWith(selectedText);
-//             const isWordAligned = selectedWords.every(word => words.includes(word));
-
-//             if (startsCorrectly && isWordAligned) {
-//                 errorMessage.innerText = "";
-
-//                 clip_id = clipId
-//                 const li = document.createElement("li");
-//                 li.innerText = selectedText;
-//                 li.dataset.id = clipId;
-//                 li.disabled=true
-//                 li.onclick = function () {
-//                         editCurrentLi(li);
-//                     };
-//                     num = span.dataset.num
-//                     li.id=`current_li_${clipId}`
-
-//                 ul.insertBefore(li, span);
-
-//                 const remainingText = fullText.slice(selectedText.length).trim();
-//                 remainingInput.value = remainingText;
-//                 span.innerText = remainingText;
-//                 openPopup(clipId, selectedText, remainingText);
-//                 li.style.cursor='wait'
-
-                
-
-
-//             } else {
-//                 // errorMessage.innerText = "Invalid highlighting. Highlight full words starting from the beginning.";
-//                 errorMessage.innerText = "Highlighting Must Start From The First Unassigned Word Of The Sentence.";
-//             }
-//         }
-
-//         selection.removeAllRanges();
-//     });
-// }
-
-// fetchClipIds("{{textfile.id}}")
 document.addEventListener("htmx:afterRequest", function (event) {
-// Ensure requestConfig exists and the method is POST
 const xhr = event.detail.xhr;
 if (xhr && xhr.responseURL.includes("add_subcliphtmx") && xhr.method === "POST") {
     try {
