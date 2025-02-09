@@ -1626,15 +1626,7 @@ select::-webkit-dropdown-arrow {
     
       btn.style.cursor = 'wait';
       btn.disabled = true;
-    
-      $.ajax({
-        url: `/text/delete-clip/${clipId}/`,
-        type: 'DELETE',
-        headers: {
-          'X-CSRFToken': '{{ csrf_token }}'
-        },
-        success: function (response) {
-          const row = btn.closest('tr'); 
+      const row = btn.closest('tr'); 
           if (row) {
             row.parentNode.removeChild(row); 
             updateSubtitleNumbers(
@@ -1643,7 +1635,16 @@ select::-webkit-dropdown-arrow {
           } else {
             console.error('Row not found for deletion.');
           }
+
+      $.ajax({
+        url: `/text/delete-clip/${clipId}/`,
+        type: 'DELETE',
+        headers: {
+          'X-CSRFToken': '{{ csrf_token }}'
         },
+        success: function (response) {
+
+          },
         error: function (xhr, status, error) {
           btn.disabled = false; 
           btn.style.cursor = 'pointer';
@@ -2104,18 +2105,6 @@ function populateVideoCategories(selectElementId, apiUrl) {
         });
 }
 
-// function handleClips(clipIds) {
-//         clipIds.forEach(clipId => {
-//             const wrapper = document.querySelector(`#wrapper_${clipId}`);
-//             const span = wrapper.querySelector("span");
-//             const ul = wrapper.querySelector(`#list-of-tags_${clipId}`);
-//             const remainingInput = wrapper.querySelector(`#remaining_${clipId}`);
-//             const errorMessage = wrapper.querySelector(`#error-message_${clipId}`);
-
-//             span.dataset.clipId = clipId;
-//             handleSelection(span, ul, remainingInput, errorMessage, clipId);
-//         });
-//     }
 
 function attachValidation(formId, clipId,cNumber) {
 const li = document.getElementById(`current_li_${cNumber}`);
