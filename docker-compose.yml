@@ -3,9 +3,6 @@ services:
     image: nas415/crfterv5:latest
     env_file:
       - .env
-    # environment:
-    # PYTHONDONTWRITEBYTECODE: "1"
-    # PYTHONUNBUFFERED: "1"
     command: >
       sh -c "
         python3.10 manage.py makemigrations &&

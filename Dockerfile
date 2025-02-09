@@ -49,6 +49,6 @@ RUN sed -i 's/<policy domain="path" rights="none" pattern="@\*"/<!--<policy doma
     COPY ./fonts /usr/share/fonts/custom
 RUN fc-cache -f -v
 
-
+RUN python3.10 manage.py add_fonts
 EXPOSE 7732
 CMD ["bash", "-c", "export $(cat /app/.env | xargs) && python3.10 manage.py migrate && python3.10 manage.py runserver 0.0.0.0:7732"]
