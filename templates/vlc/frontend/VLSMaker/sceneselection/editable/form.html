@@ -1183,6 +1183,9 @@ select::-webkit-dropdown-arrow {
       textarea.addEventListener('keydown', function (event) {
           if (event.key === 'Enter') {
               event.preventDefault();
+              textarea.style.display = 'none';
+                wrapper.style.display = 'flex';
+                edit_.style.display = 'flex';
               const check=checkSubtitlesLength();
 
                 if (check){
@@ -1384,6 +1387,9 @@ select::-webkit-dropdown-arrow {
             document.getElementById(`highlightable_${cNumber}`).addEventListener("mouseup", function () {
             const selection = window.getSelection();
             clip_Id=span.dataset.id
+            if (!clip_id){
+                return
+            }
             console.log('clipid: ',clip_Id)
             if (document.getElementById(`slide_text_${cNumber}`).style.display === 'none'){
 
