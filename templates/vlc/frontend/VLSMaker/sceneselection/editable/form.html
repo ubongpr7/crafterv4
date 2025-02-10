@@ -6,6 +6,14 @@
 .ri-close-circle-line{
     color: red;
 }
+.textarea-class:focus {
+        border-color: purple;
+        box-shadow: 0 0 0 .2rem rgba(128, 0, 128, 0.25); /* Purple box shadow */
+    }
+
+    .textarea-class::placeholder {
+        color: black;
+    }
 .file-button {
     background: #864AF9;
     border: none;
@@ -1622,16 +1630,14 @@ select::-webkit-dropdown-arrow {
             <td id="highlightable_${currentNumber}" style="padding: 0 3px;">
               <div style="display: flex; height: 100%;">
                 <textarea class="textarea-class"
-                    // style="height: 100%; width:200%; padding:22px; border:none; background-color:#f9f9f9; color:#000;font-size:larger; resize: none; border-radius:8px;border:1px solid #ced4da;line-height:1.2px"
-                    style="display: block; width: 100%; padding: .375rem .75rem; font-size: 1rem; font-weight: 400; line-height: 1.5; color: #212529; background-color: #fff; background-clip: padding-box; border: 1px solid #ced4da; padding-left:10px;"
-                    id="slide_text_${currentNumber}" 
-                    type="text" 
-                    
-                    name="slide_text" 
-                    placeholder="Type Your Subtitle Here" 
-                    class="form-control tab-textarea" 
-                    aria-describedby="textarea"
-                ></textarea>
+    style="display: block; width: 100%; padding: .375rem .75rem; font-size: 1rem; font-weight: 400; line-height: 1.5; color: #212529; background-color: #fff; background-clip: padding-box; border: 1px solid #ced4da; padding-left:10px; resize:none; border-radius:9px; transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out; placeholder-color: black;"
+    id="slide_text_${currentNumber}" 
+    type="text" 
+    name="slide_text" 
+    placeholder="Type Your Subtitle Here" 
+    class="form-control tab-textarea" 
+    aria-describedby="textarea"></textarea>
+
                 <div class="wrapper" id="wrapper_${currentNumber}" style="display:none; padding-left: 1.5rem;">
                   <div style="width: 100%;" class="tag-box">
                       <ul style="margin: 0;" id="list-of-tags_${currentNumber}" class="list-of-tags">
