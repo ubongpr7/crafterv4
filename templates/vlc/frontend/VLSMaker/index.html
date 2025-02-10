@@ -964,7 +964,38 @@ background: linear-gradient(to right, #864AF9 0%, #864AF9 70%, #D9D9D9 70%, #D9D
 
     });
   </script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+  // Function to update the subtitle background color
+  function updateSubtitleBackgroundColor(color) {
+    const previewBackground = document.getElementById('previewBackground');
+    previewBackground.style.backgroundColor = color;
+  }
 
+  // Select the subtitle background color picker and text input
+  const colorPicker2 = document.getElementById('colorPicker2');
+  const colorText2 = document.getElementById('colortext2');
+
+  // Update the subtitle background color when the color picker changes
+  colorPicker2.addEventListener('input', function () {
+    const selectedColor = colorPicker2.value;
+    colorText2.value = selectedColor; // Sync the text input with the color picker
+    updateSubtitleBackgroundColor(selectedColor); // Update the preview box
+  });
+
+  // Update the subtitle background color when the text input changes
+  colorText2.addEventListener('input', function () {
+    const selectedColor = colorText2.value;
+    if (/^#[0-9A-F]{6}$/i.test(selectedColor)) { // Validate hex color
+      colorPicker2.value = selectedColor; // Sync the color picker with the text input
+      updateSubtitleBackgroundColor(selectedColor); // Update the preview box
+    }
+  });
+
+  // Initialize the subtitle background color with the default value
+  updateSubtitleBackgroundColor(colorPicker2.value);
+});
+</script>
 </body>
 
 </html>
