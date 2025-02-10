@@ -922,57 +922,7 @@ select::-webkit-dropdown-arrow {
         </svg>
     </div>
 </div>
-
-<script>
-$(document).ready(function () {
-    let tableBody = document.querySelector("#leadsTable tbody");
-
-    // Enable sorting for all rows
-    $("#leadsTable tbody").sortable({
-        axis: "y",
-        containment: "parent",
-        handle: ".drag-container",  // Allow dragging from the subtitle text container (not just the first column)
-        update: function (event, ui) {
-            updateSubtitleNumbers(tableBody);
-            updateBackendOrder();
-        },
-        start: function(event, ui) {
-            // Add a class for purple line when dragging starts
-            $(ui.helper).addClass('dragging');
-        },
-        stop: function(event, ui) {
-            // Remove the class when dragging stops
-            $(ui.helper).removeClass('dragging');
-        },
-        connectWith: ".sortable"  // This ensures you can connect elements with other sortable containers if necessary
-    });
-
-    // Update backend when the order of subtitles changes
-    function updateBackendOrder() {
-        let subtitles = [];
-        $("#leadsTable tbody tr").each(function (index) {
-            subtitles.push({
-                id: $(this).data("id"),
-                position: index + 1
-            });
-        });
-
-        $.ajax({
-            url: "/text/update-subtitle-positions/",
-            type: "POST",
-            data: JSON.stringify({ subtitles: subtitles }),
-            contentType: "application/json",
-            headers: { "X-CSRFToken": getCSRFToken() },
-            success: function (response) {
-                console.log("Positions updated successfully");
-            },
-            error: function (xhr, status, error) {
-                console.error("Error updating positions:", error);
-            }
-        });
-    }
-});
-</script>
+</div>
 
 <!-- Scripts start -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -1059,6 +1009,56 @@ $(document).ready(function () {
 
   </script>
     
+<script>
+    $(document).ready(function () {
+        let tableBody = document.querySelector("#leadsTable tbody");
+    
+        // Enable sorting for all rows
+        $("#leadsTable tbody").sortable({
+            axis: "y",
+            containment: "parent",
+            handle: ".drag-container",  // Allow dragging from the subtitle text container (not just the first column)
+            update: function (event, ui) {
+                updateSubtitleNumbers(tableBody);
+                updateBackendOrder();
+            },
+            start: function(event, ui) {
+                // Add a class for purple line when dragging starts
+                $(ui.helper).addClass('dragging');
+            },
+            stop: function(event, ui) {
+                // Remove the class when dragging stops
+                $(ui.helper).removeClass('dragging');
+            },
+            connectWith: ".sortable"  // This ensures you can connect elements with other sortable containers if necessary
+        });
+    
+        // Update backend when the order of subtitles changes
+        function updateBackendOrder() {
+            let subtitles = [];
+            $("#leadsTable tbody tr").each(function (index) {
+                subtitles.push({
+                    id: $(this).data("id"),
+                    position: index + 1
+                });
+            });
+    
+            $.ajax({
+                url: "/text/update-subtitle-positions/",
+                type: "POST",
+                data: JSON.stringify({ subtitles: subtitles }),
+                contentType: "application/json",
+                headers: { "X-CSRFToken": getCSRFToken() },
+                success: function (response) {
+                    console.log("Positions updated successfully");
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error updating positions:", error);
+                }
+            });
+        }
+    });
+    </script>
 
 <script>
 
