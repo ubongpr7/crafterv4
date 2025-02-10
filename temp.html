@@ -842,149 +842,115 @@ select::-webkit-dropdown-arrow {
       
     </div>
       <!-- Leads Table -->
-<table id="leadsTable" class="lead-table" style="width: 100%; display: table;">
-    <thead>
-        <tr style="height: fit-content;">
+      <table id="leadsTable" class="lead-table" style="width: 100%; display: table;">
+        <thead>
+          <tr style="height: fit-content;">
             <th class="slide-first" style="font-size: 1.4rem;">Subtitle</th>
             <th style="font-size: 1.4rem; ">Subtitle Text</th>
             <th class="slide-last" style="font-size: 1.4rem; text-wrap: nowrap; width: 5%;">Edit</th>
             <th class="slide-last" style="font-size: 1.4rem; text-wrap: nowrap; width: 5%;">Delete</th>
             <th class="slide-last" style="font-size: 1.4rem; text-wrap: nowrap; width: 5%;">Undo</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% if video_clips %}
-        {% for clip in video_clips %}
-        <tr data-id="{{clip.id}}" style="height: 5rem;" id="tr_{{clip.id}}">
+          </tr>
+        </thead>
+        <tbody>
+          {% if video_clips %}
+          {% for clip in video_clips %}
+          <tr data-id="{{clip.id}}" style="height: 5rem;" id="tr_{{clip.id}}">
             <td data-tooltip="Drag To Move" style="width: 18%; text-wrap: nowrap; font-size: 1.4rem;">Subtitle {{ forloop.counter }}</td>
-            <td id="highlightable_{{forloop.counter}}" style="width: 64%;">
+              <td id="highlightable_{{forloop.counter}}" style="width: 64%;">
                 <div>
-                    <textarea style="display: none;" name="slide_text" class="form-control tab-textarea" aria-describedby="textarea" id="slide_text_{{forloop.counter}}">{{clip.slide}}</textarea>
-                    <div class="wrapper" id="wrapper_{{forloop.counter}}">
-                        <div class="tag-box">
+                      <textarea style="display: none;"  name="slide_text" class="form-control tab-textarea" aria-describedby="textarea"  id="slide_text_{{forloop.counter}}"  >{{clip.slide}}</textarea>
+                      <div class="wrapper" id="wrapper_{{forloop.counter}}">
+                        <div  class="tag-box">
                             <ul style="margin: 0;" id="list-of-tags_{{forloop.counter}}" class="list-of-tags">
+    
                                 {% for subclip in clip.subclips.all %}
-                                <li data-id="{{subclip.id}}" class="subtitle_clip" style="font-size: 1.4rem; border-color: #864AF9;" data-current_file="{{subclip.get_video_file_name}}" id="saved_li_{{subclip.id}}" onclick="editCurrentLi(this)">
-                                    <div class="drag-container">{{subclip.subtittle}}</div>
-                                </li>
+                                <li data-id="{{subclip.id}}" class="subtitle_clip" style="font-size: 1.4rem; border-color: #864AF9;"  
+            data-current_file="{{subclip.get_video_file_name}}"
+            id="saved_li_{{subclip.id}}"
+            onclick="editCurrentLi(this)">
+            <!-- Wrap the subtitle text inside a div with class 'drag-container' -->
+            <div class="drag-container">{{subclip.subtittle}}</div>
+        </li>
                                 {% endfor %}
-                                <span id="slide_span_{{forloop.counter}}" data-num="{{clip.get_number_of_subclip}}" data-id="{{clip.id}}" style="padding: 5px 10px;">{{ clip.remaining }}</span>
+                                <span id="slide_span_{{forloop.counter}}" data-num="{{clip.get_number_of_subclip}}"
+                                    data-id="{{clip.id}}" style="padding: 5px 10px;">{{ clip.remaining }}
+                                  </span>
                             </ul>
                             <input id="remaining_{{forloop.counter}}" name="remaining_" hidden type="text">
                         </div>
-                    <div id="error-message_{{forloop.counter}}" style="text-transform: capitalize;" class="error-message"></div>
+                      <div id="error-message_{{forloop.counter}}" style="text-transform: capitalize;" class="error-message"></div>
+                  </div>
                 </div>
-            </div>
-            </td>
-            <!-- Action Buttons -->
+              </td>   
             <td>
-                <div style="display: flex; place-items: center; justify-content: center;">
-                    <a href="#!" class="delete-row-btn" id="edit_{{forloop.counter}}" onclick="EditeSlide('{{forloop.counter}}')" style="display: flex; align-items: center; justify-content: center; text-decoration: none; position: relative;">
-                        <i id="icon_{{clip.id}}" class="ri-edit-box-line fa-sync-alt" style="margin: 0 auto; font-size: 20px; font-weight: 600; cursor: pointer; vertical-align: middle;"></i>
-                    </a>
-                </div>
-            </td>
-            <td id='action_{{forloop.counter}}'>
-                <div style="display: flex; place-items: center; justify-content: center;">
-                    <a href="#!" class="delete-row-btn" id="delete_{{forloop.counter}}" onclick="deleteSavedSlide('{{clip.id}}', this)" style="display: flex; align-items: center; justify-content: center; text-decoration: none; position: relative;">
-                        <img id="icon_{{clip.id}}" src="https://leadeditor.s3.amazonaws.com/lead-maker/images/delete-icn.svg" alt="delete" style="width: 1.5rem; height: 3rem; cursor: pointer;">
-                    </a>
-                </div>
-            </td>
-            <td>
-                <div style="display: flex; place-items: center; justify-content: center;">
-                    <a href="#!" style="display: flex; align-items: center; justify-content: center; text-decoration: none; position: relative;" class="delete-row-btn" id="reset_{{forloop.counter}}" onclick="subclipReset('{{clip.id}}')">
-                        <i id="icon_{{clip.id}}" class="ri-loop-right-line fa-sync-alt" style="margin: 0 auto;font-size: 20px; font-weight: 600; cursor: pointer; vertical-align: -webkit-baseline-middle;"></i>
-                    </a>
-                </div>
-            </td>
-        </tr>
-        {% endfor %}
-        <input type="number" name="no_of_slides" id="no_of_slides" hidden value="{{no_of_slides}}">
-        {% else %}
-        <input type="number" name="no_of_slides" id="no_of_slides" hidden value="0">
-        {% endif %}
-    </tbody>
-</table>
+              <div style="display: flex; place-items: center; justify-content: center;">
+                <a href="#!"  
+                  class="delete-row-btn" 
+                  id="edit_{{forloop.counter}}" 
+                  onclick="EditeSlide('{{forloop.counter}}')" style="display: flex; align-items: center; justify-content: center; text-decoration: none; position: relative;">
+                  <i id="icon_{{clip.id}}" class="ri-edit-box-line fa-sync-alt"
+                  style="margin: 0 auto;font-size: 20px; font-weight: 600; cursor: pointer; vertical-align: middle; ">
+              </i>
+                </a>
+              </div>
+              
+        </td>
+        <td id='action_{{forloop.counter}}'>
+          <div style="display: flex; place-items: center; justify-content: center;">
+            <a href="#!" class="delete-row-btn"id="delete_{{forloop.counter}}" onclick="deleteSavedSlide('{{clip.id}}', this)"  style="display: flex; align-items: center; justify-content: center; text-decoration: none; position: relative;">
+                <img id="icon_{{clip.id}}" src="https://leadeditor.s3.amazonaws.com/lead-maker/images/delete-icn.svg" alt="delete" style="width: 1.5rem; height: 3rem; cursor: pointer;">
+            </a>
+          </div>
 
-<form action="." method="post" id="processFile">
-    {% csrf_token %}
-    <input type="text" name="purpose" value="process" hidden>
-</form>
+            
+        </td>
+        <td>
+          <div style="display: flex; place-items: center; justify-content: center;">
+            <a href="#!" style="display: flex; align-items: center; justify-content: center; text-decoration: none; position: relative;"
+              class="delete-row-btn" 
+              id="reset_{{forloop.counter}}" 
+              onclick="subclipReset('{{clip.id}}')">
+              
+              <i id="icon_{{clip.id}}" class="ri-loop-right-line fa-sync-alt"
+              style="margin: 0 auto;font-size: 20px; font-weight: 600; cursor: pointer;vertical-align: -webkit-baseline-middle;"></i>
+            </a>
+          </div>     
+        </td>
+          </tr>
 
-<div class="button" style="margin-top: 60px;position: absolute; right: 20px; bottom: 16px;height: 24px; width: fit-content; display: flex; justify-content: flex-end;">
-    <div style="display: flex; align-items: center; justify-content: center; border-radius: 8px; background: #864AF9; cursor: pointer;">
-        <button type="button" onclick="highlightNoSubclipIcons(this)" id="proceed-button" style="text-decoration: none; padding: 10px 20px; color: white; font-family: Montserrat; font-size: 18px; font-weight: 500; line-height: 24px; text-align: left; background: none; border: none; cursor: pointer;">
-            Proceed To Background Music Selection
-        </button>
-        <svg width="24" height="24" type="button" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
+          {% endfor %}
+      <input  type="number"  name="no_of_slides" id="no_of_slides" hidden value="{{no_of_slides}}">
+          {% else %}
+      <input  type="number"  name="no_of_slides" id="no_of_slides" hidden value="0">
+      {% endif %}
+        </tbody>
+      </table>
+      <form action="."  method="post" id="processFile">
+        {% csrf_token %}
+        <input type="text" name="purpose" value="process" hidden>
+    </form>
+<br>
+<br>
+<br>
+    <div class="button"
+        style="margin-top: 60px;position: absolute; right: 20px; bottom: 16px;height: 24px; width: fit-content; display: flex; justify-content: flex-end;">
+        <div
+            style="display: flex; align-items: center; justify-content: center; border-radius: 8px; background: #864AF9; cursor: pointer;">
+            <button type="button" onclick="highlightNoSubclipIcons(this)" id="proceed-button"
+                style="text-decoration: none; padding: 10px 20px; color: white; font-family: Montserrat; font-size: 18px; font-weight: 500; line-height: 24px; text-align: left; background: none; border: none; cursor: pointer;">
+                Proceed To Background Music Selection
+            </button>
+            <svg width="24" height="24" type="button" viewBox="0 0 24 24" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="white" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+        </div>
     </div>
-</div>
 
-<script>
-$(document).ready(function () {
-    let tableBody = document.querySelector("#leadsTable tbody");
-
-    $("#leadsTable tbody").sortable({
-        axis: "y",
-        containment: "parent",
-        handle: ".drag-container",  // Allow dragging from any part of the subtitle row
-        update: function (event, ui) {
-            updateSubtitleNumbers(tableBody);
-            updateBackendOrder();
-        },
-        start: function(event, ui) {
-            // Add a class for purple line when dragging starts
-            $(ui.helper).addClass('dragging');
-        },
-        stop: function(event, ui) {
-            // Remove the class when dragging stops
-            $(ui.helper).removeClass('dragging');
-        }
-    });
-
-    // Update the backend when the order of subtitles changes
-    function updateBackendOrder() {
-        let subtitles = [];
-        $("#leadsTable tbody tr").each(function (index) {
-            subtitles.push({
-                id: $(this).data("id"),
-                position: index + 1
-            });
-        });
-
-        $.ajax({
-            url: "/text/update-subtitle-positions/",
-            type: "POST",
-            data: JSON.stringify({ subtitles: subtitles }),
-            contentType: "application/json",
-            headers: { "X-CSRFToken": getCSRFToken() },
-            success: function (response) {
-                console.log("Positions updated successfully");
-            },
-            error: function (xhr, status, error) {
-                console.error("Error updating positions:", error);
-            }
-        });
-    }
-});
-</script>
-
-<style>
-    /* Purple guide line for drag */
-    .dragging {
-        border-top: 2px solid purple; /* Set the border style for the dragging element */
-    }
-
-    /* Optional: Add some visual feedback for the dragged row */
-    #leadsTable .ui-sortable-placeholder {
-        border-top: 2px solid purple;
-        visibility: visible !important;
-    }
-</style>
-
+      
+  </div>
 <!-- Scripts start -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
