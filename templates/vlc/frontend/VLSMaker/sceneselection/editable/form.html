@@ -972,6 +972,9 @@ select::-webkit-dropdown-arrow {
         containment: "parent", // Contain dragging within the parent element
         handle: "td:first-child", // Allow dragging only from the first column (Subtitle)
         placeholder: "ui-sortable-placeholder", // Add a placeholder for visual feedback
+        forcePlaceholderSize: true, // Ensure the placeholder maintains a consistent size
+        tolerance: "pointer", // Use pointer-based tolerance for smoother placement
+        cursorAt: { top: 10 }, // Align the dragged element with the mouse cursor
         start: function (event, ui) {
           console.log("Drag started"); // Debugging: Log when dragging starts
         },
@@ -993,7 +996,9 @@ select::-webkit-dropdown-arrow {
             background: #f0f0f0;
             border-left: 2px solid purple;
             visibility: visible !important;
-            height: 50px; /* Adjust height as needed */
+            height: 50px; /* Adjust height to match row height */
+            margin: 0; /* Ensure no margin interferes with placement */
+            padding: 0; /* Ensure no padding interferes with placement */
           }
         `)
         .appendTo("head");
