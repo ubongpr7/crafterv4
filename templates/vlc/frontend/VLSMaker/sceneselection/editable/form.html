@@ -1220,7 +1220,13 @@ select::-webkit-dropdown-arrow {
                                   slide_span.textContent = textarea.value;
                                 }
                                 if (response.success) {
+                                    
+                                    const tr = slide_span.closest("tr");
+                                    if (tr) {
+                                        tr.setAttribute("data-id", response.id);
+                                    }
                                     slide_span.dataset.id=response.id
+                                    tr.dataset.id=response.id
                                     clip_id=response.id
                                     if (reset_){
                                       reset_.onclick= function () {
@@ -1231,8 +1237,10 @@ select::-webkit-dropdown-arrow {
                                         deleteSavedSlide(clip_id,delete_);
         
                                     };
+                                    
+
                                   };
-        
+                                  updateBackendOrder()
                                     showSuccessMessage(`Subtitle submitted successfully!`);
         
                                 } else {
@@ -2132,10 +2140,6 @@ if (form) {
                             li.dataset.name=response.video_clip.name
                             li.dataset.clipid=response.video_clip.id
                             li.dataset.cat_id=response.video_clip.cat_id
-                            const tr = li.closest("tr");
-                            if (tr) {
-                                tr.setAttribute("data-id", response.video_clip.id);
-                            }
                             
                             
                         };
@@ -2196,76 +2200,6 @@ if (form) {
 }
 }
 
-// function editAttachValidation(formId, clipId,getUrl,li) {
-      
-//       if (li) {
-//           li.disabled = true;
-//           console.log(li.dataset.id, ' has been disabled');
-//       }
-  
-//       const form = document.getElementById(formId);
-  
-//       if (form) {
-//           const fileInput = document.getElementById('slide_file');
-//           const videoSelect = document.getElementById('videoSelect');
-  
-//           if (!fileInput.value || fileInput.value.trim() === "") 
-//              {
-//                document.getElementById('upload-text').style.color='red'
-//           } else {
-//               document.getElementById('upload-text').style.color='black'
-  
-//               const popup = document.getElementById('add-subclip-popup');
-//               if (popup) popup.style.display = 'none';
-//               const formData = new FormData(form);
-//               const xhr = new XMLHttpRequest();
-  
-//               xhr.addEventListener('load', function () {
-//                   if (xhr.status === 200) {
-//                       const response = JSON.parse(xhr.responseText);
-  
-//                       if (response.success) {
-//                           const newId = response.id;
-  
-//                           if (li) {
-                              
-//                               li.dataset.id = newId;
-//                               li.dataset.current_file=response.current_file
-//                               li.disabled = false;
-//                               li.style.cursor = 'pointer';
-                          
-//                           }
-//                           showSuccessMessage('Clip Updated Successfully!')
-//                       } else {
-//                           alert(response.error || 'Failed to add clip.');
-//                       }
-//                   } else {
-//                       alert('An error occurred while saving the clip.');
-//                   }
-  
-//                   if (li) {
-//                       li.disabled = false;
-//                       li.style.cursor = 'pointer';
-//                   }
-//               });
-  
-//               // Handle errors
-//               xhr.addEventListener('error', function () {
-//                   alert('An error occurred during the request.');
-//                   if (li) {
-//                       li.disabled = false;
-//                       li.style.cursor = 'pointer';
-//                   }
-//               });
-  
-//               // Open and send the request
-//               xhr.open('POST',getUrl);
-//               xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
-//               xhr.send(formData);
-//           }
-//       }
-//   }
-   
 
 function editAttachValidation(formId, clipId,getUrl,li) {
 
