@@ -573,21 +573,19 @@
               style="width: 100%" />
             <input type="number" hidden name="font_size" value="50" class="slider" id="font_size" style="width: 100%" />
           </div>
+
+
           <!-- Slider for Border Radius -->
-          <div class="slider-container"
-            style="width: 100%; display: flex; flex-direction: column; align-items: center;">
-            <div
-              style="display: flex; align-items: center; justify-content: space-between; width: 100%; margin-bottom: 12px;">
-              <label for="subtitleBorderRadiusSlider" style="font-size: 18px; font-weight: 600;letter-spacing: 0.02em;">Subtitle Box
-                Roundness:</label>
-              <span id="subtitleBorderRadiusValue" class="subtitle-border-radius-value"
-                style="font-size: 18px; font-weight: 600;letter-spacing: 0.02em;">18</span>
-            </div>
-            <input type="range" id="subtitleBorderRadiusSlider" class="subtitle-border-radius-slider" min="0" max="50"
-              value="16"
-              style="width: 100%; margin-top: 10px; -webkit-appearance: none; appearance: none; margin: 0; height: 20px; border-radius: 10px; 
-background: linear-gradient(to right, #864AF9 0%, #864AF9 16%, #D9D9D9 16%, #D9D9D9 100%); outline: none; cursor: pointer; position: relative;">
-          </div>
+<div class="slider-container" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+  <div style="display: flex; align-items: center; justify-content: space-between; width: 100%; margin-bottom: 12px;">
+    <label for="subtitleBorderRadiusSlider" style="font-size: 18px; font-weight: 600;letter-spacing: 0.02em;">Subtitle Box Roundness:</label>
+    <span id="subtitleBorderRadiusValue" class="subtitle-border-radius-value" style="font-size: 18px; font-weight: 600;letter-spacing: 0.02em; color: #000000B2;">18</span>
+  </div>
+  <input type="range" id="subtitleBorderRadiusSlider" class="subtitle-border-radius-slider" min="0" max="50" value="18"
+    style="width: 100%; margin-top: 10px; -webkit-appearance: none; appearance: none; margin: 0; height: 20px; border-radius: 10px; 
+    background: linear-gradient(to right, #864AF9 0%, #864AF9 18%, #D9D9D9 18%, #D9D9D9 100%); outline: none; cursor: pointer; position: relative;">
+</div>
+
           <style>
             #subtitleBorderRadiusSlider::-webkit-slider-thumb {
               -webkit-appearance: none;
@@ -631,7 +629,7 @@ background: linear-gradient(to right, #864AF9 0%, #864AF9 16%, #D9D9D9 16%, #D9D
             style="display: flex; align-items: center; justify-content: space-between; width: 100%; margin-bottom: 12px;">
             <label for="subtitleOpacitySlider" style="font-size: 18px; font-weight: 600;letter-spacing: 0.02em;">Subtitle Box Opacity:</label>
             <span id="subtitleOpacityValue" class="subtitle-opacity-value"
-              style="font-size: 18px; font-weight: 600;letter-spacing: 0.02em;">70%</span>
+              style="font-size: 18px; font-weight: 600;letter-spacing: 0.02em; color: #000000B2;">70%</span>
           </div>
           <input type="range" id="subtitleOpacitySlider" class="subtitle-opacity-slider" min="0" max="100" step="1"
             value="70"
@@ -737,8 +735,6 @@ opacitySlider.addEventListener('input', function () {
   document.querySelector('.previewBackground2').style.opacity = opacityValue / 100;
   updateSliderBackground(opacitySlider);
 });
-
-
   </script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script>
