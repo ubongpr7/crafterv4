@@ -943,7 +943,8 @@ $(document).ready(function () {
         stop: function(event, ui) {
             // Remove the class when dragging stops
             $(ui.helper).removeClass('dragging');
-        }
+        },
+        connectWith: ".sortable"  // This ensures you can connect elements with other sortable containers if necessary
     });
 
     // Update backend when the order of subtitles changes
@@ -972,19 +973,6 @@ $(document).ready(function () {
     }
 });
 </script>
-
-<style>
-    /* Purple guide line for drag */
-    .dragging {
-        border-top: 2px solid purple; /* Set the border style for the dragging element */
-    }
-
-    /* Optional: Add some visual feedback for the dragged row */
-    #leadsTable .ui-sortable-placeholder {
-        border-top: 2px solid purple;
-        visibility: visible !important;
-    }
-</style>
 
 <!-- Scripts start -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
