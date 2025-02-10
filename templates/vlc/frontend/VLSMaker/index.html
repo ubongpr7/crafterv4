@@ -667,6 +667,19 @@
                             transition: 0.3s ease;
                             padding-left: 55px" />
             </div>
+            <!-- Slider for Border Radius -->
+<div class="slider-container" style="width: 100%; display: flex; justify-content: center; align-items: center; margin-bottom: 20px;">
+  <label for="borderRadiusSlider">Border Radius:</label>
+  <input type="range" id="borderRadiusSlider" name="borderRadiusSlider" min="0" max="50" value="8" style="width: 100%; margin-left: 10px;">
+  <span id="borderRadiusValue" style="margin-left: 10px;">8px</span>
+</div>
+
+<!-- Slider for Opacity -->
+<div class="slider-container" style="width: 100%; display: flex; justify-content: center; align-items: center; margin-bottom: 20px;">
+  <label for="opacitySlider">Opacity:</label>
+  <input type="range" id="opacitySlider" name="opacitySlider" min="0" max="1" step="0.1" value="0.5" style="width: 100%; margin-left: 10px;">
+  <span id="opacityValue" style="margin-left: 10px;">0.5</span>
+</div>
             
           <div class="Preview" style="width: 100%; margin-bottom: 28px;">
             <div class="Preview-text" style="display: flex; align-items: center; margin-bottom: 24px; justify-content: space-between;">
@@ -703,6 +716,29 @@
     <script src="{% static 'js/script.js'%}"></script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+      // Get references to the sliders and the previewBackground element
+      const borderRadiusSlider = document.getElementById('borderRadiusSlider');
+      const opacitySlider = document.getElementById('opacitySlider');
+      const previewBackground = document.getElementById('previewBackground');
+      const borderRadiusValue = document.getElementById('borderRadiusValue');
+      const opacityValue = document.getElementById('opacityValue');
+    
+      // Update border radius when the slider value changes
+      borderRadiusSlider.addEventListener('input', () => {
+        const borderRadius = borderRadiusSlider.value + 'px';
+        previewBackground.style.borderRadius = borderRadius;
+        borderRadiusValue.textContent = borderRadius;
+      });
+    
+      // Update opacity when the slider value changes
+      opacitySlider.addEventListener('input', () => {
+        const opacity = opacitySlider.value;
+        previewBackground.style.opacity = opacity;
+        opacityValue.textContent = opacity;
+      });
+    </script>
+    
     <script>
       $(document).ready(function() {
         const text_form = document.getElementById('text_form');
