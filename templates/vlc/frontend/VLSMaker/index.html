@@ -457,7 +457,7 @@
             </div>
 
           </div>
-          
+
           <div class="Font-Color-text" style="display: flex;
                         align-items: center;
                         margin-bottom: 8px;
@@ -578,16 +578,17 @@
             style="width: 100%; display: flex; flex-direction: column; align-items: center;">
             <div
               style="display: flex; align-items: center; justify-content: space-between; width: 100%; margin-bottom: 12px;">
-              <label for="subtitleBorderRadiusSlider" style="font-size: 18px; font-weight: 600;letter-spacing: 0.02em;">Subtitle Box
-                Roundness:</label>
+              <label for="subtitleBorderRadiusSlider"
+                style="font-size: 18px; font-weight: 600;letter-spacing: 0.02em;">Subtitle Box Roundness:</label>
               <span id="subtitleBorderRadiusValue" class="subtitle-border-radius-value"
-                style="font-size: 18px; font-weight: 600;letter-spacing: 0.02em;">18</span>
+                style="font-size: 18px; font-weight: 600;letter-spacing: 0.02em; color: #000000B2;">18</span>
             </div>
             <input type="range" id="subtitleBorderRadiusSlider" class="subtitle-border-radius-slider" min="0" max="50"
-              value="16"
+              value="18"
               style="width: 100%; margin-top: 10px; -webkit-appearance: none; appearance: none; margin: 0; height: 20px; border-radius: 10px; 
-background: linear-gradient(to right, #864AF9 0%, #864AF9 16%, #D9D9D9 16%, #D9D9D9 100%); outline: none; cursor: pointer; position: relative;">
+    background: linear-gradient(to right, #864AF9 0%, #864AF9 18%, #D9D9D9 18%, #D9D9D9 100%); outline: none; cursor: pointer; position: relative;">
           </div>
+
           <style>
             #subtitleBorderRadiusSlider::-webkit-slider-thumb {
               -webkit-appearance: none;
@@ -629,9 +630,10 @@ background: linear-gradient(to right, #864AF9 0%, #864AF9 16%, #D9D9D9 16%, #D9D
           style="width: 100%; display: flex; flex-direction: column; align-items: center; margin-bottom: 20px;">
           <div
             style="display: flex; align-items: center; justify-content: space-between; width: 100%; margin-bottom: 12px;">
-            <label for="subtitleOpacitySlider" style="font-size: 18px; font-weight: 600;letter-spacing: 0.02em;">Subtitle Box Opacity:</label>
+            <label for="subtitleOpacitySlider"
+              style="font-size: 18px; font-weight: 600;letter-spacing: 0.02em;">Subtitle Box Opacity:</label>
             <span id="subtitleOpacityValue" class="subtitle-opacity-value"
-              style="font-size: 18px; font-weight: 600;letter-spacing: 0.02em;">70%</span>
+              style="font-size: 18px; font-weight: 600;letter-spacing: 0.02em; color: #000000B2;">70%</span>
           </div>
           <input type="range" id="subtitleOpacitySlider" class="subtitle-opacity-slider" min="0" max="100" step="1"
             value="70"
@@ -709,36 +711,40 @@ background: linear-gradient(to right, #864AF9 0%, #864AF9 70%, #D9D9D9 70%, #D9D
   </div>
   <script src="{% static 'js/script.js'%}"></script>
   <script>
-    function updateSliderBackground(slider) {
-  const value = (slider.value - slider.min) / (slider.max - slider.min) * 100;
-  slider.style.background = `linear-gradient(to right, #864AF9 ${value}%, #D9D9D9 ${value}%)`;
-}
+    document.addEventListener('DOMContentLoaded', function () {
+      function updateSliderBackground(slider) {
+        const value = ((slider.value - slider.min) / (slider.max - slider.min)) * 100;
+        slider.style.background = `linear-gradient(to right, #864AF9 ${value}%, #D9D9D9 ${value}%)`;
+      }
 
-// Select sliders
-const borderRadiusSlider = document.getElementById('subtitleBorderRadiusSlider');
-const opacitySlider = document.getElementById('subtitleOpacitySlider');
+      // Select sliders
+      const borderRadiusSlider = document.getElementById('subtitleBorderRadiusSlider');
+      const opacitySlider = document.getElementById('subtitleOpacitySlider');
 
-// Initial background update
-updateSliderBackground(borderRadiusSlider);
-updateSliderBackground(opacitySlider);
+      // Initialize the preview box with the default border radius (18px)
+      const previewBox = document.querySelector('.previewBackground2');
+      previewBox.style.borderRadius = borderRadiusSlider.value + 'px';
 
-// Add event listeners to update background on input change
-borderRadiusSlider.addEventListener('input', function () {
-  const borderRadiusValue = borderRadiusSlider.value;
-  // Update the border-radius of the preview box
-  document.querySelector('.previewBackground2').style.borderRadius = borderRadiusValue + 'px';
-  document.querySelector('#subtitleBorderRadiusValue').textContent = borderRadiusValue;
-  updateSliderBackground(borderRadiusSlider);
-});
+      // Initialize the slider backgrounds
+      updateSliderBackground(borderRadiusSlider);
+      updateSliderBackground(opacitySlider);
 
-opacitySlider.addEventListener('input', function () {
-  const opacityValue = opacitySlider.value;
-  document.querySelector('#subtitleOpacityValue').textContent = opacityValue + '%';
-  document.querySelector('.previewBackground2').style.opacity = opacityValue / 100;
-  updateSliderBackground(opacitySlider);
-});
+      // Add event listeners to update background on input change
+      borderRadiusSlider.addEventListener('input', function () {
+        const borderRadiusValue = borderRadiusSlider.value;
+        // Update the border-radius of the preview box
+        previewBox.style.borderRadius = borderRadiusValue + 'px';
+        document.querySelector('#subtitleBorderRadiusValue').textContent = borderRadiusValue;
+        updateSliderBackground(borderRadiusSlider);
+      });
 
-
+      opacitySlider.addEventListener('input', function () {
+        const opacityValue = opacitySlider.value;
+        document.querySelector('#subtitleOpacityValue').textContent = opacityValue + '%';
+        previewBox.style.opacity = opacityValue / 100;
+        updateSliderBackground(opacitySlider);
+      });
+    });
   </script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script>
@@ -958,7 +964,38 @@ opacitySlider.addEventListener('input', function () {
 
     });
   </script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+  // Function to update the subtitle background color
+  function updateSubtitleBackgroundColor(color) {
+    const previewBackground = document.getElementById('previewBackground');
+    previewBackground.style.backgroundColor = color;
+  }
 
+  // Select the subtitle background color picker and text input
+  const colorPicker2 = document.getElementById('colorPicker2');
+  const colorText2 = document.getElementById('colortext2');
+
+  // Update the subtitle background color when the color picker changes
+  colorPicker2.addEventListener('input', function () {
+    const selectedColor = colorPicker2.value;
+    colorText2.value = selectedColor; // Sync the text input with the color picker
+    updateSubtitleBackgroundColor(selectedColor); // Update the preview box
+  });
+
+  // Update the subtitle background color when the text input changes
+  colorText2.addEventListener('input', function () {
+    const selectedColor = colorText2.value;
+    if (/^#[0-9A-F]{6}$/i.test(selectedColor)) { // Validate hex color
+      colorPicker2.value = selectedColor; // Sync the color picker with the text input
+      updateSubtitleBackgroundColor(selectedColor); // Update the preview box
+    }
+  });
+
+  // Initialize the subtitle background color with the default value
+  updateSubtitleBackgroundColor(colorPicker2.value);
+});
+</script>
 </body>
 
 </html>
