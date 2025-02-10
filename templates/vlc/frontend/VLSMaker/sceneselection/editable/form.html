@@ -987,43 +987,43 @@ $(document).ready(function () {
   
   <script>
 
-     $(document).ready(function () {
-      let tableBody = document.querySelector("#leadsTable tbody");
+//      $(document).ready(function () {
+//       let tableBody = document.querySelector("#leadsTable tbody");
   
-      $("#leadsTable tbody").sortable({
-          axis: "y",
-          containment: "parent",
-          handle: "td:first-child", 
-          update: function (event, ui) {
-              updateSubtitleNumbers(tableBody); 
-              updateBackendOrder();
-          }
-      });
+//       $("#leadsTable tbody").sortable({
+//           axis: "y",
+//           containment: "parent",
+//           handle: "td:first-child", 
+//           update: function (event, ui) {
+//               updateSubtitleNumbers(tableBody); 
+//               updateBackendOrder();
+//           }
+//       });
   
-  });
-  function updateBackendOrder() {
-        let subtitles = [];
-        $("#leadsTable tbody tr").each(function (index) {
-            subtitles.push({
-                id: $(this).data("id"), 
-                position: index + 1
-            });
-        });
+//   });
+//   function updateBackendOrder() {
+//         let subtitles = [];
+//         $("#leadsTable tbody tr").each(function (index) {
+//             subtitles.push({
+//                 id: $(this).data("id"), 
+//                 position: index + 1
+//             });
+//         });
 
-        $.ajax({
-            url: "/text/update-subtitle-positions/", 
-            type: "POST",
-            data: JSON.stringify({ subtitles: subtitles }),
-            contentType: "application/json",
-            headers: { "X-CSRFToken": getCSRFToken() },
-            success: function (response) {
-                console.log("Positions updated successfully");
-            },
-            error: function (xhr, status, error) {
-                console.error("Error updating positions:", error);
-            }
-        });
-    }
+//         $.ajax({
+//             url: "/text/update-subtitle-positions/", 
+//             type: "POST",
+//             data: JSON.stringify({ subtitles: subtitles }),
+//             contentType: "application/json",
+//             headers: { "X-CSRFToken": getCSRFToken() },
+//             success: function (response) {
+//                 console.log("Positions updated successfully");
+//             },
+//             error: function (xhr, status, error) {
+//                 console.error("Error updating positions:", error);
+//             }
+//         });
+//     }
 
     function getCSRFToken() {
         return document.querySelector("[name=csrfmiddlewaretoken]").value;
