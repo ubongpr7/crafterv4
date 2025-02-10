@@ -568,9 +568,9 @@ body {
 .popup-container {
     position: relative;
     background: #fff;
+    max-width: 615px;
     padding: 20px;
     border-radius: 10px;
-    max-width: 615px;
     width: 90%;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
@@ -825,8 +825,8 @@ select::-webkit-dropdown-arrow {
     <div style="display: flex; justify-content: space-between; margin-bottom: 40px;">
       <div class="d-flex justify-content-start">
     
-    <a href="#!" id="createLeadBtn" style="height: fit-content; background-color: #864af9; color: white;padding: 15px 20px; font-size: 1.4rem;" class="btn proceed-btn" onclick="addSlide()">
-        Add New Subtitle +
+        <a href="#!" id="createLeadBtn" style="font-family: 'Montserrat', sans-serif; align-items: center; display: flex; gap: 10px; padding: 12px 24px; color: white; background: #864AF9; border-radius: 8px; font-size: 18px; font-weight: 500; line-height: 24px; letter-spacing: 0.02em; text-align: left; cursor: pointer; border: none; width: fit-content; text-decoration: none; height: fit-content;" class="btn proceed-btn" onclick="addSlide()">
+            Add New Subtitle +
         </a>
       </div>
       
@@ -836,7 +836,7 @@ select::-webkit-dropdown-arrow {
         <thead>
           <tr style="height: fit-content;">
             <th class="slide-first" style="font-size: 1.4rem;">Subtitle</th>
-            <th style="font-size: 1.8rem; ">Subtitle Text</th>
+            <th style="font-size: 1.4rem; ">Subtitle Text</th>
             <th class="slide-last" style="font-size: 1.4rem; text-wrap: nowrap; width: 5%;">Edit Slide</th>
             <th class="slide-last" style="font-size: 1.4rem; text-wrap: nowrap; width: 5%;">Delete Slide</th>
             <th class="slide-last" style="font-size: 1.4rem; text-wrap: nowrap; width: 5%;">Reset Clips</th>
@@ -846,7 +846,7 @@ select::-webkit-dropdown-arrow {
           {% if video_clips %}
           {% for clip in video_clips %}
           <tr data-id="{{clip.id}}" style="height: 5rem;" id="tr_{{clip.id}}">
-            <td data-tooltip="Hold, Drag To Reorder" style="width: 18%; text-wrap: nowrap; font-size: 1.8rem;">Subtitle {{ forloop.counter }}</td>
+            <td data-tooltip="Hold, Drag To Reorder" style="width: 18%; text-wrap: nowrap; font-size: 1.4rem;">Subtitle {{ forloop.counter }}</td>
               <td id="highlightable_{{forloop.counter}}" style="width: 64%;">
                 <div>
                       <textarea style="display: none;"  name="slide_text" class="form-control tab-textarea" aria-describedby="textarea"  id="slide_text_{{forloop.counter}}"  >{{clip.slide}}</textarea>
