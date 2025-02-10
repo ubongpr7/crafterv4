@@ -577,128 +577,133 @@
             style="width: 100%; display: flex; flex-direction: column; align-items: center; margin-bottom: 20px;">
             <div
               style="display: flex; align-items: center; justify-content: space-between; width: 100%; margin-bottom: 12px;">
-              <label for="subtitleBorderRadiusSlider" style="font-size: 18px; font-weight: 600;">Subtitle Box Roundness:</label>
+              <label for="subtitleBorderRadiusSlider" style="font-size: 18px; font-weight: 600;">Subtitle Box
+                Roundness:</label>
               <span id="subtitleBorderRadiusValue" class="subtitle-border-radius-value"
-                style="font-size: 18px; font-weight: 600;">8</span>
+                style="font-size: 18px; font-weight: 600;">16</span>
             </div>
             <input type="range" id="subtitleBorderRadiusSlider" class="subtitle-border-radius-slider" min="0" max="50"
-              value="8"
+              value="16"
               style="width: 100%; margin-top: 10px; -webkit-appearance: none; appearance: none; margin: 0; height: 20px; border-radius: 10px; 
-    background: linear-gradient(to right, #864AF9 0%, #864AF9 16%, #D9D9D9 16%, #D9D9D9 100%); outline: none; cursor: pointer; position: relative;">
-
-            <style>
-              #subtitleBorderRadiusSlider::-webkit-slider-thumb {
-                -webkit-appearance: none;
-                appearance: none;
-                width: 28px;
-                height: 28px;
-                border-radius: 50%;
-                background: #864AF9;
-                /* Match the gradient color */
-                cursor: pointer;
-                border: none;
-              }
-
-              #subtitleBorderRadiusSlider::-moz-range-thumb {
-                width: 20px;
-                height: 20px;
-                border-radius: 50%;
-                background: #864AF9;
-                /* Match the gradient color */
-                cursor: pointer;
-                border: none;
-              }
-
-              #subtitleBorderRadiusSlider::-ms-thumb {
-                width: 20px;
-                height: 20px;
-                border-radius: 50%;
-                background: #864AF9;
-                /* Match the gradient color */
-                cursor: pointer;
-                border: none;
-              }
-            </style>
+background: linear-gradient(to right, #864AF9 0%, #864AF9 16%, #D9D9D9 16%, #D9D9D9 100%); outline: none; cursor: pointer; position: relative;">
           </div>
-          <!-- Slider for Opacity -->
-          <div class="slider-container"
-            style="width: 100%; display: flex; flex-direction: column; align-items: center; margin-bottom: 20px;">
-            <div
-              style="display: flex; align-items: center; justify-content: space-between; width: 100%; margin-bottom: 12px;">
-              <label for="subtitleOpacitySlider" style="font-size: 18px; font-weight: 600;">Subtitle Box Opacity:</label>
-              <span id="subtitleOpacityValue" class="subtitle-opacity-value"
-                style="font-size: 18px; font-weight: 600;">0.5 %</span>
-            </div>
-            <input type="range" id="subtitleOpacitySlider" class="subtitle-opacity-slider" min="0" max="1" step="0.1"
-              value="0.5"
-              style="width: 100%; margin-top: 10px; -webkit-appearance: none; appearance: none; margin: 0; height: 20px; border-radius: 10px; 
-    background: linear-gradient(to right, #864AF9 0%, #864AF9 50%, #D9D9D9 50%, #D9D9D9 100%); outline: none; cursor: pointer; position: relative;">
-            <style>
-              #subtitleOpacitySlider::-webkit-slider-thumb {
-                -webkit-appearance: none;
-                appearance: none;
-                width: 28px;
-                height: 28px;
-                border-radius: 50%;
-                background: #864AF9;
-                /* Match the gradient color */
-                cursor: pointer;
-                border: none;
-              }
+          <style>
+            #subtitleBorderRadiusSlider::-webkit-slider-thumb {
+              -webkit-appearance: none;
+              appearance: none;
+              width: 28px;
+              height: 28px;
+              border-radius: 50%;
+              background: #864AF9;
+              /* Match the gradient color */
+              cursor: pointer;
+              border: none;
+            }
 
-              #subtitleOpacitySlider::-moz-range-thumb {
-                width: 20px;
-                height: 20px;
-                border-radius: 50%;
-                background: #864AF9;
-                /* Match the gradient color */
-                cursor: pointer;
-                border: none;
-              }
+            #subtitleBorderRadiusSlider::-moz-range-thumb {
+              width: 20px;
+              height: 20px;
+              border-radius: 50%;
+              background: #864AF9;
+              /* Match the gradient color */
+              cursor: pointer;
+              border: none;
+            }
 
-              #subtitleOpacitySlider::-ms-thumb {
-                width: 20px;
-                height: 20px;
-                border-radius: 50%;
-                background: #864AF9;
-                /* Match the gradient color */
-                cursor: pointer;
-                border: none;
-              }
-            </style>
+            #subtitleBorderRadiusSlider::-ms-thumb {
+              width: 20px;
+              height: 20px;
+              border-radius: 50%;
+              background: #864AF9;
+              /* Match the gradient color */
+              cursor: pointer;
+              border: none;
+            }
+          </style>
+        </div>
+
+
+        <!-- Slider for Opacity -->
+        <div class="slider-container"
+          style="width: 100%; display: flex; flex-direction: column; align-items: center; margin-bottom: 20px;">
+          <div
+            style="display: flex; align-items: center; justify-content: space-between; width: 100%; margin-bottom: 12px;">
+            <label for="subtitleOpacitySlider" style="font-size: 18px; font-weight: 600;">Subtitle Box Opacity:</label>
+            <span id="subtitleOpacityValue" class="subtitle-opacity-value"
+              style="font-size: 18px; font-weight: 600;">70%</span>
           </div>
-          <div class="Preview" style="width: 100%; margin-bottom: 28px;">
-            <div class="Preview-text"
-              style="display: flex; align-items: center; margin-bottom: 24px; justify-content: space-between;">
-              <div
-                style="font-size: 24px; font-weight: 600; line-height: 29.26px; letter-spacing: 0.02em; text-align: left; margin-right: 10px;">
-                Preview</div>
-            </div>
-            <div id="preview-box"
-              style="margin:0 auto;width: 80%; height: 600px; background: #EEEEEE; border-radius: 8px; display: flex; justify-content: center; align-items: center; position: relative; flex-direction: column; margin: 0 auto;">
-              <span id="videoText"
-                style="font-size: 48px; font-weight: 700; line-height: 1.2; letter-spacing: -0.8px; text-align: center; color: #00000080;">
-                Your Selected Video <br /> Scene Will Go Here
-              </span>
-              <div id="previewBackground2"
-                style="width: fit-content; height: fit-content; background: #000000; position: absolute; bottom: 20px; border-radius: 8px; padding: 12px; display: flex; align-items: center; opacity: 0.5; justify-content: center;">
-                <span id="previewText"
-                  style="font-size: 20px; font-weight: 600; line-height: 24.38px; text-align: center; color: white; opacity: 1;width:350px;">
-                  This Is How Your Original Subtitle Text Will Be Displayed
-                </span>
-              </div>
-            </div>
+          <input type="range" id="subtitleOpacitySlider" class="subtitle-opacity-slider" min="0" max="100" step="1"
+            value="70"
+            style="width: 100%; margin-top: 10px; -webkit-appearance: none; appearance: none; margin: 0; height: 20px; border-radius: 10px; 
+background: linear-gradient(to right, #864AF9 0%, #864AF9 70%, #D9D9D9 70%, #D9D9D9 100%); outline: none; cursor: pointer; position: relative;">
+        </div>
+
+        <style>
+          #subtitleOpacitySlider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #864AF9;
+            /* Match the gradient color */
+            cursor: pointer;
+            border: none;
+          }
+
+          #subtitleOpacitySlider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #864AF9;
+            /* Match the gradient color */
+            cursor: pointer;
+            border: none;
+          }
+
+          #subtitleOpacitySlider::-ms-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #864AF9;
+            /* Match the gradient color */
+            cursor: pointer;
+            border: none;
+          }
+        </style>
+      </div>
+      <div class="Preview" style="width: 100%; margin-bottom: 28px;">
+        <div class="Preview-text"
+          style="display: flex; align-items: center; margin-bottom: 24px; justify-content: space-between;">
+          <div
+            style="font-size: 24px; font-weight: 600; line-height: 29.26px; letter-spacing: 0.02em; text-align: left; margin-right: 10px;">
+            Preview</div>
+        </div>
+        <div id="preview-box"
+          style="margin:0 auto;width: 80%; height: 600px; background: #EEEEEE; border-radius: 8px; display: flex; justify-content: center; align-items: center; position: relative; flex-direction: column; margin: 0 auto;">
+          <span id="videoText"
+            style="font-size: 48px; font-weight: 700; line-height: 1.2; letter-spacing: -0.8px; text-align: center; color: #00000080;">
+            Your Selected Video <br /> Scene Will Go Here
+          </span>
+          <div id="previewBackground2"
+            style="width: fit-content; height: fit-content; background: #000000; position: absolute; bottom: 20px; border-radius: 8px; padding: 12px; display: flex; align-items: center; opacity: 0.5; justify-content: center;">
+            <span id="previewText"
+              style="font-size: 20px; font-weight: 600; line-height: 24.38px; text-align: center; color: white; opacity: 1;width:350px;">
+              This Is How Your Original Subtitle Text Will Be Displayed
+            </span>
           </div>
-          <button id="submit_form" type="submit" class="done-button">
-            <span id="button-text" style="font-size: 18px;
+        </div>
+      </div>
+      <button id="submit_form" type="submit" class="done-button">
+        <span id="button-text" style="font-size: 18px;
                            font-weight: 500;
                            line-height: 21.94px;
                            text-align: left">Proceed To Scene Selection</span>
-          </button>
-        </div>
-      </div>
+      </button>
+  </div>
+  </div>
 
-    </form>
+  </form>
 
   </div>
   <script src="{% static 'js/script.js'%}"></script>
@@ -726,30 +731,13 @@
     });
 
     opacitySlider.addEventListener('input', function () {
-      document.getElementById('subtitleOpacityValue').textContent = opacitySlider.value;
+      const opacityValue = opacitySlider.value;
+      document.getElementById('subtitleOpacityValue').textContent = opacityValue + '%';
+      document.getElementById('previewBackground2').style.opacity = opacityValue / 100;
       updateSliderBackground(opacitySlider);
-    });
-    // Get references to the sliders and previewBackground2 element
-    const subtitleBorderRadiusValue = document.getElementById('subtitleBorderRadiusValue');
-    const subtitleOpacityValue = document.getElementById('subtitleOpacityValue');
-    const previewBackground2 = document.getElementById('previewBackground2');
-
-    // Update border radius when the slider value changes
-    subtitleBorderRadiusSlider.addEventListener('input', () => {
-      const borderRadius = subtitleBorderRadiusSlider.value;
-      previewBackground2.style.borderRadius = borderRadius + 'px';  // Ensure units are added (px)
-      subtitleBorderRadiusValue.textContent = borderRadius;
-    });
-
-    // Update opacity when the slider value changes
-    subtitleOpacitySlider.addEventListener('input', () => {
-      const opacity = subtitleOpacitySlider.value;
-      previewBackground2.style.opacity = opacity;
-      subtitleOpacityValue.textContent = opacity;
     });
 
   </script>
-
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script>
     $(document).ready(function () {
