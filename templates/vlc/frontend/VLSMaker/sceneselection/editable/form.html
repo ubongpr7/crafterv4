@@ -866,11 +866,12 @@ select::-webkit-dropdown-arrow {
     
                                 {% for subclip in clip.subclips.all %}
                                 <li data-id="{{subclip.id}}" class="subtitle_clip" style="font-size: 1.4rem; border-color: #864AF9;"  
-                                  data-current_file="{{subclip.get_video_file_name}}"
-                                  id="saved_li_{{subclip.id}}"
-                                      onclick="editCurrentLi(this)">
-                                      {{subclip.subtittle}}
-                                  </li>
+            data-current_file="{{subclip.get_video_file_name}}"
+            id="saved_li_{{subclip.id}}"
+            onclick="editCurrentLi(this)">
+            <!-- Wrap the subtitle text inside a div with class 'drag-container' -->
+            <div class="drag-container">{{subclip.subtittle}}</div>
+        </li>
                                 {% endfor %}
                                 <span id="slide_span_{{forloop.counter}}" data-num="{{clip.get_number_of_subclip}}"
                                     data-id="{{clip.id}}" style="padding: 5px 10px;">{{ clip.remaining }}
@@ -2500,3 +2501,79 @@ if (xhr && xhr.responseURL.includes("add_subcliphtmx") && xhr.method === "POST")
 });
 
 </script>
+<script>
+    // Initialize drag events
+document.querySelectorAll('.subtitle_clip').forEach(item => {
+  item.addEventListener('dragstart', handleDragStart);
+  item.addEventListener('dragover', handleDragOver);
+  item.addEventListener('drop', handleDrop);
+  item.addEventListener('dragend', handleDragEnd);
+});
+
+let draggedElement = null;
+
+function handleDragStart(event) {
+  // Store the dragged element
+  draggedElement = event.target;
+  // Add a class to indicate that it is being dragged
+  draggedElement.classList.add('dragging');
+  // Set the text inside the dragged box
+  const dragBox = document.createElement('div');
+  dragBox.classList.add('drag-box');
+  dragBox.textContent = draggedElement.querySelector('.drag-container').textContent;
+  document.body.appendChild(dragBox);
+  // Update the drag element's position
+  draggedElement.style.visibility = 'hidden';
+}
+
+function handleDragOver(event) {
+  event.preventDefault();
+  // Allow drop
+}
+
+function handleDrop(event) {
+  event.preventDefault();
+  // Only perform drop if we're dragging an element
+  if (draggedElement) {
+    const draggedText = draggedElement.querySelector('.drag-container').textContent;
+    // Insert the dragged text into the dragged box
+    const dragBox = document.querySelector('.drag-box');
+    dragBox.textContent = draggedText;
+  }
+}
+
+function handleDragEnd() {
+  // Cleanup after dragging is done
+  draggedElement.style.visibility = 'visible';
+  draggedElement.classList.remove('dragging');
+  const dragBox = document.querySelector('.drag-box');
+  if (dragBox) {
+    dragBox.remove();
+  }
+}
+
+</script>
+<style>
+    .dragging {
+  opacity: 0.5;
+}
+
+.drag-box {
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding: 10px;
+  background-color: #864AF9;
+  color: white;
+  border-radius: 5px;
+  font-size: 1.4rem;
+  pointer-events: none; /* Prevent interaction with the drag box */
+  transition: all 0.3s ease;
+}
+
+.subtitle_clip {
+  cursor: move;
+  user-select: none; /* Prevent text selection */
+}
+
+</style>
