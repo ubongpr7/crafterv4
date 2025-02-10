@@ -18,6 +18,9 @@
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
+.textarea-class{
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
 
 
 .center-container {
@@ -885,8 +888,7 @@ select::-webkit-dropdown-arrow {
         <td id='action_{{forloop.counter}}'>
           <div style="display: flex; place-items: center; justify-content: center;">
             <a href="#!" class="delete-row-btn"id="delete_{{forloop.counter}}" onclick="deleteSavedSlide('{{clip.id}}', this)"  style="display: flex; align-items: center; justify-content: center; text-decoration: none; position: relative;">
-                <img id="icon_{{clip.id}}" src="https://leadeditor.s3.amazonaws.com/lead-maker/images/delete-icn.svg" alt="delete" style="width: 2rem; height: 3rem; cursor: pointer;">
-
+                <img id="icon_{{clip.id}}" src="https://leadeditor.s3.amazonaws.com/lead-maker/images/delete-icn.svg" alt="delete" style="width: 1.5rem; height: 3rem; cursor: pointer;">
             </a>
           </div>
 
@@ -1617,15 +1619,16 @@ select::-webkit-dropdown-arrow {
         slideCell.style.fontSize = '1.4rem'
         newRow.style.height = '5rem';
         newRow.innerHTML += `
-            <td id="highlightable_${currentNumber}" style="padding: 0 4px;">
+            <td id="highlightable_${currentNumber}" style="padding: 0 3px;">
               <div style="display: flex; height: 100%;">
-                <textarea 
-                    style="height: 100%; width:200%; padding:22px; border:none; background-color:#f9f9f9; color:#000;font-size:larger;"
+                <textarea class="textarea-class"
+                    // style="height: 100%; width:200%; padding:22px; border:none; background-color:#f9f9f9; color:#000;font-size:larger; resize: none; border-radius:8px;border:1px solid #ced4da;line-height:1.2px"
+                    style="display: block; width: 100%; padding: .375rem .75rem; font-size: 1rem; font-weight: 400; line-height: 1.5; color: #212529; background-color: #fff; background-clip: padding-box; border: 1px solid #ced4da; padding-left:10px;"
                     id="slide_text_${currentNumber}" 
                     type="text" 
                     
                     name="slide_text" 
-                    placeholder="Type Your Sentence Here" 
+                    placeholder="Type Your Subtitle Here" 
                     class="form-control tab-textarea" 
                     aria-describedby="textarea"
                 ></textarea>
