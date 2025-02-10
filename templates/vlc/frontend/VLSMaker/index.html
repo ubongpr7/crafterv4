@@ -2,150 +2,163 @@
 
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Cache-Control"
+          content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <link href="https://fonts.cdnfonts.com/css/montserrat" rel="stylesheet" />
+    <link href="https://fonts.cdnfonts.com/css/open-sans" rel="stylesheet" />
+    <link href="https://fonts.cdnfonts.com/css/helveticafortarget-bold"
+          rel="stylesheet" />
+    <link href="https://fonts.cdnfonts.com/css/roboto" rel="stylesheet" />
+    <link href="https://fonts.cdnfonts.com/css/arial" rel="stylesheet" />
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <meta http-equiv="Pragma" content="no-cache" />
-  <meta http-equiv="Expires" content="0" />
-  <link href="https://fonts.cdnfonts.com/css/montserrat" rel="stylesheet" />
-  <link href="https://fonts.cdnfonts.com/css/open-sans" rel="stylesheet" />
-  <link href="https://fonts.cdnfonts.com/css/helveticafortarget-bold" rel="stylesheet" />
-  <link href="https://fonts.cdnfonts.com/css/roboto" rel="stylesheet" />
-  <link href="https://fonts.cdnfonts.com/css/arial" rel="stylesheet" />
+    {% include 'partials/head_c.html' %}
 
-  {% include 'partials/head_c.html' %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <style>
+      .video-card {
+        padding: 20px;
+        border-radius: 10px;
+        background-color: #f2f2f2;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        margin-bottom: 30px;
+        box-sizing: border-box;
+      }
 
-  <link rel="stylesheet" href="{% static 'css/style.css' %}" />
-  <style>
-    .video-card {
-      padding: 20px;
-      border-radius: 10px;
-      background-color: #f2f2f2;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      margin-bottom: 30px;
-      box-sizing: border-box;
-    }
+      .card-text {
+        text-align: left;
+        width: 100%;
+      }
 
-    .card-text {
-      text-align: left;
-      width: 100%;
-    }
-  </style>
-</head>
+     
+     
+    </style>
+  </head>
+  <body style="position: relative; overflow-x: hidden;">
+    <div class="bg"></div>
 
-<body style="position: relative; overflow-x: hidden;">
-  <div class="bg"></div>
+    {% include 'sub_header.html' %}
 
-  {% include 'sub_header.html' %}
-
-  <div class="progressbar" style="display: flex;
+    <div class="progressbar"
+         style="display: flex;
                 justify-content: center;
                 align-items: center;
                 margin-top: 84px;
                 margin-bottom: 56px">
-    <div style="width: 624px;
+      <div style="width: 624px;
                   height: 10px;
                   background: #EEEEEE;
                   position: relative;
                   display: flex;
                   align-items: center">
-      <div style="position: absolute;
+        <div style="position: absolute;
                     width: 25px;
                     height: 25px;
                     background: #864AF9;
                     border-radius: 90px;
                     left: 0%;
                     transform: translateX(-100%)"></div>
-      <div style="position: absolute;
+        <div style="position: absolute;
                     width: 25px;
                     height: 25px;
                     background: #EEEEEE;
                     border-radius: 90px;
                     left: 208px"></div>
-      <div style="position: absolute;
+        <div style="position: absolute;
                     width: 25px;
                     height: 25px;
                     background: #EEEEEE;
                     border-radius: 90px;
                     left: 416px"></div>
-      <div style="position: absolute;
+        <div style="position: absolute;
                     width: 25px;
                     height: 25px;
                     background: #EEEEEE;
                     border-radius: 90px;
                     left: 100%"></div>
-      <div style="position: absolute; top: -50px; left: -75.96px;">
-        Voice & Subtitle Design
+        <div style="position: absolute; top: -50px; left: -75.96px;">
+          Voice & Subtitle Design
+        </div>
+        <div style="position: absolute; top: -50px; left: 160px;">Scene Selection</div>
+        <div style="position: absolute; top: -50px; left: 312px;">
+          Background Music Selection
+        </div>
+        <div style="position: absolute; top: -50px; left: 594px;">Download</div>
       </div>
-      <div style="position: absolute; top: -50px; left: 160px;">Scene Selection</div>
-      <div style="position: absolute; top: -50px; left: 312px;">
-        Background Music Selection
-      </div>
-      <div style="position: absolute; top: -50px; left: 594px;">Download</div>
     </div>
-  </div>
 
-  {% include 'messages.html' %}
+    {% include 'messages.html' %}
 
-  <div style="display: flex;
+    <div style="display: flex;
                 justify-content: center;
                 align-items: center;
                 margin-bottom: 10px;
                ">
-    <form action="{% url 'video_text:add_text' %}" method="post" enctype="multipart/form-data" class="form"
-      id="text_form" style="
+      <form action="{% url 'video_text:add_text' %}"
+            method="post"
+            enctype="multipart/form-data"
+            class="form"
+            id="text_form"
+            style="
                    border: 1px solid #0000004D;
                    border-radius: 8px;
                    padding: 40px 24px;
-                   background: white;">
-      {% csrf_token %}
+                   background: white;"
+                   >
+        {% csrf_token %}
 
-      <div style="font-size: 24px;
+        <div style="font-size: 24px;
                     font-weight: 700;
                     line-height: 29.26px;
                     letter-spacing: -0.03em;
                     text-align: center;
                     margin-bottom: 40px">
-        <span> Create Your Perfect Video Creative:
-          <br />
+          <span> Create Your Perfect Video Creative:
+            <br />
           Upload, Customize, and Convert!</span>
-      </div>
-      <div class="card-text" style="text-align: start; display: flex;">
-        <h3>Tutorial Video:</h3>
-      </div>
-      <div class="video-card">
-        <div style="display: flex;
+        </div>
+        <div class="card-text" style="text-align: start; display: flex;">
+          <h3>Tutorial Video:</h3>
+        </div>
+        <div class="video-card">
+          <div style="display: flex;
                       width: 100%;
                       height: 376px;
                       border-radius: 8px;
                       align-items: center;
                       justify-content: center">
-          <div id="videoPreviewContainer" style="width: 100%;
+            <div id="videoPreviewContainer"
+                 style="width: 100%;
                         height: 100%;
                         display: flex;
                         align-items: center;
                         justify-content: center;
                         overflow: hidden"></div>
+          </div>
         </div>
-      </div>
 
-      <div style="font-size: 18px;
+        <div style="font-size: 18px;
                     font-weight: 600;
                     line-height: 21.94px;
                     text-align: left;
                     margin-bottom: 24px">Pick Your Dimensions</div>
-      <div class="options video-sizes" style="display: grid;
+        <div class="options video-sizes"
+             style="display: grid;
                     grid-template-columns: repeat(4, 1fr);
                     height: 290px;
                     gap: 10px;
                     margin-bottom: 48px">
-        <div class="box" data-resolution="1:1" style="display: flex;
+          <div class="box"
+               data-resolution="1:1"
+               style="display: flex;
                       justify-content: center;
                       background: white;
                       text-align: center;
@@ -153,27 +166,29 @@
                       border: 1px solid #864AF9;
                       padding: 12px 8px;
                       cursor: pointer">
-          <input type="radio" name="resolution" value="1:1" checked hidden />
-          <div style="display: flex; flex-direction: column; align-items: center;">
-            <div style="font-size: 18px;
+            <input type="radio" name="resolution" value="1:1" checked hidden />
+            <div style="display: flex; flex-direction: column; align-items: center;">
+              <div style="font-size: 18px;
                           font-weight: 500;
                           line-height: 21.94px;
                           letter-spacing: -0.03em;
                           text-align: center;
                           margin-bottom: 30px">Square</div>
-            <div style="height: 100px;
+              <div style="height: 100px;
                           width: 100px;
                           background: #D9D9D9;
                           border-radius: 8px;
                           margin-bottom: 8px;
                           border: 2px dashed"></div>
-            <div class="text" style="font-size: 16px;
+              <div class="text"
+                   style="font-size: 16px;
                           font-weight: 400;
                           line-height: 21.79px;
                           letter-spacing: -0.03em;
                           text-align: center;
                           margin-bottom: 12px">1:1</div>
-            <div class="circle-outer" style="width: 15px;
+              <div class="circle-outer"
+                   style="width: 15px;
                           height: 15px;
                           border-radius: 90px;
                           border: 3px solid #864AF9;
@@ -181,16 +196,19 @@
                           justify-content: center;
                           align-items: center;
                           padding: 7px">
-              <div class="circle-inner" style="width: 100%;
+                <div class="circle-inner"
+                     style="width: 100%;
                             height: 100%;
                             border-radius: 90px;
                             background: #864AF9"></div>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- Option 2: TikTok/Short -->
-        <div class="box" data-resolution="4:5" style="display: flex;
+          <!-- Option 2: TikTok/Short -->
+          <div class="box"
+               data-resolution="4:5"
+               style="display: flex;
                       justify-content: center;
                       background: white;
                       text-align: center;
@@ -198,27 +216,29 @@
                       border: 1px solid #88888877;
                       padding: 12px 8px;
                       cursor: pointer">
-          <input type="radio" name="resolution" value="4:5" hidden />
-          <div style="display: flex; flex-direction: column; align-items: center;">
-            <div style="font-size: 18px;
+            <input type="radio" name="resolution" value="4:5" hidden />
+            <div style="display: flex; flex-direction: column; align-items: center;">
+              <div style="font-size: 18px;
                           font-weight: 500;
                           line-height: 21.94px;
                           letter-spacing: -0.03em;
                           text-align: center;
                           margin-bottom: 30px">Vertical/Portrait</div>
-            <div style="height: 100px;
+              <div style="height: 100px;
                           width: 80px;
                           background: #D9D9D9;
                           border-radius: 8px;
                           margin-bottom: 8px;
                           border: 2px dashed"></div>
-            <div class="text" style="font-size: 16px;
+              <div class="text"
+                   style="font-size: 16px;
                           font-weight: 400;
                           line-height: 21.79px;
                           letter-spacing: -0.03em;
                           text-align: center;
                           margin-bottom: 12px">4:5</div>
-            <div class="circle-outer" style="width: 15px;
+              <div class="circle-outer"
+                   style="width: 15px;
                           height: 15px;
                           border-radius: 90px;
                           border: 3px solid #D9D9D9;
@@ -226,16 +246,19 @@
                           justify-content: center;
                           align-items: center;
                           padding: 7px">
-              <div class="circle-inner" style="width: 100%;
+                <div class="circle-inner"
+                     style="width: 100%;
                             height: 100%;
                             border-radius: 90px;
                             background: #D9D9D9"></div>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- Option 3: YouTube -->
-        <div class="box" data-resolution="16:9" style="display: flex;
+          <!-- Option 3: YouTube -->
+          <div class="box"
+               data-resolution="16:9"
+               style="display: flex;
                       justify-content: center;
                       background: white;
                       text-align: center;
@@ -243,27 +266,29 @@
                       border: 1px solid #88888877;
                       padding: 12px 8px;
                       cursor: pointer">
-          <input type="radio" name="resolution" value="16:9" hidden />
-          <div style="display: flex; flex-direction: column; align-items: center;">
-            <div style="font-size: 18px;
+            <input type="radio" name="resolution" value="16:9" hidden />
+            <div style="display: flex; flex-direction: column; align-items: center;">
+              <div style="font-size: 18px;
                           font-weight: 500;
                           line-height: 21.94px;
                           letter-spacing: -0.03em;
                           text-align: center;
                           margin-bottom: 30px">YouTube</div>
-            <div style="height: 100px;
+              <div style="height: 100px;
                           width: 155px;
                           background: #D9D9D9;
                           border-radius: 8px;
                           margin-bottom: 8px;
                           border: 2px dashed"></div>
-            <div class="text" style="font-size: 16px;
+              <div class="text"
+                   style="font-size: 16px;
                           font-weight: 400;
                           line-height: 21.79px;
                           letter-spacing: -0.03em;
                           text-align: center;
                           margin-bottom: 12px">16:9</div>
-            <div class="circle-outer" style="width: 15px;
+              <div class="circle-outer"
+                   style="width: 15px;
                           height: 15px;
                           border-radius: 90px;
                           border: 3px solid #D9D9D9;
@@ -271,15 +296,18 @@
                           justify-content: center;
                           align-items: center;
                           padding: 7px">
-              <div class="circle-inner" style="width: 100%;
+                <div class="circle-inner"
+                     style="width: 100%;
                             height: 100%;
                             border-radius: 90px;
                             background: #D9D9D9"></div>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="box" data-resolution="9:16" style="display: flex;
+          <div class="box"
+               data-resolution="9:16"
+               style="display: flex;
                       justify-content: center;
                       background: white;
                       text-align: center;
@@ -287,27 +315,29 @@
                       border: 1px solid #88888877;
                       padding: 12px 8px;
                       cursor: pointer">
-          <input type="radio" name="resolution" value="9:16" hidden />
-          <div style="display: flex; flex-direction: column; align-items: center;">
-            <div style="font-size: 18px;
+            <input type="radio" name="resolution" value="9:16" hidden />
+            <div style="display: flex; flex-direction: column; align-items: center;">
+              <div style="font-size: 18px;
                           font-weight: 500;
                           line-height: 21.94px;
                           letter-spacing: -0.03em;
                           text-align: center;
                           margin-bottom: 30px">TikTok/Reels</div>
-            <div style="height: 100px;
+              <div style="height: 100px;
                           width: 56.25px;
                           background: #D9D9D9;
                           border-radius: 8px;
                           margin-bottom: 8px;
                           border: 2px dashed"></div>
-            <div class="text" style="font-size: 16px;
+              <div class="text"
+                   style="font-size: 16px;
                           font-weight: 400;
                           line-height: 21.79px;
                           letter-spacing: -0.03em;
                           text-align: center;
                           margin-bottom: 12px">9:16</div>
-            <div class="circle-outer" style="width: 15px;
+              <div class="circle-outer"
+                   style="width: 15px;
                           height: 15px;
                           border-radius: 90px;
                           border: 3px solid #D9D9D9;
@@ -315,42 +345,47 @@
                           justify-content: center;
                           align-items: center;
                           padding: 7px">
-              <div class="circle-inner" style="width: 100%;
+                <div class="circle-inner"
+                     style="width: 100%;
                             height: 100%;
                             border-radius: 90px;
                             background: #D9D9D9"></div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-
-      <div style="display:flex; flex-direction: column; gap: 24px;">
-        <div style="width: 100%;
+        
+        <div style="display:flex; flex-direction: column; gap: 24px;">
+          <div style="width: 100%;
                       display: flex;
                       flex-direction: column">
 
-          <div class="11Labs-Api-key-text" style="display: flex;
+            <div class="11Labs-Api-key-text"
+                 style="display: flex;
                         align-items: center;
                         margin-bottom: 16px">
-            <div style="font-size: 18px;
+              <div style="font-size: 18px;
                           font-weight: 600;
                           line-height: 26.1px;
                           letter-spacing: 0.02em;
                           text-align: left;
                           margin-right: 10px">ElevenLabs Api Key:</div>
-            <div class="vh-parent">
-              <div class="vh-child">
-                <span class="text3">
-                  An unique code from your Eleven Labs account that lets VideoCrafter.io use your selected AI voices.
-                  Find it in your Eleven Labs account under API settings.
-                </span>
+              <div class="vh-parent">
+                <div class="vh-child">
+                  <span class="text3">
+                    An unique code from your Eleven Labs account that lets VideoCrafter.io use your selected AI voices. Find it in your Eleven Labs account under API settings.
+                  </span>
+                </div>
+                ?
               </div>
-              ?
             </div>
-          </div>
-          <div class="11Labs-Api-key-textarea" style="margin-bottom: 24px;">
-            <input id="api_key" type="text" class="text3" name="elevenlabs_apikey" placeholder="ElevenLabs Api Key"
-              style="width: 100%;
+            <div class="11Labs-Api-key-textarea" style="margin-bottom: 24px;">
+              <input id="api_key"
+                     type="text"
+                     class="text3"
+                     name="elevenlabs_apikey"
+                     placeholder="ElevenLabs Api Key"
+                     style="width: 100%;
                             height: 56px;
                             border: 1px solid #E3E3E3;
                             box-sizing: border-box;
@@ -359,33 +394,38 @@
                             display: flex;
                             align-items: center;
                             transition: 0.3s ease" />
-            <div style="width:700px; overflow-wrap: break-word;">
-              <p id="api_key_error" style="color:red;"></p>
+                            <div style="width:700px; overflow-wrap: break-word;">
+                              <p id="api_key_error" style="color:red;"></p>
+                            </div>
+             
             </div>
-
-          </div>
-          <div class="Voice-ID-text" style="display: flex;
+            <div class="Voice-ID-text"
+                 style="display: flex;
                         align-items: center;
                         margin-bottom: 16px">
-            <div style="font-size: 18px;
+              <div style="font-size: 18px;
                           font-weight: 600;
                           line-height: 26.1px;
                           letter-spacing: 0.02em;
                           text-align: left;
                           margin-right: 10px">Voice ID:</div>
-            <div class="vh-parent">
-              <div class="vh-child">
-                <span class="text3">
-                  The specific identifier for the voice you want to use. Each voice in your Eleven Labs account has its
-                  own unique ID.
-                </span>
+              <div class="vh-parent">
+                <div class="vh-child">
+                  <span class="text3">
+                    The specific identifier for the voice you want to use. Each voice in your Eleven Labs account has its own unique ID.
+                  </span>
+                </div>
+                ?
               </div>
-              ?
             </div>
-          </div>
 
-          <div class="Voice-ID-textarea" style="margin-bottom: 24px;">
-            <input type="text" id="voice_id" class="text3" placeholder="Enter Voice ID" name="voiceid" style="width: 100%;
+            <div class="Voice-ID-textarea" style="margin-bottom: 24px;">
+              <input type="text"
+                     id="voice_id"
+                     class="text3"
+                     placeholder="Enter Voice ID"
+                     name="voiceid"
+                     style="width: 100%;
                             height: 56px;
                             border: 1px solid #E3E3E3;
                             box-sizing: border-box;
@@ -394,29 +434,32 @@
                             display: flex;
                             align-items: center;
                             transition: 0.3s ease" />
-            <p id="voice_id_error" style="color:red; "></p>
-          </div>
+              <p id="voice_id_error" style="color:red; "></p>
+            </div>
 
-          <div class="Line" style="width: 100%;
+            <div class="Line"
+                 style="width: 100%;
                         border: 1px solid #E3E3E3;
                         margin-bottom: 24px"></div>
-          <div style="font-size: 24px;
+            <div style="font-size: 24px;
                         font-weight: 600;
                         line-height: 29.26px;
                         text-align: left;
                         letter-spacing: 0px;
                         margin-bottom: 24px">Subtitle Design</div>
-          <div class="Upload-Font-File-text" style="display: flex;
+            <div class="Upload-Font-File-text"
+                 style="display: flex;
                         align-items: center;
                         margin-bottom: 8px">
-            <div style="font-size: 18px;
+              <div style="font-size: 18px;
                           font-weight: 600;
                           line-height: 21.94px;
                           letter-spacing: 0.02em;
                           text-align: left;
                           margin-right: 10px">Choose Font:</div>
-          </div>
-          <div class="Upload-Font-File-Upload" style="width: 100%;
+            </div>
+            <div class="Upload-Font-File-Upload"
+                 style="width: 100%;
                         height: 56px;
                         border: 1px solid #E3E3E3;
                         box-sizing: border-box;
@@ -426,103 +469,144 @@
                         display: flex;
                         align-items: center;
                         margin-bottom: 24px">
-            <div style="width: fit-content;
+              <div style="width: fit-content;
                           color: black;
                           display: flex;
                           align-items: center;
                           gap: 10px;
                           position: relative;
                           flex-grow: 1">
-              <select id="font_select" required name="font_select" style="width: 100%;
+                <select id="font_select"
+                        required
+                        name="font_select"
+                        style="width: 100%;
                                padding: 8px 24px;
                                font-size: 16px;
                                border-radius: 8px;
                                border:none;
                                cursor: pointer">
-                <option class="text3" id="font_s" style="color:#cccccc" value="" disabled selected>Select A Font
-                </option>
-                <option class="text3" style="font-family:Arial;" value="Arial">Arial</option>
-                <option class="text3" style="font-family:Open Sans Condensed" value="OpenSans-Semibold">
-                  Open Sans Condensed
-                </option>
-                <option class="text3" style="font-family:HelveticaforTarget-Bold" value="Helvetica-2">
-                  Helvetica-Bold
-                </option>
-                <option class="text3" style="font-family:Roboto Medium" value="Roboto">
-                  Roboto Medium
-                </option>
-                <option class="text3" style="font-family:Montserrat;
-                                 font-weight:600" value="Montserrat">Montserrat</option>
-              </select>
+                  <option class="text3"
+                          id="font_s"
+                          style="color:#cccccc"
+                          value=""
+                          disabled
+                          selected>Select A Font</option>
+                  <option class="text3" style="font-family:Arial;" value="Arial">Arial</option>
+                  <option class="text3"
+                          style="font-family:Open Sans Condensed"
+                          value="OpenSans-Semibold">
+                    Open Sans Condensed
+                  </option>
+                  <option class="text3"
+                          style="font-family:HelveticaforTarget-Bold"
+                          value="Helvetica-2">
+                    Helvetica-Bold
+                  </option>
+                  <option class="text3" style="font-family:Roboto Medium" value="Roboto">
+                    Roboto Medium
+                  </option>
+                  <option class="text3"
+                          style="font-family:Montserrat;
+                                 font-weight:600"
+                          value="Montserrat">Montserrat</option>
+                </select>
+              </div>
+
             </div>
+            <p id="font_error" style="color:red; margin-top:-20px; "></p>
 
-          </div>
-          <p id="font_error" style="color:red; margin-top:-20px; "></p>
-
-          <div class="Font-Size-text" style="display: flex;
+            <div class="Font-Size-text"
+                 style="display: flex;
                         align-items: center;
                         margin-bottom: 8px;
                         justify-content: space-between">
-            <div style="font-size: 18px;
+              <div style="font-size: 18px;
                           font-weight: 600;
                           line-height: 21.94px;
                           letter-spacing: 0.02em;
                           text-align: left;
-                          margin-right: 10px">Font Size: <span id="recommended-font-size" style="font-size: 16px;
+                          margin-right: 10px">Font Size: <span id="recommended-font-size"
+                          style="font-size: 16px;
                           font-weight: 400;
                           line-height: 26.1px;
                           letter-spacing: 0.02em;
-                          margin-right: 10px">(Recommended Font Size: 22)</span></div>
-            <span id="SliderValue" style="font-size: 18px;
+                          margin-right: 10px"
+                          >(Recommended Font Size: 22)</span></div>
+              <span id="SliderValue"
+                    style="font-size: 18px;
                            font-weight: 600;
                            line-height: 21.94px;
                            letter-spacing: 0.02em;
                            text-align: left;
                            color: #000000B2">0</span>
-          </div>
+            </div>
 
 
+            
 
-
-          <div class="Font-Size-Slider" style="width: 100%;
+            <div class="Font-Size-Slider"
+                 style="width: 100%;
                         display: flex;
                         justify-content: center;
                         align-items: center;
                         margin-bottom: 36.89px">
-            <input type="range" name="font_size1" min="0" max="25" value="22" class="slider" id="mySlider"
-              style="width: 100%" />
-            <input type="number" hidden name="font_size" value="50" class="slider" id="font_size" style="width: 100%" />
-          </div>
-          <div class="Font-Color-text" style="display: flex;
+              <input type="range"
+                     name="font_size1"
+                     min="0"
+                     max="25"
+                     value="22"
+                     class="slider"
+                     id="mySlider"
+                     style="width: 100%" />
+              <input type="number"
+                     hidden
+                     name="font_size"
+                     value="50"
+                     class="slider"
+                     id="font_size"
+                     style="width: 100%" />
+            </div>
+            <div class="Font-Color-text"
+                 style="display: flex;
                         align-items: center;
                         margin-bottom: 8px;
                         justify-content: space-between">
-            <div style="font-size: 18px;
+              <div style="font-size: 18px;
                           font-weight: 600;
                           line-height: 21.94px;
                           letter-spacing: 0.02em;
                           text-align: left;
                           margin-right: 10px">Font Color:</div>
-          </div>
+            </div>
 
-          <div class="Font-Color-textarea" style="margin-bottom: 24px;
+            <div class="Font-Color-textarea"
+                 style="margin-bottom: 24px;
                         display: flex;
                         align-items: center;
                         position: relative">
-            <div id="color1" style="width: 35px;
+              <div id="color1"
+                   style="width: 35px;
                           height: 35px;
                           background: #FFFFFF;
                           border-radius: 4px;
                           border: 1px solid #000000B2;
                           position: absolute;
                           left: 10px">
-              <input type="color" name="font_color" id="colorPicker1" value="#ffffff" style="position: absolute;
+                <input type="color"
+                       name="font_color"
+                       id="colorPicker1"
+                       value="#ffffff"
+                       style="position: absolute;
                               padding: 0;
                               width: 35px;
                               height: 35px;
                               opacity: 0" />
-            </div>
-            <input id="colortext1" type="text" class="focusdefault" placeholder="#ffffff" style="width: 100%;
+              </div>
+              <input id="colortext1"
+                     type="text"
+                     class="focusdefault"
+                     placeholder="#ffffff"
+                     style="width: 100%;
                             height: 56px;
                             border: 1px solid #000000B2;
                             box-sizing: border-box;
@@ -532,36 +616,47 @@
                             align-items: center;
                             transition: 0.3s ease;
                             padding-left: 55px" />
-          </div>
-          <div class="Subtitle-text" style="display: flex;
+            </div>
+            <div class="Subtitle-text"
+                 style="display: flex;
                         align-items: center;
                         margin-bottom: 8px;
                         justify-content: space-between">
-            <div style="font-size: 18px;
+              <div style="font-size: 18px;
                           font-weight: 600;
                           line-height: 21.94px;
                           letter-spacing: 0.02em;
                           text-align: left;
                           margin-right: 10px">Subtitles Background Color:</div>
-          </div>
-          <div class="Subtitle-textarea" style="margin-bottom: 48px;
+            </div>
+            <div class="Subtitle-textarea"
+                 style="margin-bottom: 48px;
                         display: flex;
                         align-items: center;
                         position: relative">
-            <div id="color2" style="width: 35px;
+              <div id="color2"
+                   style="width: 35px;
                           height: 35px;
                           background: #000000;
                           border-radius: 4px;
                           border: 1px solid #000000B2;
                           position: absolute;
                           left: 10px">
-              <input type="color" name="subtitle_box_color" id="colorPicker2" value="#000000" style="position: absolute;
+                <input type="color"
+                       name="subtitle_box_color"
+                       id="colorPicker2"
+                       value="#000000"
+                       style="position: absolute;
                               padding: 0;
                               width: 35px;
                               height: 35px;
                               opacity: 0" />
-            </div>
-            <input id="colortext2" type="text" class="focusdefault" placeholder="#000000" style="width: 100%;
+              </div>
+              <input id="colortext2"
+                     type="text"
+                     class="focusdefault"
+                     placeholder="#000000"
+                     style="width: 100%;
                             height: 56px;
                             border: 1px solid #000000B2;
                             box-sizing: border-box;
@@ -571,308 +666,296 @@
                             align-items: center;
                             transition: 0.3s ease;
                             padding-left: 55px" />
-          </div>
-          <!-- Slider for Border Radius -->
-          <div class="slider-container"
-            style="width: 100%; display: flex; justify-content: center; align-items: center; margin-bottom: 20px;">
-            <label for="borderRadiusSlider">Border Radius:</label>
-            <input type="range" id="borderRadiusSlider" name="borderRadiusSlider" min="0" max="50" value="8"
-              style="width: 100%; margin-left: 10px;">
-            <span id="borderRadiusValue" style="margin-left: 10px;">8px</span>
-          </div>
-
-          <!-- Slider for Opacity -->
-           
-          <div class="slider-container"
-            style="width: 100%; display: flex; justify-content: center; align-items: center; margin-bottom: 20px;">
-            <label for="opacitySlider">Opacity:</label>
-            <input type="range" id="opacitySlider" name="opacitySlider" min="0" max="1" step="0.1" value="0.5"
-              style="width: 100%; margin-left: 10px;">
-            <span id="opacityValue" style="margin-left: 10px;">0.5</span>
-          </div>
-
-          <div class="Preview" style="width: 100%; margin-bottom: 28px;">
-            <div class="Preview-text"
-              style="display: flex; align-items: center; margin-bottom: 24px; justify-content: space-between;">
-              <div
-                style="font-size: 24px; font-weight: 600; line-height: 29.26px; letter-spacing: 0.02em; text-align: left; margin-right: 10px;">
-                Preview</div>
             </div>
-            <div id="preview-box"
-              style="margin:0 auto;width: 80%; height: 600px; background: #EEEEEE; border-radius: 8px; display: flex; justify-content: center; align-items: center; position: relative; flex-direction: column; margin: 0 auto;">
-              <span id="videoText"
-                style="font-size: 48px; font-weight: 700; line-height: 1.2; letter-spacing: -0.8px; text-align: center; color: #00000080;">
+            <!-- Slider for Border Radius -->
+<div class="slider-container" style="width: 100%; display: flex; justify-content: center; align-items: center; margin-bottom: 20px;">
+  <label for="subtitleBorderRadiusSlider">Border Radius:</label>
+  <input type="range" id="subtitleBorderRadiusSlider" name="subtitleBorderRadiusSlider" min="0" max="50" value="8" style="width: 100%; margin-left: 10px;">
+  <span id="subtitleBorderRadiusValue" style="margin-left: 10px;">8px</span>
+</div>
+
+<!-- Slider for Opacity -->
+<div class="slider-container" style="width: 100%; display: flex; justify-content: center; align-items: center; margin-bottom: 20px;">
+  <label for="subtitleOpacitySlider">Opacity:</label>
+  <input type="range" id="subtitleOpacitySlider" name="subtitleOpacitySlider" min="0" max="1" step="0.1" value="0.5" style="width: 100%; margin-left: 10px;">
+  <span id="subtitleOpacityValue" style="margin-left: 10px;">0.5</span>
+</div>
+
+            
+          <div class="Preview" style="width: 100%; margin-bottom: 28px;">
+            <div class="Preview-text" style="display: flex; align-items: center; margin-bottom: 24px; justify-content: space-between;">
+              <div style="font-size: 24px; font-weight: 600; line-height: 29.26px; letter-spacing: 0.02em; text-align: left; margin-right: 10px;">Preview</div>
+            </div>
+            <div id="preview-box" style="margin:0 auto;width: 80%; height: 600px; background: #EEEEEE; border-radius: 8px; display: flex; justify-content: center; align-items: center; position: relative; flex-direction: column; margin: 0 auto;">
+              <span id="videoText" style="font-size: 48px; font-weight: 700; line-height: 1.2; letter-spacing: -0.8px; text-align: center; color: #00000080;">
                 Your Selected Video <br /> Scene Will Go Here
               </span>
-              <div id="previewBackground"
-                style="width: fit-content; height: fit-content; background: #000000; position: absolute; bottom: 20px; border-radius: 8px; padding: 12px; display: flex; align-items: center; opacity: 0.5; justify-content: center;">
-                <span id="previewText"
-                  style="font-size: 20px; font-weight: 600; line-height: 24.38px; text-align: center; color: white; opacity: 1;width:350px;">
+              <div id="previewBackground" style="width: fit-content; height: fit-content; background: #000000; position: absolute; bottom: 20px; border-radius: 8px; padding: 12px; display: flex; align-items: center; opacity: 0.5; justify-content: center;">
+                <span id="previewText" style="font-size: 20px; font-weight: 600; line-height: 24.38px; text-align: center; color: white; opacity: 1;width:350px;">
                   This Is How Your Original Subtitle Text Will Be Displayed
                 </span>
               </div>
             </div>
           </div>
+          
+          
 
 
-
-
-          <button id="submit_form" type="submit" class="done-button">
-            <span id="button-text" style="font-size: 18px;
+            <button id="submit_form" type="submit" class="done-button">
+              <span id="button-text"
+                    style="font-size: 18px;
                            font-weight: 500;
                            line-height: 21.94px;
                            text-align: left">Proceed To Scene Selection</span>
-          </button>
+            </button>
+          </div>
         </div>
-      </div>
 
-    </form>
+      </form>
 
-  </div>
-  <script src="{% static 'js/script.js'%}"></script>
+    </div>
+    <script src="{% static 'js/script.js'%}"></script>
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script>
-    // Get references to the sliders and the previewBackground element
-    const borderRadiusSlider = document.getElementById('borderRadiusSlider');
-    const opacitySlider = document.getElementById('opacitySlider');
-    const previewBackground = document.getElementById('previewBackground');
-    const borderRadiusValue = document.getElementById('borderRadiusValue');
-    const opacityValue = document.getElementById('opacityValue');
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+      $(document).ready(function() {
+        const text_form = document.getElementById('text_form');
+        window.onpageshow = function(event) {
+          if (event.persisted) {
 
-    // Update border radius when the slider value changes
-    borderRadiusSlider.addEventListener('input', () => {
-      const borderRadius = borderRadiusSlider.value + 'px';
-      previewBackground.style.borderRadius = borderRadius;
-      borderRadiusValue.textContent = borderRadius;
-    });
-
-    // Update opacity when the slider value changes
-    opacitySlider.addEventListener('input', () => {
-      const opacity = opacitySlider.value;
-      previewBackground.style.opacity = opacity;
-      opacityValue.textContent = opacity;
-    });
-  </script>
-
-  <script>
-    $(document).ready(function () {
-      const text_form = document.getElementById('text_form');
-      window.onpageshow = function (event) {
-        if (event.persisted) {
-
-          // If the page is loaded from cache (e.g., via back button)
-          // text_form.reset();  // Reset the form fields
-          const slider2 = document.getElementById('mySlider')
-          //text_form.style.height = '2290px'; // Reset any custom heights
-          slider2.style.background = `linear-gradient(to right, #864AF9 ${slider.value * 4}%, #D9D9D9 ${slider.value * 4}%)`;
-          // document.getElementById(input.id).style.background = `linear-gradient(to right, #864AF9 ${storedValue}%, #D9D9D9 ${storedValue}%)`; 
+            // If the page is loaded from cache (e.g., via back button)
+            // text_form.reset();  // Reset the form fields
+            const slider2 = document.getElementById('mySlider')
+            //text_form.style.height = '2290px'; // Reset any custom heights
+            slider2.style.background = `linear-gradient(to right, #864AF9 ${slider.value*4}%, #D9D9D9 ${slider.value*4}%)`;
+            // document.getElementById(input.id).style.background = `linear-gradient(to right, #864AF9 ${storedValue}%, #D9D9D9 ${storedValue}%)`; 
 
 
-          stopProcessingAnimation('#button-text'); // Stop the processing animation
-          // button_text.text('Proceed To Scene Selection')
+            stopProcessingAnimation('#button-text'); // Stop the processing animation
+            // button_text.text('Proceed To Scene Selection')
 
-        }
-      };
+          }
+        };
 
-      const submitButton = $('#submit_form');
-      const apiKeyInput = $('#api_key');
-      const voiceIdInput = $('#voice_id');
-      const apiKeyError = $('#api_key_error');
-      const voiceIdError = $('#voice_id_error');
-      const font_select = document.getElementById('font_select');
-      const font_error = $('#font_error');
-      const button_text = $('#button-text')
-      // Always enable the submit button
-      submitButton.prop('disabled', false);
+        const submitButton = $('#submit_form');
+        const apiKeyInput = $('#api_key');
+        const voiceIdInput = $('#voice_id');
+        const apiKeyError = $('#api_key_error');
+        const voiceIdError = $('#voice_id_error');
+        const font_select = document.getElementById('font_select');
+        const font_error = $('#font_error');
+        const button_text = $('#button-text')
+        // Always enable the submit button
+        submitButton.prop('disabled', false);
 
-      function startProcessingAnimation(selector) {
-        const button_text = $(selector);
-        let dots = 0;
+        function startProcessingAnimation(selector) {
+          const button_text = $(selector);
+          let dots = 0;
 
-        // Clear any existing interval to avoid multiple intervals running
-        if (button_text.data('intervalId')) {
-          clearInterval(button_text.data('intervalId'));
+          // Clear any existing interval to avoid multiple intervals running
+          if (button_text.data('intervalId')) {
+            clearInterval(button_text.data('intervalId'));
+          }
+
+          // Set the interval to change the text every 500 milliseconds
+          const intervalId = setInterval(function() {
+            dots = (dots + 1) % 4; // Cycle between 0, 1, 2, and 3
+            let loadingText = 'Processing' + '.'.repeat(dots); // Add dots dynamically
+            button_text.text(loadingText);
+          }, 500); // 500 milliseconds = 0.5 seconds
+
+          // Store the interval ID in the button text element for later use
+          button_text.data('intervalId', intervalId);
         }
 
-        // Set the interval to change the text every 500 milliseconds
-        const intervalId = setInterval(function () {
-          dots = (dots + 1) % 4; // Cycle between 0, 1, 2, and 3
-          let loadingText = 'Processing' + '.'.repeat(dots); // Add dots dynamically
-          button_text.text(loadingText);
-        }, 500); // 500 milliseconds = 0.5 seconds
+        // To stop the animation, you can create a separate function
+        function stopProcessingAnimation(selector) {
+          const button_text = $(selector);
+          const intervalId = button_text.data('intervalId');
 
-        // Store the interval ID in the button text element for later use
-        button_text.data('intervalId', intervalId);
-      }
-
-      // To stop the animation, you can create a separate function
-      function stopProcessingAnimation(selector) {
-        const button_text = $(selector);
-        const intervalId = button_text.data('intervalId');
-
-        // Clear the interval if it exists
-        if (intervalId) {
-          clearInterval(intervalId);
-          button_text.data('intervalId', null); // Remove the stored interval ID
-          button_text.text('Proceed To Scene Selection'); // Optionally reset the text or set it to another value
+          // Clear the interval if it exists
+          if (intervalId) {
+            clearInterval(intervalId);
+            button_text.data('intervalId', null); // Remove the stored interval ID
+            button_text.text('Proceed To Scene Selection'); // Optionally reset the text or set it to another value
+          }
         }
-      }
 
 
 
-      function validateAPIKey(event) {
-        startProcessingAnimation('#button-text'); // Start the processing animation
+        function validateAPIKey(event) {
+          startProcessingAnimation('#button-text'); // Start the processing animation
 
-        event.preventDefault(); // Prevent the default form submission
+          event.preventDefault(); // Prevent the default form submission
 
-        const apiKey = apiKeyInput.val().trim();
-        const voiceId = voiceIdInput.val().trim();
-        const font_ = font_select.value;
-
-
-        // Remove any previous error messages
-        apiKeyError.text('');
-        voiceIdError.text('');
-        font_error.text('');
-        //text_form.style.height = '2290px';
-
-        if (apiKey && voiceId && font_) {
-          // Send AJAX request to validate the API key and voice ID
-          $.ajax({
-            url: '/text/validate_api_key/', // URL for the Django view
-            type: 'POST',
-            data: {
-              'eleven_labs_api_key': apiKey,
-              'voice_id': voiceId,
-              'csrfmiddlewaretoken': '{{ csrf_token }}' // Include CSRF token for security
-            },
-            success: function (response) {
-              console.log(response); // Log the entire response to the console
-
-              if (response.valid) {
-                text_form.submit();
-              } else {
-                stopProcessingAnimation('#button-text');
+          const apiKey = apiKeyInput.val().trim();
+          const voiceId = voiceIdInput.val().trim();
+          const font_ = font_select.value;
 
 
-                if (response.error.toLowerCase().includes('api key')) {
-                  apiKeyInput.focus();
-                  apiKeyError.text(response.error);
-                } else if (response.error.toLowerCase().includes('voice')) {
-                  voiceIdInput.focus();
-                  voiceIdError.text(response.error);
+          // Remove any previous error messages
+          apiKeyError.text('');
+          voiceIdError.text('');
+          font_error.text('');
+          //text_form.style.height = '2290px';
+
+          if (apiKey && voiceId && font_) {
+            // Send AJAX request to validate the API key and voice ID
+            $.ajax({
+              url: '/text/validate_api_key/', // URL for the Django view
+              type: 'POST',
+              data: {
+                'eleven_labs_api_key': apiKey,
+                'voice_id': voiceId,
+                'csrfmiddlewaretoken': '{{ csrf_token }}' // Include CSRF token for security
+              },
+              success: function(response) {
+                console.log(response); // Log the entire response to the console
+
+                if (response.valid) {
+                  text_form.submit();
                 } else {
-                  apiKeyInput.focus();
-                  apiKeyError.text(response.error);
-                }
-              }
-            },
-            error: function (xhr, status, error) {
-              console.log("Error Status: ", status);
-              console.log("Error: ", error);
-              stopProcessingAnimation('#button-text');
-              apiKeyError.text('Error validating the API key.');
-              apiKeyInput.focus();
-              button_text.text('Proceed To Scene Selection');
-            }
-          });
-        } else {
-          stopProcessingAnimation('#button-text');
+                  stopProcessingAnimation('#button-text'); 
 
-          if (!apiKey) {
-            apiKeyInput.focus();
-            apiKeyError.text('API key is required.');
-          } else if (!voiceId) {
-            voiceIdInput.focus();
-            voiceIdError.text('Voice ID is required.');
-          } else if (!font_) {
-            font_select.required = true;
-            font_select.focus();
-            font_error.text('Please Select A Font From The Dropdown');
+
+                  if (response.error.toLowerCase().includes('api key')) {
+                    apiKeyInput.focus();
+                    apiKeyError.text(response.error); 
+                  } else if (response.error.toLowerCase().includes('voice')) {
+                    voiceIdInput.focus();
+                    voiceIdError.text(response.error); 
+                  } else {
+                    apiKeyInput.focus();
+                    apiKeyError.text(response.error); 
+                  }
+                }
+              },
+              error: function(xhr, status, error) {
+                console.log("Error Status: ", status);
+                console.log("Error: ", error); 
+                stopProcessingAnimation('#button-text'); 
+                apiKeyError.text('Error validating the API key.');
+                apiKeyInput.focus();
+                button_text.text('Proceed To Scene Selection');
+              }
+            });
+          } else {
+            stopProcessingAnimation('#button-text'); 
+
+            if (!apiKey) {
+              apiKeyInput.focus();
+              apiKeyError.text('API key is required.');
+            } else if (!voiceId) {
+              voiceIdInput.focus();
+              voiceIdError.text('Voice ID is required.');
+            } else if (!font_) {
+              font_select.required = true;
+              font_select.focus();
+              font_error.text('Please Select A Font From The Dropdown');
+            }
           }
         }
+
+        submitButton.on('click', validateAPIKey);
+
+        function updateFontFunc(updateValue) {
+
+          const slider = document.getElementById("mySlider");
+          const sliderValue = document.getElementById("SliderValue");
+          const previewText= document.getElementById("previewText");
+          slider.value = updateValue
+          sliderValue.textContent = slider.value;
+          
+          previewText.style.fontSize = `${slider.value*0.8}px`;
+          document.getElementById('font_size').value=slider.value*2
+          document.getElementById('recommended-font-size').textContent = `(Recommended Font Size: ${updateValue})`
+          
+
+          const value = (slider.value - slider.min) / (slider.max - slider.min) * 100;
+          slider.style.background = `linear-gradient(to right, #864AF9 0%, #864AF9 ${value}%, #D9D9D9 ${value}%, #D9D9D9 100%)`;
+          slider.style.background.border = ``;
+
+          console.log('======> slider value',slider.value)
+          console.log('======> font size value value',document.getElementById('font_size').value)
       }
 
-      submitButton.on('click', validateAPIKey);
 
-      function updateFontFunc(updateValue) {
+        document.querySelectorAll('.box').forEach((box) => {
+          box.addEventListener('click', () => {
+            const resolution = box.getAttribute('data-resolution');
+            const previewBox = document.getElementById('preview-box');
+            const videoText = document.getElementById('videoText');
+        
+            // Adjust box size and text size based on aspect ratio
+            if (resolution === '1:1') {
+              previewBox.style.width = '600px';
+              previewBox.style.height = '600px';
+              videoText.style.fontSize = '48px';
 
-        const slider = document.getElementById("mySlider");
-        const sliderValue = document.getElementById("SliderValue");
-        const previewText = document.getElementById("previewText");
-        slider.value = updateValue
-        sliderValue.textContent = slider.value;
+              previewText.style.width = `350px`;
+              
 
-        previewText.style.fontSize = `${slider.value * 0.8}px`;
-        document.getElementById('font_size').value = slider.value * 2
-        document.getElementById('recommended-font-size').textContent = `(Recommended Font Size: ${updateValue})`
+              updateFontFunc("22")
+            } else if (resolution === '4:5') {
+              previewBox.style.width = '480px';
+              previewBox.style.height = '600px';
+              videoText.style.fontSize = '42px';
 
+              previewText.style.width = `350px`;
 
-        const value = (slider.value - slider.min) / (slider.max - slider.min) * 100;
-        slider.style.background = `linear-gradient(to right, #864AF9 0%, #864AF9 ${value}%, #D9D9D9 ${value}%, #D9D9D9 100%)`;
-        slider.style.background.border = ``;
+              updateFontFunc("22")
+            } else if (resolution === '16:9') {
+              previewBox.style.width = '680px';
+              previewBox.style.height = '382px';
+              videoText.style.fontSize = '38px';
 
-        console.log('======> slider value', slider.value)
-        console.log('======> font size value value', document.getElementById('font_size').value)
-      }
+              previewText.style.width = `350px`;
+              updateFontFunc("22")
+            } else if (resolution === '9:16') {
+              previewBox.style.width = '382px';
+              previewBox.style.height = '680px';
+              videoText.style.fontSize = '34px';
 
+              previewText.style.width = `300px`;
+        
+              updateFontFunc("16")
 
-      document.querySelectorAll('.box').forEach((box) => {
-        box.addEventListener('click', () => {
-          const resolution = box.getAttribute('data-resolution');
-          const previewBox = document.getElementById('preview-box');
-          const videoText = document.getElementById('videoText');
-
-          // Adjust box size and text size based on aspect ratio
-          if (resolution === '1:1') {
-            previewBox.style.width = '600px';
-            previewBox.style.height = '600px';
-            videoText.style.fontSize = '48px';
-
-            previewText.style.width = `350px`;
-
-
-            updateFontFunc("22")
-          } else if (resolution === '4:5') {
-            previewBox.style.width = '480px';
-            previewBox.style.height = '600px';
-            videoText.style.fontSize = '42px';
-
-            previewText.style.width = `350px`;
-
-            updateFontFunc("22")
-          } else if (resolution === '16:9') {
-            previewBox.style.width = '680px';
-            previewBox.style.height = '382px';
-            videoText.style.fontSize = '38px';
-
-            previewText.style.width = `350px`;
-            updateFontFunc("22")
-          } else if (resolution === '9:16') {
-            previewBox.style.width = '382px';
-            previewBox.style.height = '680px';
-            videoText.style.fontSize = '34px';
-
-            previewText.style.width = `300px`;
-
-            updateFontFunc("16")
-
-            previewText.style.fontSize = `18px`;
-          }
-
-          // Center the preview box
-          previewBox.style.margin = '0 auto';
+              previewText.style.fontSize = `18px`;
+            }
+            
+            // Center the preview box
+            previewBox.style.margin = '0 auto';
+          });
         });
+        
+      
+      
+
+
       });
+    </script>
+<script>
+  // Get references to the sliders and the previewBackground element
+  const subtitleBorderRadiusSlider = document.getElementById('subtitleBorderRadiusSlider');
+  const subtitleOpacitySlider = document.getElementById('subtitleOpacitySlider');
+  const previewBackground = document.getElementById('previewBackground');
+  const subtitleBorderRadiusValue = document.getElementById('subtitleBorderRadiusValue');
+  const subtitleOpacityValue = document.getElementById('subtitleOpacityValue');
 
+  // Update border radius when the slider value changes
+  subtitleBorderRadiusSlider.addEventListener('input', () => {
+    const borderRadius = subtitleBorderRadiusSlider.value + 'px';
+    previewBackground.style.borderRadius = borderRadius;
+    subtitleBorderRadiusValue.textContent = borderRadius;
+  });
 
+  // Update opacity when the slider value changes
+  subtitleOpacitySlider.addEventListener('input', () => {
+    const opacity = subtitleOpacitySlider.value;
+    previewBackground.style.opacity = opacity;
+    subtitleOpacityValue.textContent = opacity;
+  });
+</script>
 
-
-
-    });
-  </script>
-
-</body>
-
+  </body>
 </html>
