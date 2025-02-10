@@ -885,9 +885,13 @@ select::-webkit-dropdown-arrow {
         <td id='action_{{forloop.counter}}'>
           <div style="display: flex; place-items: center; justify-content: center;">
             <a href="#!" class="delete-row-btn"id="delete_{{forloop.counter}}" onclick="deleteSavedSlide('{{clip.id}}', this)"  style="display: flex; align-items: center; justify-content: center; text-decoration: none; position: relative;">
-              <i id="icon_{{clip.id}}" class="ri-delete-bin-6-line fa-sync-alt"
-                        style="margin: 0 auto;font-size: 20px; font-weight: 600; cursor: pointer; vertical-align: middle;">
-                    </i>
+                <i id="icon_{{clip.id}}" class="ri-delete-bin-6-line fa-sync-alt" 
+                style="margin: 0 auto; font-size: 20px; font-weight: 600; cursor: pointer; vertical-align: middle;">
+                 <img src="https://leadeditor.s3.amazonaws.com/lead-maker/images/delete-icn.svg" 
+                      alt="delete" 
+                      style="width: 3rem; height: 3rem;">
+             </i>
+             
             </a>
           </div>
 
