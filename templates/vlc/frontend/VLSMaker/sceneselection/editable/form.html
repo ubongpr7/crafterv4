@@ -963,77 +963,107 @@ select::-webkit-dropdown-arrow {
   <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
   
   <script>
-
-     $(document).ready(function () {
+    $(document).ready(function () {
+      // Initialize sortable on the table body
       let tableBody = document.querySelector("#leadsTable tbody");
   
       $("#leadsTable tbody").sortable({
-          axis: "y",
-          containment: "parent",
-          handle: "td:first-child", 
-          update: function (event, ui) {
-              updateSubtitleNumbers(tableBody); 
-              updateBackendOrder();
-          }
+        axis: "y", // Restrict dragging to the vertical axis
+        containment: "parent", // Contain dragging within the parent element
+        handle: "td:first-child", // Allow dragging only from the first column (Subtitle)
+        placeholder: "ui-sortable-placeholder", // Add a placeholder for visual feedback
+        start: function (event, ui) {
+          console.log("Drag started"); // Debugging: Log when dragging starts
+        },
+        update: function (event, ui) {
+          console.log("Drag ended, updating order"); // Debugging: Log when dragging ends
+          updateSubtitleNumbers(tableBody); // Update subtitle numbers
+          updateBackendOrder(); // Update backend with new order
+        },
+        stop: function (event, ui) {
+          console.log("Drag stopped"); // Debugging: Log when dragging stops
+        }
       });
   
-  });
-  function updateBackendOrder() {
-        let subtitles = [];
-        $("#leadsTable tbody tr").each(function (index) {
-            subtitles.push({
-                id: $(this).data("id"), 
-                position: index + 1
-            });
-        });
-
-        $.ajax({
-            url: "/text/update-subtitle-positions/", 
-            type: "POST",
-            data: JSON.stringify({ subtitles: subtitles }),
-            contentType: "application/json",
-            headers: { "X-CSRFToken": getCSRFToken() },
-            success: function (response) {
-                console.log("Positions updated successfully");
-            },
-            error: function (xhr, status, error) {
-                console.error("Error updating positions:", error);
-            }
-        });
+      // Add CSS for the placeholder
+      $("<style>")
+        .prop("type", "text/css")
+        .html(`
+          .ui-sortable-placeholder {
+            background: #f0f0f0;
+            border-left: 2px solid purple;
+            visibility: visible !important;
+            height: 50px; /* Adjust height as needed */
+          }
+        `)
+        .appendTo("head");
+    });
+  
+    // Function to update subtitle numbers
+    function updateSubtitleNumbers(tableBody) {
+      let rows = tableBody.getElementsByTagName("tr");
+      for (let i = 0; i < rows.length; i++) {
+        let subtitleCell = rows[i].querySelector("td:first-child");
+        subtitleCell.textContent = `Subtitle ${i + 1}`;
+      }
     }
-
-    function getCSRFToken() {
-        return document.querySelector("[name=csrfmiddlewaretoken]").value;
-    }
-
-    function checkSubtitlesLength() {
-        let tableBody = document.querySelector("#leadsTable tbody");
-        let rows = tableBody.getElementsByTagName("tr");
-        if (rows.length > 40) {
-                console.log(rows.length)
-                    $.ajax({
-                        url: `/text/check-subtitles/{{textfile.id}}/`,
-                        method: 'GET',
-                        success: function(response) {
-                            if (response.status === 'error') {
-                                alert(response.message); 
-                                return false 
-                            } else {
-                                console.log(response.message);
-                                return true
-                            }
-                        },
-                        error: function(xhr, status, error) {
-                            console.error("Error checking subtitles:", error);
-                        }
-                    });
-                
-        }else {
-            return true
+  
+    // Function to update backend with new subtitle order
+    function updateBackendOrder() {
+      let subtitles = [];
+      $("#leadsTable tbody tr").each(function (index) {
+        subtitles.push({
+          id: $(this).data("id"),
+          position: index + 1
+        });
+      });
+  
+      $.ajax({
+        url: "/text/update-subtitle-positions/",
+        type: "POST",
+        data: JSON.stringify({ subtitles: subtitles }),
+        contentType: "application/json",
+        headers: { "X-CSRFToken": getCSRFToken() },
+        success: function (response) {
+          console.log("Positions updated successfully");
+        },
+        error: function (xhr, status, error) {
+          console.error("Error updating positions:", error);
         }
+      });
     }
-
-
+  
+    // Function to get CSRF token
+    function getCSRFToken() {
+      return document.querySelector("[name=csrfmiddlewaretoken]").value;
+    }
+  
+    // Function to check subtitles length
+    function checkSubtitlesLength() {
+      let tableBody = document.querySelector("#leadsTable tbody");
+      let rows = tableBody.getElementsByTagName("tr");
+      if (rows.length > 40) {
+        console.log(rows.length);
+        $.ajax({
+          url: `/text/check-subtitles/{{textfile.id}}/`,
+          method: "GET",
+          success: function (response) {
+            if (response.status === "error") {
+              alert(response.message);
+              return false;
+            } else {
+              console.log(response.message);
+              return true;
+            }
+          },
+          error: function (xhr, status, error) {
+            console.error("Error checking subtitles:", error);
+          }
+        });
+      } else {
+        return true;
+      }
+    }
   </script>
     
 
