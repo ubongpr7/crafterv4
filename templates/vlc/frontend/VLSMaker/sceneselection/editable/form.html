@@ -1113,7 +1113,8 @@ select::-webkit-dropdown-arrow {
   }
   //good
     function deleteAllLi(cNumber) {
-    const ul = document.getElementById(`list-of-tags_${cNumber}`); // Get the <ul> element by ID
+    
+        const ul = document.getElementById(`list-of-tags_${cNumber}`); // Get the <ul> element by ID
     if (ul) {
       // Select all <li> elements within the <ul>
       const liElements = ul.querySelectorAll("li");
