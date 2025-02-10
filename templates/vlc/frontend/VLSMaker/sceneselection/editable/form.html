@@ -1389,7 +1389,7 @@ select::-webkit-dropdown-arrow {
             document.getElementById(`highlightable_${cNumber}`).addEventListener("mouseup", function () {
             const selection = window.getSelection();
             clip_Id=span.dataset.id
-            if (!clip_id){
+            if (!clip_id ==null){
                 return
             }
             console.log('clipid: ',clip_Id)
