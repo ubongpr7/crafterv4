@@ -1,6 +1,6 @@
 {% load static %}
 <style>
-    /* Style for subtitles */
+/* Style for subtitles */
 .subtitle_clip {
     cursor: move; /* Indicate that the item is draggable */
     padding: 10px;
@@ -9,6 +9,7 @@
     background-color: #f9f9f9;
     border: 1px solid #864AF9; /* Existing border color */
     border-radius: 5px;
+    position: relative; /* Ensure positioning for nested elements */
     transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
@@ -26,6 +27,19 @@
 .subtitle_clip.drag-over:hover {
     background-color: #f0f0f0;
 }
+
+/* Styling the drag message */
+.drag-message {
+    position: absolute;
+    top: 50%; /* Center the message vertically */
+    left: 50%; /* Center the message horizontally */
+    transform: translate(-50%, -50%); /* Center it perfectly */
+    color: #864AF9;
+    font-size: 1.2rem;
+    font-weight: bold;
+    display: none; /* Initially hidden */
+}
+
 
 </style>
 <style>
@@ -2530,7 +2544,9 @@ if (xhr && xhr.responseURL.includes("add_subcliphtmx") && xhr.method === "POST")
 </script>
 <script>
     let draggedItem = null;
+let dragMessage = null; // To hold the message element
 
+// Add event listeners to all subtitle items
 document.querySelectorAll('.subtitle_clip').forEach(item => {
     item.addEventListener('dragstart', startDrag);
     item.addEventListener('dragover', dragOver);
@@ -2542,13 +2558,23 @@ document.querySelectorAll('.subtitle_clip').forEach(item => {
 function startDrag(event) {
     draggedItem = event.target;
     draggedItem.classList.add('dragging'); // Apply dragging visual feedback
-    event.dataTransfer.setData("text/plain", draggedItem.id); // Store dragged item id
+
+    // Create the drag message and append it to the dragged item
+    dragMessage = document.createElement('div');
+    dragMessage.classList.add('drag-message');
+    dragMessage.textContent = "Dragging...";
+    draggedItem.appendChild(dragMessage); // Show drag message inside the subtitle box
+    dragMessage.style.display = 'block'; // Make the message visible
+
+    // Optionally: Use dataTransfer to store the id of the dragged item
+    event.dataTransfer.setData("text/plain", draggedItem.id); 
 }
 
 // Handle drag over event to show the purple border
 function dragOver(event) {
     event.preventDefault(); // Allow the drop
 
+    // Only apply the effect if the dragged item is not the one being hovered over
     if (event.target !== draggedItem && event.target.classList.contains('subtitle_clip')) {
         event.target.classList.add('drag-over'); // Add the purple border to the target item
     }
@@ -2566,11 +2592,18 @@ function endDrag(event) {
     // Remove the "drag-over" class from all items
     document.querySelectorAll('.subtitle_clip').forEach(item => item.classList.remove('drag-over'));
 
+    // Remove the drag message from the dragged item
+    if (dragMessage) {
+        dragMessage.style.display = 'none'; // Hide the drag message
+        draggedItem.removeChild(dragMessage); // Remove the message element
+    }
+
     // Optionally, reorder items here (move the dragged item to a new position)
     const list = document.querySelector('#list-of-tags_' + draggedItem.dataset.id); // Update as needed
     if (list) {
         list.appendChild(draggedItem);  // Move the dragged item to the new position
     }
 }
+
 
 </script>
