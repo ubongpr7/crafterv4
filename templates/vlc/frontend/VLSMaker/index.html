@@ -780,53 +780,52 @@
     </div>
     <script src="{% static 'js/script.js'%}"></script>
     <script>
-      function updateSliderBackground(slider) {
-        const value = (slider.value - slider.min) / (slider.max - slider.min) * 100;
-        slider.style.background = `linear-gradient(to right, #864AF9 ${value}%, #D9D9D9 ${value}%)`;
-      }
-    
-      // Select sliders
-      const borderRadiusSlider = document.getElementById('subtitleBorderRadiusSlider');
-      const opacitySlider = document.getElementById('subtitleOpacitySlider');
-    
-      // Initial background update
-      updateSliderBackground(borderRadiusSlider);
-      updateSliderBackground(opacitySlider);
-    
-      // Add event listeners to update background on input change
-      borderRadiusSlider.addEventListener('input', function() {
-        const borderRadiusValue = borderRadiusSlider.value;
-        // Update the border-radius of the preview box
-        document.getElementById('previewBackground').style.borderRadius = borderRadiusValue + 'px';
-        document.getElementById('subtitleBorderRadiusValue').textContent = borderRadiusValue;
-        updateSliderBackground(borderRadiusSlider);
-      });
-    
-      opacitySlider.addEventListener('input', function() {
-        document.getElementById('subtitleOpacityValue').textContent = opacitySlider.value;
-        updateSliderBackground(opacitySlider);
-      });
-    
-      // Get references to the sliders and previewBackground element
-      const subtitleBorderRadiusSlider = document.getElementById('subtitleBorderRadiusSlider');
-      const subtitleOpacitySlider = document.getElementById('subtitleOpacitySlider');
-      const previewBackground = document.getElementById('previewBackground');
-      const subtitleBorderRadiusValue = document.getElementById('subtitleBorderRadiusValue');
-      const subtitleOpacityValue = document.getElementById('subtitleOpacityValue');
-    
-      // Update border radius when the slider value changes
-      subtitleBorderRadiusSlider.addEventListener('input', () => {
-        const borderRadius = subtitleBorderRadiusSlider.value;
-        previewBackground.style.borderRadius = borderRadius + 'px';  // Ensure units are added (px)
-        subtitleBorderRadiusValue.textContent = borderRadius;
-      });
-    
-      // Update opacity when the slider value changes
-      subtitleOpacitySlider.addEventListener('input', () => {
-        const opacity = subtitleOpacitySlider.value;
-        previewBackground.style.opacity = opacity;
-        subtitleOpacityValue.textContent = opacity;
-      });
+     function updateSliderBackground(slider) {
+  const value = (slider.value - slider.min) / (slider.max - slider.min) * 100;
+  slider.style.background = `linear-gradient(to right, #864AF9 ${value}%, #D9D9D9 ${value}%)`;
+}
+
+// Select sliders
+const borderRadiusSlider = document.getElementById('subtitleBorderRadiusSlider');
+const opacitySlider = document.getElementById('subtitleOpacitySlider');
+
+// Initial background update
+updateSliderBackground(borderRadiusSlider);
+updateSliderBackground(opacitySlider);
+
+// Add event listeners to update background on input change
+borderRadiusSlider.addEventListener('input', function() {
+  const borderRadiusValue = borderRadiusSlider.value;
+  // Update the border-radius of the preview box
+  document.getElementById('previewBackground').style.borderRadius = borderRadiusValue + 'px';
+  document.getElementById('subtitleBorderRadiusValue').textContent = borderRadiusValue;
+  updateSliderBackground(borderRadiusSlider);
+});
+
+opacitySlider.addEventListener('input', function() {
+  document.getElementById('subtitleOpacityValue').textContent = opacitySlider.value;
+  updateSliderBackground(opacitySlider);
+});
+
+// Get references to the sliders and previewBackground element
+const subtitleBorderRadiusValue = document.getElementById('subtitleBorderRadiusValue');
+const subtitleOpacityValue = document.getElementById('subtitleOpacityValue');
+const previewBackground = document.getElementById('previewBackground');
+
+// Update border radius when the slider value changes
+subtitleBorderRadiusSlider.addEventListener('input', () => {
+  const borderRadius = subtitleBorderRadiusSlider.value;
+  previewBackground.style.borderRadius = borderRadius + 'px';  // Ensure units are added (px)
+  subtitleBorderRadiusValue.textContent = borderRadius;
+});
+
+// Update opacity when the slider value changes
+subtitleOpacitySlider.addEventListener('input', () => {
+  const opacity = subtitleOpacitySlider.value;
+  previewBackground.style.opacity = opacity;
+  subtitleOpacityValue.textContent = opacity;
+});
+
     </script>
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
