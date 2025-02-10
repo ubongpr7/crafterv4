@@ -927,10 +927,11 @@ select::-webkit-dropdown-arrow {
 $(document).ready(function () {
     let tableBody = document.querySelector("#leadsTable tbody");
 
+    // Enable sorting for all rows
     $("#leadsTable tbody").sortable({
         axis: "y",
         containment: "parent",
-        handle: ".drag-container",  // Allow dragging from any part of the subtitle row
+        handle: ".drag-container",  // Allow dragging from the subtitle text container (not just the first column)
         update: function (event, ui) {
             updateSubtitleNumbers(tableBody);
             updateBackendOrder();
@@ -945,7 +946,7 @@ $(document).ready(function () {
         }
     });
 
-    // Update the backend when the order of subtitles changes
+    // Update backend when the order of subtitles changes
     function updateBackendOrder() {
         let subtitles = [];
         $("#leadsTable tbody tr").each(function (index) {
