@@ -834,9 +834,9 @@ select::-webkit-dropdown-arrow {
           <tr style="height: fit-content;">
             <th class="slide-first" style="font-size: 1.4rem;">Subtitle</th>
             <th style="font-size: 1.4rem; ">Subtitle Text</th>
-            <th class="slide-last" style="font-size: 1.4rem; text-wrap: nowrap; width: 5%;">Edit Slide</th>
-            <th class="slide-last" style="font-size: 1.4rem; text-wrap: nowrap; width: 5%;">Delete Slide</th>
-            <th class="slide-last" style="font-size: 1.4rem; text-wrap: nowrap; width: 5%;">Reset Clips</th>
+            <th class="slide-last" style="font-size: 1.4rem; text-wrap: nowrap; width: 5%;">Edit</th>
+            <th class="slide-last" style="font-size: 1.4rem; text-wrap: nowrap; width: 5%;">Delete</th>
+            <th class="slide-last" style="font-size: 1.4rem; text-wrap: nowrap; width: 5%;">Undo</th>
           </tr>
         </thead>
         <tbody>
@@ -852,7 +852,7 @@ select::-webkit-dropdown-arrow {
                             <ul style="margin: 0;" id="list-of-tags_{{forloop.counter}}" class="list-of-tags">
     
                                 {% for subclip in clip.subclips.all %}
-                                <li data-id="{{subclip.id}}" class="subtitle_clip" style="font-size: 1.5rem; border-color: #864AF9;"  
+                                <li data-id="{{subclip.id}}" class="subtitle_clip" style="font-size: 1.4rem; border-color: #864AF9;"  
                                   data-current_file="{{subclip.get_video_file_name}}"
                                   id="saved_li_{{subclip.id}}"
                                       onclick="editCurrentLi(this)">
@@ -1632,7 +1632,7 @@ select::-webkit-dropdown-arrow {
                     class="form-control tab-textarea" 
                     aria-describedby="textarea"
                 ></textarea>
-                <div class="wrapper" id="wrapper_${currentNumber}" style="display:none; padding-left: 2.5rem;">
+                <div class="wrapper" id="wrapper_${currentNumber}" style="display:none; padding-left: 1.5rem;">
                   <div style="width: 100%;" class="tag-box">
                       <ul style="margin: 0;" id="list-of-tags_${currentNumber}" class="list-of-tags">
                           <span id="slide_span_${currentNumber}"></span>
