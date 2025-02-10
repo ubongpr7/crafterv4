@@ -612,7 +612,7 @@ body {
 /* Modal Header */
 .popup-content .title {
     border-left: 1px solid #00000080;
-    background: #6a3cb8;
+    background: #864af9;
     color: white;
     border-top: none;
     font-size: 24px;
@@ -886,7 +886,7 @@ select::-webkit-dropdown-arrow {
           <div style="display: flex; place-items: center; justify-content: center;">
             <a href="#!" class="delete-row-btn"id="delete_{{forloop.counter}}" onclick="deleteSavedSlide('{{clip.id}}', this)"  style="display: flex; align-items: center; justify-content: center; text-decoration: none; position: relative;">
               <i id="icon_{{clip.id}}" class="ri-delete-bin-6-line fa-sync-alt"
-                        style="margin: 0 auto;font-size: 20px; font-weight: 600; cursor: pointer; vertical-align: middle;">
+                        style="margin: 0 auto;font-size: 20px; font-weight: 600; cursor: pointer; vertical-align: middle;color: red;">
                     </i>
             </a>
           </div>
@@ -1804,7 +1804,7 @@ style="grid-template-columns: 0.7fr 1fr;width:100%;">
     </div>
     {% if user.subscription.plan.name|lower == 'free' %}
 
-    <div id='disabled-div' data-tooltip="Only Available On Paid Plans" style="border-left:0.8px solid #864AF9;background-color:eeeeeebb;  opacity: 0.5; cursor: not-allowed" class="form-grid-item ">
+    <div id='disabled-div' data-tooltip="Only Available On Paid Plans" style="border-left:0.8px solid #000;background-color:eeeeeebb;  opacity: 0.5; cursor: not-allowed" class="form-grid-item ">
      {% else %}
      <div style="border-left:0.8px solid #864AF9;" class="form-grid-item ">
     {% endif %}
