@@ -685,7 +685,7 @@ background: linear-gradient(to right, #864AF9 0%, #864AF9 70%, #D9D9D9 70%, #D9D
             style="font-size: 48px; font-weight: 700; line-height: 1.2; letter-spacing: -0.8px; text-align: center; color: #00000080;">
             Your Selected Video <br /> Scene Will Go Here
           </span>
-          <div id="previewBackground2"
+          <div id="previewBackground" class="previewBackground2"
             style="width: fit-content; height: fit-content; background: #000000; position: absolute; bottom: 20px; border-radius: 8px; padding: 12px; display: flex; align-items: center; opacity: 0.5; justify-content: center;">
             <span id="previewText"
               style="font-size: 20px; font-weight: 600; line-height: 24.38px; text-align: center; color: white; opacity: 1;width:350px;">
@@ -725,15 +725,15 @@ background: linear-gradient(to right, #864AF9 0%, #864AF9 70%, #D9D9D9 70%, #D9D
     borderRadiusSlider.addEventListener('input', function () {
       const borderRadiusValue = borderRadiusSlider.value;
       // Update the border-radius of the preview box
-      document.getElementById('previewBackground2').style.borderRadius = borderRadiusValue + 'px';
-      document.getElementById('subtitleBorderRadiusValue').textContent = borderRadiusValue;
+      document.getElementsByClassName('previewBackground2').style.borderRadius = borderRadiusValue + 'px';
+      document.getElementsByClassName('subtitleBorderRadiusValue').textContent = borderRadiusValue;
       updateSliderBackground(borderRadiusSlider);
     });
 
     opacitySlider.addEventListener('input', function () {
       const opacityValue = opacitySlider.value;
       document.getElementById('subtitleOpacityValue').textContent = opacityValue + '%';
-      document.getElementById('previewBackground2').style.opacity = opacityValue / 100;
+      document.getElementsByClassName('previewBackground2').style.opacity = opacityValue / 100;
       updateSliderBackground(opacitySlider);
     });
 
