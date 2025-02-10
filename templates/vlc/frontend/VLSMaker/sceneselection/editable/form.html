@@ -879,7 +879,7 @@ select::-webkit-dropdown-arrow {
                   id="edit_{{forloop.counter}}" 
                   onclick="EditeSlide('{{forloop.counter}}')">
                   <i id="icon_{{clip.id}}" class="ri-edit-box-line fa-sync-alt"
-                  style="margin: 0 auto;font-size: 20px; font-weight: 600; cursor: pointer;">
+                  style="margin: 0 auto;font-size: 20px; font-weight: 600; cursor: pointer; vertical-align: middle;">
               </i>
                 </a>
               </div>
@@ -889,7 +889,7 @@ select::-webkit-dropdown-arrow {
           <div style="display: flex; place-items: center; justify-content: center;">
             <a href="#!" class="delete-row-btn"id="delete_{{forloop.counter}}" onclick="deleteSavedSlide('{{clip.id}}', this)">
               <i id="icon_{{clip.id}}" class="ri-delete-bin-6-line fa-sync-alt"
-                        style="margin: 0 auto;font-size: 20px; font-weight: 600; cursor: pointer;">
+                        style="margin: 0 auto;font-size: 20px; font-weight: 600; cursor: pointer; vertical-align: middle;">
                     </i>
             </a>
           </div>
@@ -904,7 +904,7 @@ select::-webkit-dropdown-arrow {
               onclick="subclipReset('{{clip.id}}')">
               
               <i id="icon_{{clip.id}}" class="ri-loop-right-line fa-sync-alt"
-              style="margin: 0 auto;font-size: 20px; font-weight: 600; cursor: pointer;"></i>
+              style="margin: 0 auto;font-size: 20px; font-weight: 600; cursor: pointer;vertical-align: middle;"></i>
             </a>
           </div>     
         </td>
