@@ -680,7 +680,7 @@ select::-webkit-dropdown-arrow {
     border-radius: 8px;
     padding: 30px 30px;
     width: 100%;
-    max-width: 500px;
+    max-width: 615px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     animation: slide-down 0.3s ease-in-out;
 }
@@ -805,9 +805,6 @@ select::-webkit-dropdown-arrow {
   height: 50px;
   text-align: center;
 }
-.lead-table tr td:nth-child(3) {
-  /* background: #e3e3e3; */
-}
 .lead-table thead tr {
   height: 70px;
 }
@@ -837,9 +834,9 @@ select::-webkit-dropdown-arrow {
           <tr style="height: fit-content;">
             <th class="slide-first" style="font-size: 1.4rem;">Subtitle</th>
             <th style="font-size: 1.4rem; ">Subtitle Text</th>
-            <th class="slide-last" style="font-size: 1.4rem; text-wrap: nowrap; width: 5%;">Edit Slide</th>
-            <th class="slide-last" style="font-size: 1.4rem; text-wrap: nowrap; width: 5%;">Reset Clips</th>
-            <th class="slide-last" style="font-size: 1.4rem; text-wrap: nowrap; width: 5%;">Delete Slide</th>
+            <th class="slide-last" style="font-size: 1.4rem; text-wrap: nowrap; width: 5%;">Edit</th>
+            <th class="slide-last" style="font-size: 1.4rem; text-wrap: nowrap; width: 5%;">Delete</th>
+            <th class="slide-last" style="font-size: 1.4rem; text-wrap: nowrap; width: 5%;">Undo</th>
           </tr>
         </thead>
         <tbody>
@@ -855,7 +852,7 @@ select::-webkit-dropdown-arrow {
                             <ul style="margin: 0;" id="list-of-tags_{{forloop.counter}}" class="list-of-tags">
     
                                 {% for subclip in clip.subclips.all %}
-                                <li data-id="{{subclip.id}}" class="subtitle_clip" style="font-size: 1.5rem; border-color: #864AF9;"  
+                                <li data-id="{{subclip.id}}" class="subtitle_clip" style="font-size: 1.4rem; border-color: #864AF9;"  
                                   data-current_file="{{subclip.get_video_file_name}}"
                                   id="saved_li_{{subclip.id}}"
                                       onclick="editCurrentLi(this)">
@@ -882,7 +879,7 @@ select::-webkit-dropdown-arrow {
                   id="edit_{{forloop.counter}}" 
                   onclick="EditeSlide('{{forloop.counter}}')">
                   <i id="icon_{{clip.id}}" class="ri-edit-box-line fa-sync-alt"
-                  style="margin: 0 auto;font-size: 27px; font-weight: 600; cursor: pointer;">
+                  style="margin: 0 auto;font-size: 20px; font-weight: 600; cursor: pointer; vertical-align: middle;">
               </i>
                 </a>
               </div>
@@ -892,7 +889,7 @@ select::-webkit-dropdown-arrow {
           <div style="display: flex; place-items: center; justify-content: center;">
             <a href="#!" class="delete-row-btn"id="delete_{{forloop.counter}}" onclick="deleteSavedSlide('{{clip.id}}', this)">
               <i id="icon_{{clip.id}}" class="ri-delete-bin-6-line fa-sync-alt"
-                        style="margin: 0 auto;font-size: 27px; font-weight: 600; cursor: pointer;">
+                        style="margin: 0 auto;font-size: 20px; font-weight: 600; cursor: pointer; vertical-align: middle;">
                     </i>
             </a>
           </div>
@@ -907,7 +904,7 @@ select::-webkit-dropdown-arrow {
               onclick="subclipReset('{{clip.id}}')">
               
               <i id="icon_{{clip.id}}" class="ri-loop-right-line fa-sync-alt"
-              style="margin: 0 auto;font-size: 27px; font-weight: 600; cursor: pointer;"></i>
+              style="margin: 0 auto;font-size: 20px; font-weight: 600; cursor: pointer;vertical-align: -webkit-baseline-middle;"></i>
             </a>
           </div>     
         </td>
@@ -1621,13 +1618,13 @@ select::-webkit-dropdown-arrow {
     
         document.getElementById('no_of_slides').value = currentNumber;
         slideCell.innerText = `Subtitle ${currentNumber}`;
-        slideCell.style.fontSize = '1.8rem'
+        slideCell.style.fontSize = '1.4rem'
         newRow.style.height = '5rem';
         newRow.innerHTML += `
             <td id="highlightable_${currentNumber}" style="padding: 0 4px;">
               <div style="display: flex; height: 100%;">
                 <textarea 
-                    style="font-size: 14px; height: 100%; width:200%; padding:22px; border:none; background-color:#f9f9f9; color:#000;font-size:larger;"
+                    style="height: 100%; width:200%; padding:22px; border:none; background-color:#f9f9f9; color:#000;font-size:larger;"
                     id="slide_text_${currentNumber}" 
                     type="text" 
                     
@@ -1636,7 +1633,7 @@ select::-webkit-dropdown-arrow {
                     class="form-control tab-textarea" 
                     aria-describedby="textarea"
                 ></textarea>
-                <div class="wrapper" id="wrapper_${currentNumber}" style="display:none; padding-left: 2.5rem;">
+                <div class="wrapper" id="wrapper_${currentNumber}" style="display:none; padding-left: 1.5rem;">
                   <div style="width: 100%;" class="tag-box">
                       <ul style="margin: 0;" id="list-of-tags_${currentNumber}" class="list-of-tags">
                           <span id="slide_span_${currentNumber}"></span>
@@ -1658,7 +1655,7 @@ select::-webkit-dropdown-arrow {
                    style="display:none;" 
                    onclick="EditeSlide(${currentNumber})">
                    <i id="icon_{{clip.id}}" class="ri-edit-box-line fa-sync-alt"
-                        style="margin: 0 auto;font-size: 27px; font-weight: 600; cursor: pointer;">
+                        style="margin: 0 auto;font-size: 20px; font-weight: 600; cursor: pointer;">
                     </i>
                 </a>
                 </div>
@@ -1668,7 +1665,7 @@ select::-webkit-dropdown-arrow {
     
                 <a href="#!" class="delete-row-btn" id="delete_${currentNumber}" onclick="deleteSlide(this)">
                   <i id="" class="ri-delete-bin-6-line fa-sync-alt"
-                        style="margin: 0 auto;font-size: 27px; font-weight: 600; curIsor: pointer;">
+                        style="margin: 0 auto;font-size: 20px; font-weight: 600; curIsor: pointer;">
                     </i>
                 </a>
 
@@ -1684,7 +1681,7 @@ select::-webkit-dropdown-arrow {
                    >
                    
               <i id="icon_{{clip.id}}" class="ri-loop-right-line fa-sync-alt"
-              style="margin: 0 auto;font-size: 27px; font-weight: 600; cursor: pointer;"></i>
+              style="margin: 0 auto;font-size: 20px; font-weight: 600; cursor: pointer;"></i>
                 </a>
                 </div>
             </td>`;
