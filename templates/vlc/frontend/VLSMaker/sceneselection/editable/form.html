@@ -1110,7 +1110,7 @@
 <script>
 function toggleColumns(li, shouldDisable) {
     let $row = $(li).closest("tr"); 
-    let $nextCols = $row.find("td").slice(2, 4); 
+    let $nextCols = $row.find("td").slice(2, 5); 
 
     $nextCols.each(function() {
         $(this).css({
@@ -1334,8 +1334,7 @@ function toggleColumns(li, shouldDisable) {
         const delete_ = document.getElementById(`edit_${currentNumber}`);
         textarea.style.display = 'flex';
         wrapper.style.display = 'flex'
-        // delete_.style.display = 'none';
-        edit_.style.display = 'none'
+        
         wrapper.style.display = 'none'
         toggleColumns(textarea,true)
 
