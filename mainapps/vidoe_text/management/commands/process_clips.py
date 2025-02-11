@@ -1715,7 +1715,7 @@ class Command(BaseCommand):
         ).set_duration(clip.duration)
 
         text_width, text_height = subtitle_clip.size
-        small_margin = 8 
+        small_margin = 18 
         box_width = (
             text_width + small_margin
         ) 
