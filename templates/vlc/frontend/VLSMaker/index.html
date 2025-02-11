@@ -64,6 +64,18 @@
       font-style: normal;
       font-display: swap;
     }
+    @font-face {
+      font-family: 'OpenSans-Semibold';  
+      src: url('fonts/OpenSans-Semibold.ttf') format('truetype');
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Roboto-Medium';  
+      src: url('fonts/Roboto-Medium.ttf') format('truetype');
+      font-style: normal;
+      font-display: swap;
+    }
 </style>
   {% include 'partials/head_c.html' %}
 
@@ -492,23 +504,22 @@
                 <option class="text3" id="font_s" style="color:#cccccc" value="" disabled selected>Select A Font
                 </option>
                 <option class="text3" style="font-family:Arial;" value="Arial">Arial</option>
-                <option class="text3" style="font-family:Open Sans Condensed" value="OpenSans-Semibold">
+                <option class="text3" style="font-family:OpenSans-Semibold" value="OpenSans-Semibold">
                   Open Sans Condensed
                 </option>
-                <option class="text3" style="font-family:HelveticaforTarget-Bold" value="Helvetica-2">
-                  Helvetica-Bold
+                <option class="text3" style="font-family:Helvetica" value="Helvetica">
+                  Helvetica 
                 </option>
-                <option class="text3" style="font-family:Roboto Medium" value="Roboto">
+                <option class="text3" style="font-family:Roboto-Medium" value="Roboto-Medium">
                   Roboto Medium
                 </option>
-                <option class="text3" style="font-family:Montserrat;
-                                 font-weight:400" value="Montserrat">Montserrat</option>
-                <option class="text3" style="font-family:Montserrat;
-                                 font-weight:600" value="Montserrat">Montserrat SemiBold</option>
-                <option class="text3" style="font-family:Montserrat;
-                                 font-weight:700" value="Montserrat-Bold">Montserrat Bold</option>
-                <option class="text3" style="font-family:Montserrat;
-                                 font-weight:800" value="Montserrat">Montserrat ExtraBold</option>
+                <option class="text3" style="font-family:Montserrat; " value="Montserrat">Montserrat</option>
+                <option class="text3" style="font-family:Montserrat;"
+                   value="Montserrat-SemiBold">Montserrat SemiBold</option>
+                <option class="text3" style="font-family:Montserrat-Bold;
+                                 " value="Montserrat-Bold">Montserrat Bold</option>
+                <option class="text3" style="font-family:Montserrat-ExtraBold;
+                                 " value="Montserrat-ExtraBold">Montserrat ExtraBold</option>
               </select>
             </div>
 
