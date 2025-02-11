@@ -859,7 +859,10 @@ select::-webkit-dropdown-arrow {
             <td data-tooltip="Drag To Move" style="width: 18%; text-wrap: nowrap; font-size: 1.4rem;">Subtitle {{ forloop.counter }}</td>
               <td id="highlightable_{{forloop.counter}}" style="width: 64%;">
                 <div>
-                      <textarea style="display: none;"  name="slide_text" class="form-control tab-textarea" aria-describedby="textarea"  id="slide_text_{{forloop.counter}}"  >{{clip.slide}}</textarea>
+                      <textarea     style="display: none; width: 100%; padding: .375rem .75rem; font-size: 1rem; font-weight: 400; line-height: 1.5; color: #212529; background-color: #fff; background-clip: padding-box; border: 1px solid #ced4da; padding-left:10px; resize:none; border-radius:14px; transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out; placeholder-color: black;"
+                      class="textarea-class"
+                       name="slide_text" class="form-control tab-textarea" aria-describedby="textarea"  id="slide_text_{{forloop.counter}}"  >{{clip.slide}}</textarea>
+
                       <div class="wrapper" id="wrapper_{{forloop.counter}}">
                         <div  class="tag-box">
                             <ul style="margin: 0;" id="list-of-tags_{{forloop.counter}}" class="list-of-tags">
