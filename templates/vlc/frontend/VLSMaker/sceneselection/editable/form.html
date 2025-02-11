@@ -863,7 +863,7 @@ select::-webkit-dropdown-arrow {
                       class="textarea-class"
                        name="slide_text" class="form-control tab-textarea" aria-describedby="textarea"  id="slide_text_{{forloop.counter}}"  >{{clip.slide}}</textarea>
 
-                      <div class="wrapper" id="wrapper_{{forloop.counter}}">
+                      <div class="wrapper" id="wrapper_{{forloop.counter}}" style="flex-direction:column">
                         <div  class="tag-box">
                             <ul style="margin: 0;" id="list-of-tags_{{forloop.counter}}" class="list-of-tags">
     
@@ -1702,7 +1702,7 @@ select::-webkit-dropdown-arrow {
     class="form-control tab-textarea" 
     aria-describedby="textarea"></textarea>
 
-                <div class="wrapper" id="wrapper_${currentNumber}" style="display:none; padding-left: 1.5rem;">
+                <div class="wrapper" id="wrapper_${currentNumber}" style="display:none; padding-left: 1.5rem;flex-direction-column">
                   <div style="width: 100%;" class="tag-box">
                       <ul style="margin: 0;" id="list-of-tags_${currentNumber}" class="list-of-tags">
                           <span id="slide_span_${currentNumber}"></span>
