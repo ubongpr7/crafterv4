@@ -1112,9 +1112,9 @@
 
 function toggleColumns(li, shouldDisable) {
     let $row = $(li).closest("tr"); 
-    let $nextCols = $row.find("td").slice(1, 4); 
+    let $nextCols = $row.find("td").slice(2, 4); 
 
-    $nextCols.find("input, select, textarea, button")
+    $nextCols.find("div, a, button")
         .prop("disabled", shouldDisable)
         .css("background-color", shouldDisable ? "#d3d3d3" : "");
 }
