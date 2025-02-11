@@ -1719,9 +1719,9 @@ class Command(BaseCommand):
         box_width = (
             text_width + small_margin
         )  # Adjust the box width to be slightly larger than the text width
-        rounded_box_array = self.create_rounded_rectangle((box_width, box_height), box_radius, subtitle_box_color)
 
         box_height = text_height + margin
+        rounded_box_array = self.create_rounded_rectangle((box_width, box_height), box_radius, subtitle_box_color)
         box_clip = ImageClip(rounded_box_array, ismask=False).set_duration(subtitle_clip.duration).set_opacity(subtitle_opacity)
 
         # box_clip = (
