@@ -7,10 +7,12 @@ import matplotlib.colors as mcolors
 import imageio
 from django.templatetags.static import static
 from moviepy.editor import ImageClip
+
 import numpy as np
 from django.contrib.staticfiles.storage import staticfiles_storage
 import textwrap
-from PIL import ImageFont, Image,ImageDraw
+
+from PIL import ImageFont, Image,ImageDraw,ImageColor
 from pathlib import Path
 from moviepy.editor import (
     AudioFileClip,
@@ -1720,7 +1722,7 @@ class Command(BaseCommand):
         ) 
 
         box_height = text_height + margin
-        rounded_box_array = self.create_rounded_rectangle((int(box_width), int(box_height)), int(box_radius), rectangle_color)
+        rounded_box_array = self.create_rounded_rectangle((int(box_width), int(box_height)), int(box_radius), )
         logging.info('done with')
         box_clip = ImageClip(rounded_box_array, ismask=False).set_duration(subtitle_clip.duration).set_opacity(subtitle_opacity)
 
@@ -1737,11 +1739,13 @@ class Command(BaseCommand):
 
         return CompositeVideoClip([clip, box_clip, subtitle_clip])
 
-    def create_rounded_rectangle(self,size, radius, color=(255, 255, 255, 255)):
+    def create_rounded_rectangle(self,size, radius ):
         """ Create an RGBA image with a rounded rectangle """
+
+        rectangle_color = ImageColor.getrgb(self.text_file_instance.subtitle_box_color) + (255,)
         img = Image.new("RGBA", size, (0, 0, 0, 0))  
         draw = ImageDraw.Draw(img)        
-        draw.rounded_rectangle((0, 0, size[0], size[1]), radius=radius, fill=color)
+        draw.rounded_rectangle((0, 0, size[0], size[1]), radius=radius, fill=rectangle_color)
         return np.array(img)
 
 
