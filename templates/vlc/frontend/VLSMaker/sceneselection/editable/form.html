@@ -231,6 +231,7 @@
         color: red;
         font-size: 12px;
         margin-top: 5px;
+        padding-left: 10px;
     }
 
     .details {
@@ -859,7 +860,6 @@
                 Add New Subtitle +
             </a>
         </div>
-
     </div>
     <!-- Leads Table -->
     <table id="leadsTable" class="lead-table" style="width: 100%; display: table;">
@@ -1191,6 +1191,7 @@
     function deleteAllLi(cNumber) {
 
         const ul = document.getElementById(`list-of-tags_${cNumber}`); // Get the <ul> element by ID
+<<<<<<< HEAD
     if (ul) {
       // Select all <li> elements within the <ul>
       const liElements = ul.querySelectorAll("li");
@@ -1198,30 +1199,40 @@
       liElements.forEach(li => li.remove());
     } else {
       console.error("Element with ID 'list-of-tags' not found.");
+=======
+        if (ul) {
+            // Select all <li> elements within the <ul>
+            const liElements = ul.querySelectorAll("li");
+
+            // Loop through the <li> elements and remove each one
+            liElements.forEach(li => li.remove());
+        } else {
+            console.error("Element with ID 'list-of-tags' not found.");
+        }
+>>>>>>> fa6899b (errormessage)
     }
-  }
-  //good
-  
+    //good
+
     function handleEnterToHide(currentNumber,) {
-        edit =false
-      const textarea = document.getElementById(`slide_text_${currentNumber}`);
-      
-      const wrapper = document.getElementById(`wrapper_${currentNumber}`);
-      const slide_span = document.getElementById(`slide_span_${currentNumber}`);
-      const edit_ = document.getElementById(`edit_${currentNumber}`);
-      const delete_ = document.getElementById(`delete_${currentNumber}`);
-      const reset_ = document.getElementById(`reset_${currentNumber}`);
-      let clip_id=slide_span.dataset.id
-      let tableBody = document.querySelector("#leadsTable tbody");
-      let rows = tableBody.getElementsByTagName("tr");
-      textarea.addEventListener('keydown', function (event) {
-          if (event.key === 'Enter') {
-              event.preventDefault();
-              textarea.style.display = 'none';
+        edit = false
+        const textarea = document.getElementById(`slide_text_${currentNumber}`);
+
+        const wrapper = document.getElementById(`wrapper_${currentNumber}`);
+        const slide_span = document.getElementById(`slide_span_${currentNumber}`);
+        const edit_ = document.getElementById(`edit_${currentNumber}`);
+        const delete_ = document.getElementById(`delete_${currentNumber}`);
+        const reset_ = document.getElementById(`reset_${currentNumber}`);
+        let clip_id = slide_span.dataset.id
+        let tableBody = document.querySelector("#leadsTable tbody");
+        let rows = tableBody.getElementsByTagName("tr");
+        textarea.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                textarea.style.display = 'none';
                 wrapper.style.display = 'flex';
                 edit_.style.display = 'flex';
                 slide_span.textContent = textarea.value;
-                toggleColumns(textarea,true)
+                toggleColumns(textarea, true)
 
                 const check = checkSubtitlesLength();
 
@@ -1274,8 +1285,8 @@
                                         };
 
 
-                                  };
-                                  updateBackendOrder()
+                                    };
+                                    updateBackendOrder()
                                     showSuccessMessage(`Subtitle submitted successfully!`);
 
                                 } else {
@@ -1736,7 +1747,7 @@
                   </div>
                   
                   </div>
-                  <div id="error-message_${currentNumber}" style="text-transform: capitalize;" class="error-message"></div>
+                  <div id="error-message_${currentNumber}" style="text-transform: capitalize; padding-left:24px" class="error-message"></div>
               </div>
             </td>
             
