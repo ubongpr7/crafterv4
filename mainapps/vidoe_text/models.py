@@ -218,17 +218,7 @@ class TextLineVideoClip(models.Model):
     def get_number_of_subclip(self):
         return len(self.subclips.all())
     class Meta:
-        # unique_together = ("text_file", "line_number")
-
         ordering = ['position', "text_file"]
-    # def save(self, *args, **kwargs):
-    #     if not self.line_number:
-    #         max_line_number = (
-    #             TextLineVideoClip.objects.filter(text_file=self.text_file)
-    #             .aggregate(max_line=models.Max('line_number'))['max_line'] or 0
-    #         )
-    #         self.line_number = max_line_number + 1
-    #     super().save(*args, **kwargs)
 
     def to_dict(self):
          

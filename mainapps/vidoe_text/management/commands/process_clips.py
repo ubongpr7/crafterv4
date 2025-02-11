@@ -1718,20 +1718,14 @@ class Command(BaseCommand):
         small_margin = 8 
         box_width = (
             text_width + small_margin
-        )  # Adjust the box width to be slightly larger than the text width
+        ) *2
 
         box_height = text_height + margin
         rounded_box_array = self.create_rounded_rectangle((int(box_width), int(box_height)), int(box_radius), rectangle_color)
         logging.info('done with')
         box_clip = ImageClip(rounded_box_array, ismask=False).set_duration(subtitle_clip.duration).set_opacity(subtitle_opacity)
 
-        # box_clip = (
-        #     ColorClip(size=(box_width, box_height), color=subtitle_box_color)
-        #     .set_opacity(subtitle_opacity)
-        #     .set_duration(subtitle_clip.duration)
-        # )
         print("this is the used box color:", subtitle_box_color)
-        # Adjust box position to be slightly higher in the video
         box_position = ("center", clip.h - box_height - 2 * margin)
         subtitle_position = (
             "center",
@@ -1745,12 +1739,9 @@ class Command(BaseCommand):
 
     def create_rounded_rectangle(self,size, radius, color=(255, 255, 255, 255)):
         """ Create an RGBA image with a rounded rectangle """
-        img = Image.new("RGBA", size, (0, 0, 0, 0))  # Transparent background
-        draw = ImageDraw.Draw(img)
-        
-        # Draw rounded rectangle
+        img = Image.new("RGBA", size, (0, 0, 0, 0))  
+        draw = ImageDraw.Draw(img)        
         draw.rounded_rectangle((0, 0, size[0], size[1]), radius=radius, fill=color)
-        
         return np.array(img)
 
 
@@ -1765,7 +1756,6 @@ class Command(BaseCommand):
             text_file_instance.generated_final_video
         )
 
-        # # Get the watermark from the S3 path
         watermark_s3_path = LogoModel.objects.first().logo.name
 
         with tempfile.NamedTemporaryFile(
@@ -1776,7 +1766,6 @@ class Command(BaseCommand):
                 png_file.write(content)
 
         try:
-            # Load the watermark image and resize it to 80% of the video width
             watermark = (
                 ImageClip(watermark_temp_path.name)
                 .resize(width=video.w * 1.2)
