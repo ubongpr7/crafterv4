@@ -1719,6 +1719,8 @@ class Command(BaseCommand):
         box_width = (
             text_width + small_margin
         )  # Adjust the box width to be slightly larger than the text width
+        rounded_box_array = self.create_rounded_rectangle((box_width, box_height), box_radius, subtitle_box_color)
+
         box_height = text_height + margin
         box_clip = ImageClip(rounded_box_array, ismask=False).set_duration(subtitle_clip.duration).set_opacity(subtitle_opacity)
 
@@ -1734,7 +1736,6 @@ class Command(BaseCommand):
             "center",
             clip.h - box_height - 2 * margin + (box_height - text_height) / 2,
         )
-        rounded_box_array = self.create_rounded_rectangle((box_width, box_height), box_radius, subtitle_box_color)
 
         box_clip = box_clip.set_position(box_position)
         subtitle_clip = subtitle_clip.set_position(subtitle_position)
