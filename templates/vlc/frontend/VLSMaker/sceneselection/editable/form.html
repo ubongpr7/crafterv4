@@ -979,12 +979,12 @@ select::-webkit-dropdown-arrow {
           console.log("Drag started"); // Debugging: Log when dragging starts
         },
         update: function (event, ui) {
-          console.log("Drag ended, updating order"); // Debugging: Log when dragging ends
-          updateSubtitleNumbers(tableBody); // Update subtitle numbers
-          updateBackendOrder(); // Update backend with new order
+          console.log("Drag ended, updating order");
+          updateSubtitleNumbers(tableBody); 
+          updateBackendOrder(); 
         },
         stop: function (event, ui) {
-          console.log("Drag stopped"); // Debugging: Log when dragging stops
+          console.log("Drag stopped");
         }
       });
   
@@ -1015,29 +1015,33 @@ select::-webkit-dropdown-arrow {
   
     // Function to update backend with new subtitle order
     function updateBackendOrder() {
-      let subtitles = [];
-      $("#leadsTable tbody tr").each(function (index) {
-        subtitles.push({
-          id: $(this).data("id"),
-          position: index + 1
-        });
-      });
-  
-      $.ajax({
+    let subtitles = [];
+    $("#leadsTable tbody tr").each(function (index) {
+        let clip_id = $(this).data("id"); // Get the ID
+
+        if (clip_id != null) {  // Ensure it's not null or undefined
+            subtitles.push({
+                id: clip_id,
+                position: index + 1
+            });
+        }
+    });
+
+    $.ajax({
         url: "/text/update-subtitle-positions/",
         type: "POST",
         data: JSON.stringify({ subtitles: subtitles }),
         contentType: "application/json",
         headers: { "X-CSRFToken": getCSRFToken() },
         success: function (response) {
-          console.log("Positions updated successfully");
+            console.log("Positions updated successfully");
         },
         error: function (xhr, status, error) {
-          console.error("Error updating positions:", error);
+            console.error("Error updating positions:", error);
         }
-      });
-    }
-  
+    });
+}
+
     // Function to get CSRF token
     function getCSRFToken() {
       return document.querySelector("[name=csrfmiddlewaretoken]").value;
@@ -1196,7 +1200,7 @@ select::-webkit-dropdown-arrow {
                         
                         const payload = JSON.stringify({
                             text: textarea.value,
-                            position:rows.length+1
+                            // position:rows.length+1
                         });
         
                         const xhr = new XMLHttpRequest();

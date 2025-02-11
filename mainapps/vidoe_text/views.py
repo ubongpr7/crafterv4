@@ -76,7 +76,7 @@ def add_text_clip_line(request, textfile_id):
         try:
             data = json.loads(request.body) 
             slide_text = data.get('text')  
-            position = data.get('position')  
+            # position = data.get('position')  
 
             if not slide_text:
                 return JsonResponse({"success": False, "error": "Slide text is required"}, status=400)
@@ -84,7 +84,7 @@ def add_text_clip_line(request, textfile_id):
                 text_file=textfile,
                 slide=slide_text,
                 remaining=slide_text,
-                position=position
+                # position=position
             )
             return JsonResponse({"success": True, "id": clip.id,'new':True})
 
