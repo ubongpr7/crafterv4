@@ -921,6 +921,17 @@
                     </div>
 
                 </td>
+                <td>
+                    <div style="display: flex; place-items: center; justify-content: center;">
+                        <a href="#!"
+                            style="display: flex; align-items: center; justify-content: center; text-decoration: none; position: relative;"
+                            class="delete-row-btn" id="reset_{{forloop.counter}}" onclick="subclipReset('{{clip.id}}')">
+
+                            <i id="icon_{{clip.id}}" class="ri-loop-right-line fa-sync-alt"
+                                style="margin: 0 auto;font-size: 20px; font-weight: 600; cursor: pointer;vertical-align: -webkit-baseline-middle;"></i>
+                        </a>
+                    </div>
+                </td>
                 <td id='action_{{forloop.counter}}'>
                     <div style="display: flex; place-items: center; justify-content: center;">
                         <a href="#!" class="delete-row-btn" id="delete_{{forloop.counter}}"
@@ -934,17 +945,7 @@
 
 
                 </td>
-                <td>
-                    <div style="display: flex; place-items: center; justify-content: center;">
-                        <a href="#!"
-                            style="display: flex; align-items: center; justify-content: center; text-decoration: none; position: relative;"
-                            class="delete-row-btn" id="reset_{{forloop.counter}}" onclick="subclipReset('{{clip.id}}')">
-
-                            <i id="icon_{{clip.id}}" class="ri-loop-right-line fa-sync-alt"
-                                style="margin: 0 auto;font-size: 20px; font-weight: 600; cursor: pointer;vertical-align: -webkit-baseline-middle;"></i>
-                        </a>
-                    </div>
-                </td>
+                
             </tr>
 
             {% endfor %}
@@ -1110,7 +1111,7 @@
 <script>
 function toggleColumns(li, shouldDisable) {
     let $row = $(li).closest("tr"); 
-    let $nextCols = $row.find("td").slice(2, 5); 
+    let $nextCols = $row.find("td").slice(2, 4); 
 
     $nextCols.each(function() {
         $(this).css({
@@ -1772,15 +1773,6 @@ function toggleColumns(li, shouldDisable) {
                 </a>
                 </div>
                 </td>
-                <td id="action_${currentNumber}">
-                <div style="display: flex; place-items: center; justify-content: center;">
-    
-                <a href="#!" class="delete-row-btn" id="delete_${currentNumber}" onclick="deleteSlide(this)">
-                  <img id="icon_{{clip.id}}" src="https://leadeditor.s3.amazonaws.com/lead-maker/images/delete-icn.svg" alt="delete" style="width: 1.5rem; height: 3rem; cursor: pointer;">
-                </a>
-
-                </div>
-                </td>
                 <td>
                 <div style="display: flex; place-items: center; justify-content: center;">
     
@@ -1794,7 +1786,17 @@ function toggleColumns(li, shouldDisable) {
               style="margin: 0 auto;font-size: 20px; font-weight: 600; cursor: pointer;"></i>
                 </a>
                 </div>
-            </td>`;
+            </td>
+                <td id="action_${currentNumber}">
+                <div style="display: flex; place-items: center; justify-content: center;">
+    
+                <a href="#!" class="delete-row-btn" id="delete_${currentNumber}" onclick="deleteSlide(this)">
+                  <img id="icon_{{clip.id}}" src="https://leadeditor.s3.amazonaws.com/lead-maker/images/delete-icn.svg" alt="delete" style="width: 1.5rem; height: 3rem; cursor: pointer;">
+                </a>
+
+                </div>
+                </td>
+                `;
             document.getElementById(`slide_text_${currentNumber}`).focus()
             setTimeout(() => {
                 handleEnterToHide(currentNumber,);
