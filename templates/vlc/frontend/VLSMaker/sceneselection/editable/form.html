@@ -1110,6 +1110,14 @@
 <script>
 
 
+function toggleColumns(li, shouldDisable) {
+    let $row = $(li).closest("tr"); 
+    let $nextCols = $row.find("td").slice(1, 4); 
+
+    $nextCols.find("input, select, textarea, button")
+        .prop("disabled", shouldDisable)
+        .css("background-color", shouldDisable ? "#d3d3d3" : "");
+}
     function handleAutomateToHide(currentNumber) {
         edit = false;
         const textarea = document.getElementById(`slide_text_${currentNumber}`);
@@ -1784,6 +1792,7 @@
                 handleSelection(currentNumber);
                 updateSubtitleNumbers(table)
             }, 0);
+            toggleColumns(document.getElementById(`slide_text_${currentNumber}`),true)
         }
     }
     function checkRowCount(tableBody) {
