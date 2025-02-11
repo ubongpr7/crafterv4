@@ -1112,11 +1112,15 @@
 function toggleColumns(li, shouldDisable) {
     let $row = $(li).closest("tr"); 
     let $nextCols = $row.find("td").slice(2, 4); 
+    $nextCols.forEach($col=>{
+        $col.css({
+            "background-color": shouldDisable ? "#d3d3d3" : "",
 
+        })
+    })
     $nextCols.find("a, button")
         .prop("disabled", shouldDisable)
         .css({
-            "background-color": shouldDisable ? "blue" : "",
             "cursor": shouldDisable ? "wait" : "pointer",
             "pointer-events": shouldDisable ? "none" : "auto"
         });
