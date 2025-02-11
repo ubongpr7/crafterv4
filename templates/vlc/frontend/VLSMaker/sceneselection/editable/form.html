@@ -848,7 +848,6 @@
     #leadsTable tbody td:first-child:active {
         cursor: grabbing;
     }
-
 </style>
 <div class="lead-container lead-details" style="max-width: 96%; margin: 0 auto; ">
 
@@ -946,7 +945,7 @@
 
 
                 </td>
-                
+
             </tr>
 
             {% endfor %}
@@ -997,129 +996,134 @@
 
 <script>
     $(document).ready(function () {
-    let tableBody = document.querySelector("#leadsTable tbody");
+        // Initialize sortable on the table body
+        let tableBody = document.querySelector("#leadsTable tbody");
 
-    $("#leadsTable tbody").sortable({
-        axis: "y",
-        containment: "parent",
-        handle: "td:first-child",
-        placeholder: "ui-sortable-placeholder",
-        forcePlaceholderSize: true,
-        tolerance: "pointer",
-        cursorAt: { top: 10 },
-        start: function (event, ui) {
-            console.log("Drag started");
-        },
-        update: function (event, ui) {
-            console.log("Drag ended, updating order");
-            updateSubtitleNumbers(tableBody);
-            updateBackendOrder();
-        },
-        stop: function (event, ui) {
-            console.log("Drag stopped");
-        }
-    });
-
-    $("<style>")
-        .prop("type", "text/css")
-        .html(`
-            .ui-sortable-placeholder {
-                background: #f0f0f0;
-                border-left: 2px solid purple;
-                visibility: visible !important;
-                height: 50px;
-                margin: 0;
-                padding: 0;
+        $("#leadsTable tbody").sortable({
+            axis: "y", // Restrict dragging to the vertical axis
+            containment: "parent", // Contain dragging within the parent element
+            handle: "td:first-child", // Allow dragging only from the first column (Subtitle)
+            placeholder: "ui-sortable-placeholder", // Add a placeholder for visual feedback
+            forcePlaceholderSize: true, // Ensure the placeholder maintains a consistent size
+            tolerance: "pointer", // Use pointer-based tolerance for smoother placement
+            cursorAt: { top: 10 }, // Align the dragged element with the mouse cursor
+            start: function (event, ui) {
+                console.log("Drag started"); // Debugging: Log when dragging starts
+            },
+            update: function (event, ui) {
+                console.log("Drag ended, updating order");
+                updateSubtitleNumbers(tableBody);
+                updateBackendOrder();
+            },
+            stop: function (event, ui) {
+                console.log("Drag stopped");
             }
+        });
+
+        // Add CSS for the placeholder
+        $("<style>")
+            .prop("type", "text/css")
+            .html(`
+          .ui-sortable-placeholder {
+            background: #f0f0f0;
+            border-left: 2px solid purple;
+            visibility: visible !important;
+            height: 50px; /* Adjust height to match row height */
+            margin: 0; /* Ensure no margin interferes with placement */
+            padding: 0; /* Ensure no padding interferes with placement */
+          }
         `)
-        .appendTo("head");
-});
+            .appendTo("head");
+    });
 
-function updateSubtitleNumbers(tableBody) {
-    let rows = tableBody.getElementsByTagName("tr");
-    for (let i = 0; i < rows.length; i++) {
-        let subtitleCell = rows[i].querySelector("td:first-child");
-        subtitleCell.textContent = `Subtitle ${i + 1}`;
+    // Function to update subtitle numbers
+    function updateSubtitleNumbers(tableBody) {
+        let rows = tableBody.getElementsByTagName("tr");
+        for (let i = 0; i < rows.length; i++) {
+            let subtitleCell = rows[i].querySelector("td:first-child");
+            subtitleCell.textContent = `Subtitle ${i + 1}`;
+        }
     }
-}
 
-function updateBackendOrder() {
-    let subtitles = [];
-    $("#leadsTable tbody tr").each(function (index) {
-        let clip_id = $(this).data("id");
-        if (clip_id != null) {
-            subtitles.push({
-                id: clip_id,
-                position: index + 1
-            });
-        }
-    });
+    // Function to update backend with new subtitle order
+    function updateBackendOrder() {
+        let subtitles = [];
+        $("#leadsTable tbody tr").each(function (index) {
+            let clip_id = $(this).data("id"); // Get the ID
 
-    $.ajax({
-        url: "/text/update-subtitle-positions/",
-        type: "POST",
-        data: JSON.stringify({ subtitles: subtitles }),
-        contentType: "application/json",
-        headers: { "X-CSRFToken": getCSRFToken() },
-        success: function (response) {
-            console.log("Positions updated successfully");
-        },
-        error: function (xhr, status, error) {
-            console.error("Error updating positions:", error);
-        }
-    });
-}
+            if (clip_id != null) {  // Ensure it's not null or undefined
+                subtitles.push({
+                    id: clip_id,
+                    position: index + 1
+                });
+            }
+        });
 
-function getCSRFToken() {
-    return document.querySelector("[name=csrfmiddlewaretoken]").value;
-}
-
-function checkSubtitlesLength() {
-    let tableBody = document.querySelector("#leadsTable tbody");
-    let rows = tableBody.getElementsByTagName("tr");
-    if (rows.length > 40) {
-        console.log(rows.length);
         $.ajax({
-            url: `/text/check-subtitles/{{textfile.id}}/`,
-            method: "GET",
+            url: "/text/update-subtitle-positions/",
+            type: "POST",
+            data: JSON.stringify({ subtitles: subtitles }),
+            contentType: "application/json",
+            headers: { "X-CSRFToken": getCSRFToken() },
             success: function (response) {
-                if (response.status === "error") {
-                    alert(response.message);
-                    return false;
-                } else {
-                    console.log(response.message);
-                    return true;
-                }
+                console.log("Positions updated successfully");
             },
             error: function (xhr, status, error) {
-                console.error("Error checking subtitles:", error);
+                console.error("Error updating positions:", error);
             }
         });
-    } else {
-        return true;
     }
-}
 
+    // Function to get CSRF token
+    function getCSRFToken() {
+        return document.querySelector("[name=csrfmiddlewaretoken]").value;
+    }
+
+    // Function to check subtitles length
+    function checkSubtitlesLength() {
+        let tableBody = document.querySelector("#leadsTable tbody");
+        let rows = tableBody.getElementsByTagName("tr");
+        if (rows.length > 40) {
+            console.log(rows.length);
+            $.ajax({
+                url: `/text/check-subtitles/{{textfile.id}}/`,
+                method: "GET",
+                success: function (response) {
+                    if (response.status === "error") {
+                        alert(response.message);
+                        return false;
+                    } else {
+                        console.log(response.message);
+                        return true;
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error checking subtitles:", error);
+                }
+            });
+        } else {
+            return true;
+        }
+    }
 </script>
-
 <script>
-function toggleColumns(li, shouldDisable) {
-    let $row = $(li).closest("tr"); 
-    let $nextCols = $row.find("td").slice(2, 4); 
+    function toggleColumns(li, shouldDisable) {
+        let $row = $(li).closest("tr");
+        let $nextCols = $row.find("td").slice(2, 4);
 
-    $nextCols.each(function() {
-        $(this).css({
-            "background-color": shouldDisable ? "#d3d3d3" : ""
+        $nextCols.each(function () {
+            $(this).css({
+                "background-color": shouldDisable ? "#d3d3d3" : ""
+            });
         });
-    });
 
-    $nextCols.find("a, button")
-        .prop("disabled", shouldDisable)
-        .css({
-            "cursor": shouldDisable ? "wait" : "pointer",
-            "pointer-events": shouldDisable ? "none" : "auto"
-        });
-}
+        $nextCols.find("a, button")
+            .prop("disabled", shouldDisable)
+            .css({
+                "cursor": shouldDisable ? "wait" : "pointer",
+                "pointer-events": shouldDisable ? "none" : "auto"
+            });
+    }
 
     function handleAutomateToHide(currentNumber) {
         edit = false;
@@ -1288,7 +1292,7 @@ function toggleColumns(li, shouldDisable) {
 
                                     };
                                     updateBackendOrder()
-                                    toggleColumns(textarea,false)
+                                    toggleColumns(textarea, false)
                                     showSuccessMessage(`Subtitle submitted successfully!`);
 
                                 } else {
@@ -1329,9 +1333,9 @@ function toggleColumns(li, shouldDisable) {
         const delete_ = document.getElementById(`edit_${currentNumber}`);
         textarea.style.display = 'flex';
         wrapper.style.display = 'flex'
-        
+
         wrapper.style.display = 'none'
-        toggleColumns(textarea,true)
+        toggleColumns(textarea, true)
 
 
     };
@@ -1736,7 +1740,7 @@ function toggleColumns(li, shouldDisable) {
     id="slide_text_${currentNumber}" 
     type="text" 
     name="slide_text" 
-    placeholder="Type Your Subtitle Here" 
+    placeholder="Type Your Script Here" 
     class="form-control tab-textarea" 
     aria-describedby="textarea"></textarea>
 
@@ -1797,7 +1801,7 @@ function toggleColumns(li, shouldDisable) {
                 handleSelection(currentNumber);
                 updateSubtitleNumbers(table)
             }, 0);
-            toggleColumns(document.getElementById(`slide_text_${currentNumber}`),true)
+            toggleColumns(document.getElementById(`slide_text_${currentNumber}`), true)
         }
     }
     function checkRowCount(tableBody) {
