@@ -9,12 +9,62 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
-  <link href="https://fonts.cdnfonts.com/css/montserrat" rel="stylesheet" />
+  <!-- <link href="https://fonts.cdnfonts.com/css/montserrat" rel="stylesheet" />
   <link href="https://fonts.cdnfonts.com/css/open-sans" rel="stylesheet" />
   <link href="https://fonts.cdnfonts.com/css/helveticafortarget-bold" rel="stylesheet" />
   <link href="https://fonts.cdnfonts.com/css/roboto" rel="stylesheet" />
   <link href="https://fonts.cdnfonts.com/css/arial" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+ -->
+ <style>
+  @font-face {
+    font-family: 'Montserrat';
+    src: url('fonts/Montserrat.ttf') format('truetype');
 
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap; 
+  }
+
+  @font-face {
+    font-family: 'Montserrat-Bold';
+        src: url('fonts/Montserrat-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap; 
+  }
+
+  @font-face {
+    font-family: 'Montserrat-SemiBold';
+    src: url('fonts/Montserrat-SemiBold.ttf') format('truetype');
+         
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'Montserrat-ExtraBold';
+    src: url('fonts/Montserrat-ExtraBold.ttf') format('truetype');
+    font-weight: 800;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+      font-family: 'Arial'; 
+      src: url('fonts/Arial.ttf') format('truetype');
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Helvetica';  
+      src: url('fonts/Helvetica.otf') format('otf');
+      font-style: normal;
+      font-display: swap;
+    }
+</style>
   {% include 'partials/head_c.html' %}
 
   <link rel="stylesheet" href="{% static 'css/style.css' %}" />
