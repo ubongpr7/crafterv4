@@ -455,8 +455,10 @@
                                  font-weight:600" value="Montserrat">Montserrat</option>
               </select>
             </div>
-            <p id="font_error" style="color:red; margin-top:-20px; "></p>
+
           </div>
+          <p id="font_error" style="color:red; margin-top:-20px; "></p>
+
 
           <div class="Font-Color-text" style="display: flex;
                         align-items: center;
@@ -711,38 +713,34 @@ background: linear-gradient(to right, #864AF9 0%, #864AF9 70%, #D9D9D9 70%, #D9D
   <script src="{% static 'js/script.js'%}"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-  // Function to update the slider background
-  function updateSliderBackground(slider) {
-    const value = ((slider.value - slider.min) / (slider.max - slider.min)) * 100;
-    slider.style.background = `linear-gradient(to right, #864AF9 ${value}%, #D9D9D9 ${value}%)`;
-  }
+      function updateSliderBackground(slider) {
+        const value = ((slider.value - slider.min) / (slider.max - slider.min)) * 100;
+        slider.style.background = `linear-gradient(to right, #864AF9 ${value}%, #D9D9D9 ${value}%)`;
+      }
 
-  // Select the opacity slider and the preview box
-  const opacitySlider = document.getElementById('subtitleOpacitySlider');
-  const previewBox = document.querySelector('.previewBackground2');
-  
-  // Initial setup
-  previewBox.style.opacity = opacitySlider.value / 100;
-  document.querySelector('#subtitleOpacityValue').textContent = opacitySlider.value + '%';
-  
-  // Update the background of the slider
-  updateSliderBackground(opacitySlider);
+      const borderRadiusSlider = document.getElementById('subtitleBorderRadiusSlider');
+      const opacitySlider = document.getElementById('subtitleOpacitySlider');
 
-  // Add event listener for the opacity slider input
-  opacitySlider.addEventListener('input', function () {
-    const opacityValue = opacitySlider.value;
-    
-    // Update the opacity value in the preview box
-    previewBox.style.opacity = opacityValue / 100;
-    
-    // Update the opacity value text
-    document.querySelector('#subtitleOpacityValue').textContent = opacityValue + '%';
-    
-    // Update the slider background to reflect current value
-    updateSliderBackground(opacitySlider);
-  });
-});
+      const previewBox = document.querySelector('.previewBackground2');
+      previewBox.style.borderRadius = borderRadiusSlider.value + 'px';
 
+      updateSliderBackground(borderRadiusSlider);
+      updateSliderBackground(opacitySlider);
+
+      borderRadiusSlider.addEventListener('input', function () {
+        const borderRadiusValue = borderRadiusSlider.value;
+        previewBox.style.borderRadius = borderRadiusValue + 'px';
+        document.querySelector('#subtitleBorderRadiusValue').textContent = borderRadiusValue;
+        updateSliderBackground(borderRadiusSlider);
+      });
+
+      opacitySlider.addEventListener('input', function () {
+        const opacityValue = opacitySlider.value;
+        document.querySelector('#subtitleOpacityValue').textContent = opacityValue + '%';
+        previewBox.style.opacity = opacityValue / 100;
+        updateSliderBackground(opacitySlider);
+      });
+    });
   </script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script>
