@@ -931,7 +931,7 @@ def add_text(request):
         subtitle_box_color = request.POST.get("subtitle_box_color")
         font_select = request.POST.get("font_select")
         font_size = request.POST.get("font_size")
-        # box_radius = int(request.POST.get("box_radius"))
+        box_radius = int(request.POST.get("box_radius"))
         # subtitle_opacity = float(int(request.POST.get("subtitle_opacity"))/ 100)
         
     
@@ -951,7 +951,7 @@ def add_text(request):
                     font_size=font_size,
                     font_color=font_color,
                     # subtitle_opacity=subtitle_opacity,
-                    # box_radius=box_radius
+                    box_radius=box_radius
 
                 )
 
