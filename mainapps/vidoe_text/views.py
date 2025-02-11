@@ -931,6 +931,10 @@ def add_text(request):
         subtitle_box_color = request.POST.get("subtitle_box_color")
         font_select = request.POST.get("font_select")
         font_size = request.POST.get("font_size")
+        box_radius = float(int(request.POST.get("box_radius"))/ 100)
+        subtitle_opacity = float(int(request.POST.get("subtitle_opacity"))/ 100)
+        
+    
         print('======>',font_size)
         x, y = is_api_key_valid(api_key, voice_id)
 
@@ -946,6 +950,9 @@ def add_text(request):
                     subtitle_box_color=subtitle_box_color,
                     font_size=font_size,
                     font_color=font_color,
+                    subtitle_opacity=subtitle_opacity,
+                    box_radius=box_radius
+
                 )
 
                 return redirect(reverse("video:add_scenes", args=[text_obj.id]))

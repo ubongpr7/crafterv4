@@ -10,7 +10,7 @@ from moviepy.editor import ImageClip
 import numpy as np
 from django.contrib.staticfiles.storage import staticfiles_storage
 import textwrap
-from PIL import ImageFont, Image
+from PIL import ImageFont, Image,ImageDraw
 from pathlib import Path
 from moviepy.editor import (
     AudioFileClip,
@@ -1622,6 +1622,9 @@ class Command(BaseCommand):
         base_font_size = self.text_file_instance.font_size - 3
         color = self.text_file_instance.font_color
         margin = 29
+        box_radius=self.text_file_instance.box_radius
+        subtitle_opacity=self.text_file_instance.subtitle_opacity
+
         font_path = self.text_file_instance.font
         if margin is None:
             # Set default margin or handle the case when margin is None
@@ -1717,11 +1720,13 @@ class Command(BaseCommand):
             text_width + small_margin
         )  # Adjust the box width to be slightly larger than the text width
         box_height = text_height + margin
-        box_clip = (
-            ColorClip(size=(box_width, box_height), color=subtitle_box_color)
-            .set_opacity(0.7)
-            .set_duration(subtitle_clip.duration)
-        )
+        box_clip = ImageClip(rounded_box_array, ismask=False).set_duration(subtitle_clip.duration).set_opacity(subtitle_opacity)
+
+        # box_clip = (
+        #     ColorClip(size=(box_width, box_height), color=subtitle_box_color)
+        #     .set_opacity(subtitle_opacity)
+        #     .set_duration(subtitle_clip.duration)
+        # )
         print("this is the used box color:", subtitle_box_color)
         # Adjust box position to be slightly higher in the video
         box_position = ("center", clip.h - box_height - 2 * margin)
@@ -1729,11 +1734,23 @@ class Command(BaseCommand):
             "center",
             clip.h - box_height - 2 * margin + (box_height - text_height) / 2,
         )
+        rounded_box_array = self.create_rounded_rectangle((box_width, box_height), box_radius, subtitle_box_color)
 
         box_clip = box_clip.set_position(box_position)
         subtitle_clip = subtitle_clip.set_position(subtitle_position)
 
         return CompositeVideoClip([clip, box_clip, subtitle_clip])
+
+    def create_rounded_rectangle(self,size, radius, color=(255, 255, 255, 255)):
+        """ Create an RGBA image with a rounded rectangle """
+        img = Image.new("RGBA", size, (0, 0, 0, 0))  # Transparent background
+        draw = ImageDraw.Draw(img)
+        
+        # Draw rounded rectangle
+        draw.rounded_rectangle((0, 0, size[0], size[1]), radius=radius, fill=color)
+        
+        return np.array(img)
+
 
     def add_static_watermark_to_instance(
         self,

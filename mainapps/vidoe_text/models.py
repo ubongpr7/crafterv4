@@ -87,6 +87,8 @@ class TextFile(models.Model):
     bg_level = models.DecimalField(
         null=True, blank=True, max_digits=12, decimal_places=9, default=0.1
     )
+    box_radius=models.FloatField(default=0.0,null=True)
+    subtitle_opacity=models.FloatField(default=0.0,null=True)
     font = models.CharField(max_length=50, default="Arial")
     font_color = models.CharField(max_length=7)  # e.g., hex code: #ffffff
     subtitle_box_color = models.CharField(max_length=7, blank=True, null=True)
