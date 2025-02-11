@@ -1718,7 +1718,7 @@ class Command(BaseCommand):
         small_margin = 8 
         box_width = (
             text_width + small_margin
-        ) *2
+        ) 
 
         box_height = text_height + margin
         rounded_box_array = self.create_rounded_rectangle((int(box_width), int(box_height)), int(box_radius), rectangle_color)
