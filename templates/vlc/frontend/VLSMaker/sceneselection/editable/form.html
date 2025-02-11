@@ -876,8 +876,7 @@
             {% if video_clips %}
             {% for clip in video_clips %}
             <tr data-id="{{clip.id}}" style="height: 5rem;" id="tr_{{clip.id}}">
-                <td data-tooltip="Drag To Move" style="width: 18%; text-wrap: nowrap; font-size: 1.4rem;">Subtitle {{
-                    forloop.counter }}</td>
+                <td data-tooltip="Drag To Move" style="width: 18%; text-wrap: nowrap; font-size: 1.4rem;">Subtitle {{forloop.counter }}</td>
                 <td id="highlightable_{{forloop.counter}}" style="width: 64%;">
                     <div>
                         <textarea
@@ -1195,7 +1194,6 @@
       // Select all <li> elements within the <ul>
       const liElements = ul.querySelectorAll("li");
       
-      // Loop through the <li> elements and remove each one
       liElements.forEach(li => li.remove());
     } else {
       console.error("Element with ID 'list-of-tags' not found.");
@@ -1740,6 +1738,7 @@
                   <div id="error-message_${currentNumber}" style="text-transform: capitalize;" class="error-message"></div>
               </div>
             </td>
+            
                 <td>
                 <div style="display: flex; place-items: center; justify-content: center;">
                   
@@ -1890,6 +1889,7 @@ style="grid-template-columns: 0.7fr 1fr;width:100%;">
                 </label>
                 <i id="clear-file" style="display:none" onclick="clearFileInput()" class="ri-close-circle-line"></i>
             <input type="file" onchange="saveInput(this)" id="slide_file" name="slide_file" class="upload-input" accept="video/*">
+
         </div>
         
         <p id="currentFile"></p>
