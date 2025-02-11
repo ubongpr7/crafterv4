@@ -1718,7 +1718,7 @@
             newRow.style.height = '5rem';
             newRow.innerHTML += `
             <td id="highlightable_${currentNumber}" style="padding: 12 12px;">
-              <div style="display: flex; height: 100%;width: 100%; margin-left:-10px;flex-direction: column;">
+              <div style="display: flex; height: 100%;width: 100%;flex-direction: column;">
                 <textarea class="textarea-class"
     style="display: block;  padding: .375rem .75rem; font-size: 1rem; font-weight: 400; line-height: 1.5; color: #212529; background-color: #fff; background-clip: padding-box; border: 1px solid #ced4da; padding-left:10px; resize:none; border-radius:14px; transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out; placeholder-color: black;"
     id="slide_text_${currentNumber}" 
@@ -1728,7 +1728,7 @@
     class="form-control tab-textarea" 
     aria-describedby="textarea"></textarea>
 
-                <div class="wrapper" id="wrapper_${currentNumber}" style="display:none; padding-left: 1.5rem;flex-direction-column">
+                <div class="wrapper" id="wrapper_${currentNumber}" style="display:none; flex-direction-column">
                   <div style="width: 100%;" class="tag-box">
                       <ul style="margin: 0;" id="list-of-tags_${currentNumber}" class="list-of-tags">
                           <span id="slide_span_${currentNumber}"></span>
@@ -1737,7 +1737,7 @@
                   </div>
                   
                   </div>
-                  <div id="error-message_${currentNumber}" style="text-transform: capitalize; padding-left:24px" class="error-message"></div>
+                  <div id="error-message_${currentNumber}" style="text-transform: capitalize;"  class="error-message"></div>
               </div>
             </td>
             
