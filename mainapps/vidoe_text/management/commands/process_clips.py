@@ -720,7 +720,7 @@ class Command(BaseCommand):
                     stderr=subprocess.PIPE,
                     text=True,
                 )
-                self.text_file_instance.track_progress(20)
+                # self.text_file_instance.track_progress(20)
 
                 # Log command output
                 logging.info(f"Command output: {result.stdout}")
@@ -823,9 +823,7 @@ class Command(BaseCommand):
                     stderr=subprocess.PIPE,
                     text=True,
                 )
-                self.text_file_instance.track_progress(20)
 
-                # Log command output
                 logging.info(f"Command output: {result.stdout}")
                 logging.error(f"Command error (if any): {result.stderr}")
 
@@ -1619,23 +1617,23 @@ class Command(BaseCommand):
     ) -> VideoFileClip:
         logging.info(f"Adding subtitle: {subtitle.text}")
         subtitle_box_color = self.text_file_instance.subtitle_box_color
-        base_font_size = self.text_file_instance.font_size - 3
+        base_font_size = self.text_file_instance.font_size -3
+        if self.text_file_instance.resolution=='9:16' and base_font_size>25:
+            base_font_size=25
+
         color = self.text_file_instance.font_color
         margin = 29
         box_radius=self.text_file_instance.box_radius
         subtitle_opacity=self.text_file_instance.subtitle_opacity
 
         font_path = self.text_file_instance.font
-        if margin is None:
-            # Set default margin or handle the case when margin is None
-            margin = 30
+        
         x, y, z = mcolors.to_rgb(subtitle_box_color)
         subtitle_box_color = (x * 255, y * 255, z * 255)
         rectangle_color= (int(x * 255), int(y * 255), int(z * 255))
         # Calculate the scaling factor based on the resolution of the clip
         scaling_factor = clip.h / 1080
         font_size = int(int(base_font_size) * scaling_factor)
-        font_path_ = fonts.get(font_path, "Montserrat")
 
         def split_text(text: str, max_line_width: int) -> str:
             words = text.split()
@@ -1657,7 +1655,6 @@ class Command(BaseCommand):
 
             return "\n".join(lines)
 
-        # Function to ensure the subtitle text does not exceed two lines
         def ensure_two_lines(
             text: str, initial_max_line_width: int, initial_font_size: int
         ) -> (str, int):
@@ -1677,7 +1674,7 @@ class Command(BaseCommand):
 
             return wrapped_text, font_size
 
-        max_line_width = 35  # Initial value, can be adjusted
+        max_line_width = 35 
 
         if len(subtitle.text) > 60:
             wrapped_text, adjusted_font_size = ensure_two_lines(
@@ -1731,6 +1728,7 @@ class Command(BaseCommand):
             "center",
             clip.h - box_height - 2 * margin + (box_height - text_height) / 2,
         )
+
 
         box_clip = box_clip.set_position(box_position)
         subtitle_clip = subtitle_clip.set_position(subtitle_position)
