@@ -1620,6 +1620,8 @@ class Command(BaseCommand):
         base_font_size = self.text_file_instance.font_size -3
         if self.text_file_instance.resolution=='9:16' and base_font_size>25:
             base_font_size=25
+        if self.text_file_instance.resolution=='4:5' and base_font_size>44:
+            base_font_size=44
 
         color = self.text_file_instance.font_color
         margin = 29
