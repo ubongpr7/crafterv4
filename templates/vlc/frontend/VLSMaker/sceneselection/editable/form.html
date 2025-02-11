@@ -1234,7 +1234,7 @@ function toggleColumns(li, shouldDisable) {
                 wrapper.style.display = 'flex';
                 edit_.style.display = 'flex';
                 slide_span.textContent = textarea.value;
-                toggleColumns(textarea, true)
+                // toggleColumns(textarea, true)
 
                 const check = checkSubtitlesLength();
 
@@ -1289,6 +1289,7 @@ function toggleColumns(li, shouldDisable) {
 
                                     };
                                     updateBackendOrder()
+                                    toggleColumns(textarea,false)
                                     showSuccessMessage(`Subtitle submitted successfully!`);
 
                                 } else {
@@ -1332,6 +1333,7 @@ function toggleColumns(li, shouldDisable) {
         // delete_.style.display = 'none';
         edit_.style.display = 'none'
         wrapper.style.display = 'none'
+        toggleColumns(textarea,true)
 
 
     };
