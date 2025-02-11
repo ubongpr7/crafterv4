@@ -91,78 +91,72 @@
       height: auto;
     }
 
-    .hiw-element-placeholder {
-      background: none;
-      height: auto !important;
-      border: 1px solid #d9d9d9;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+    .hiw-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
+.hiw-element {
+  width: 100%;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
-    .video-placeholder {
-      height: auto;
-      background-color: none;
+.hiw-element-text-container {
+  margin-bottom: 10px;
+}
 
-    }
+.hiw-element-heading {
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 5px;
+}
 
-    .hiw-element {
-      /* display: -webkit-box; */
-      /* display: -ms-flexbox; */
-      display: flex;
-      flex-direction: column;
-      -webkit-box-orient: vertical;
-      -webkit-box-direction: reverse;
-      /* -ms-flex-direction: column-reverse; */
-      /* flex-direction: column-reverse; */
-      gap: 40px;
-    }
+.hiw-element-text {
+  font-size: 14px;
+  text-align: center;
+  margin-bottom: 15px;
+}
 
+.hiw-element-placeholder {
+  width: 100%;
+  max-width: 600px; /* Make sure the videos don't stretch too wide on large screens */
+  margin-bottom: 15px;
+}
 
-    .hiw-element-text-container {
-      width: 800px;
+.sep-border {
+  width: 100%;
+  border-top: 1px solid #ccc;
+  margin-bottom: 15px;
+}
 
-    }
+/* Make videos responsive */
+.video-js {
+  width: 100% !important;
+  max-width: 600px;
+  height: auto;
+}
 
-    .hiw-element-placeholder {
-      width: 800px;
+/* Ensure the last video (Step 6) shows properly */
+.hiw-container .hiw-element:last-child {
+  margin-bottom: 0;
+}
 
-    }
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .hiw-container {
+    padding: 10px;
+  }
 
-    .price-promo {
-      color: rgba(0, 0, 0, 0.7);
-    }
+  .hiw-element {
+    margin-bottom: 20px;
+  }
+}
 
-    .sep-border {
-      border-bottom: 1px solid #ccc;
-      margin: 0 auto;
-      margin-top: 36px;
-      width: 800px;
-    }
-
-    @media screen and (max-width: 600px) {
-      .hiw-element-text-container {
-        width: 100%;
-        margin-top: 12px;
-
-      }
-      .hiw-element{
-        flex-direction: column-reverse;
-      }
-    }
-
-    @media screen and (max-width: 600px) {
-      .hiw-element-placeholder {
-        width: 100%;
-      }
-      .hiw-element-text{
-        margin-top: 10px !important;
-      }
-      .sep-border{
-        margin-top: 0px;
-      }
-    }
   </style>
 </head>
 
