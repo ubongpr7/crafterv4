@@ -876,7 +876,8 @@
             {% if video_clips %}
             {% for clip in video_clips %}
             <tr data-id="{{clip.id}}" style="height: 5rem;" id="tr_{{clip.id}}">
-                <td data-tooltip="Drag To Move" style="width: 18%; text-wrap: nowrap; font-size: 1.4rem;">Subtitle {{forloop.counter }}</td>
+                <td data-tooltip="Drag To Move" style="width: 18%; text-wrap: nowrap; font-size: 1.4rem;">
+                    Subtitle {{forloop.counter }}</td>
                 <td id="highlightable_{{forloop.counter}}" style="width: 64%;">
                     <div>
                         <textarea
