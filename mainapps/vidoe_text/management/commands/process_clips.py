@@ -1724,7 +1724,7 @@ class Command(BaseCommand):
         box_height = text_height + margin
         rounded_box_array = self.create_rounded_rectangle((int(box_width), int(box_height)), int(box_radius), )
         logging.info('done with')
-        box_clip = ImageClip(rounded_box_array, ismask=False).set_duration(subtitle_clip.duration).set_opacity(subtitle_opacity)
+        box_clip = ImageClip(rounded_box_array, ismask=False).set_duration(subtitle_clip.duration)
 
         print("this is the used box color:", subtitle_box_color)
         box_position = ("center", clip.h - box_height - 2 * margin)
