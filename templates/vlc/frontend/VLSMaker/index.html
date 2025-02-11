@@ -962,47 +962,29 @@ background: linear-gradient(to right, #864AF9 0%, #864AF9 70%, #D9D9D9 70%, #D9D
   <script>
     document.addEventListener('DOMContentLoaded', function () {
   // Function to update the subtitle background color with the selected transparency
-  function updateSubtitleBackgroundColor(color, opacity) {
+  function updateSubtitleBackgroundColor(color) {
     const previewBackground = document.getElementById('previewBackground');
     
-    // Use rgba to keep the color fixed and allow opacity changes
-    previewBackground.style.backgroundColor = `rgba(${hexToRgb(color)}, ${opacity})`;
-  }
-
-  // Convert hex color to RGB format
-  function hexToRgb(hex) {
-    // Remove the '#' and parse the hex value
-    hex = hex.replace('#', '');
-    const r = parseInt(hex.substring(0, 2), 16);
-    const g = parseInt(hex.substring(2, 4), 16);
-    const b = parseInt(hex.substring(4, 6), 16);
-    return `${r}, ${g}, ${b}`;
+    // Check if the color has an alpha value (rgba format)
+    if (color.includes('rgba')) {
+      // If the color is in RGBA format, extract only the RGB part (remove the alpha value)
+      const rgbColor = color.replace(/,.*\)$/, ')');  // Remove the alpha part
+      previewBackground.style.backgroundColor = rgbColor;  // Apply RGB color without transparency
+    } else {
+      // If the color is in hex or other format, just apply it directly
+      previewBackground.style.backgroundColor = color;
+    }
   }
 
   // Select the subtitle background color picker and text input
   const colorPicker2 = document.getElementById('colorPicker2');
   const colorText2 = document.getElementById('colortext2');
-  const opacitySlider = document.createElement('input');
-  opacitySlider.type = 'range';
-  opacitySlider.min = 0;
-  opacitySlider.max = 1;
-  opacitySlider.step = 0.01;
-  opacitySlider.value = 1; // Default opacity is 1 (fully opaque)
-  
-  // Append the opacity slider next to the color input (optional)
-  document.querySelector('.Subtitle-textarea').appendChild(opacitySlider);
 
   // Update the subtitle background color when the color picker changes
   colorPicker2.addEventListener('input', function () {
     const selectedColor = colorPicker2.value;
     colorText2.value = selectedColor; // Sync the text input with the color picker
-    updateSubtitleBackgroundColor(selectedColor, opacitySlider.value); // Update the preview box
-  });
-
-  // Update the subtitle background color when the opacity slider changes
-  opacitySlider.addEventListener('input', function () {
-    const selectedColor = colorPicker2.value;
-    updateSubtitleBackgroundColor(selectedColor, opacitySlider.value); // Update the preview box with new opacity
+    updateSubtitleBackgroundColor(selectedColor); // Update the preview box
   });
 
   // Update the subtitle background color when the text input changes
@@ -1010,12 +992,12 @@ background: linear-gradient(to right, #864AF9 0%, #864AF9 70%, #D9D9D9 70%, #D9D
     const selectedColor = colorText2.value;
     if (/^#[0-9A-F]{6}$/i.test(selectedColor)) { // Validate hex color
       colorPicker2.value = selectedColor; // Sync the color picker with the text input
-      updateSubtitleBackgroundColor(selectedColor, opacitySlider.value); // Update the preview box with the new color and opacity
+      updateSubtitleBackgroundColor(selectedColor); // Update the preview box
     }
   });
 
   // Initialize the subtitle background color with the default value
-  updateSubtitleBackgroundColor(colorPicker2.value, opacitySlider.value);
+  updateSubtitleBackgroundColor(colorPicker2.value);
 });
 
   </script>
