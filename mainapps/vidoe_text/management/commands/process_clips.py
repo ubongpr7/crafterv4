@@ -1631,7 +1631,7 @@ class Command(BaseCommand):
             margin = 30
         x, y, z = mcolors.to_rgb(subtitle_box_color)
         subtitle_box_color = (x * 255, y * 255, z * 255)
-
+        rectangle_color= (int(x * 255), int(y * 255), int(z * 255))
         # Calculate the scaling factor based on the resolution of the clip
         scaling_factor = clip.h / 1080
         font_size = int(int(base_font_size) * scaling_factor)
@@ -1721,7 +1721,8 @@ class Command(BaseCommand):
         )  # Adjust the box width to be slightly larger than the text width
 
         box_height = text_height + margin
-        rounded_box_array = self.create_rounded_rectangle((int(box_width), int(box_height)), int(box_radius), subtitle_box_color)
+        rounded_box_array = self.create_rounded_rectangle((int(box_width), int(box_height)), int(box_radius), rectangle_color)
+        logging.info('done with')
         box_clip = ImageClip(rounded_box_array, ismask=False).set_duration(subtitle_clip.duration).set_opacity(subtitle_opacity)
 
         # box_clip = (
