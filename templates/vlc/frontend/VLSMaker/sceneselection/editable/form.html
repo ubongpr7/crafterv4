@@ -1109,15 +1109,19 @@
 
 <script>
 
-
 function toggleColumns(li, shouldDisable) {
     let $row = $(li).closest("tr"); 
     let $nextCols = $row.find("td").slice(2, 4); 
 
-    $nextCols.find("div, a, button")
+    $nextCols.find("a, button")
         .prop("disabled", shouldDisable)
-        .css("background-color", shouldDisable ? "#d3d3d3" : "");
+        .css({
+            "background-color": shouldDisable ? "#d3d3d3" : "",
+            "cursor": shouldDisable ? "wait" : "pointer",
+            "pointer-events": shouldDisable ? "none" : "auto"
+        });
 }
+
     function handleAutomateToHide(currentNumber) {
         edit = false;
         const textarea = document.getElementById(`slide_text_${currentNumber}`);
