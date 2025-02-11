@@ -1174,7 +1174,16 @@ select::-webkit-dropdown-arrow {
     }
   }
   //good
-  
+  function toggleColumns(li, shouldDisable) {
+    let $row = $(li).closest("tr"); 
+    let $nextCols = $row.find("td").slice(1, 4); 
+
+    $nextCols.find("input, select, textarea, button")
+        .prop("disabled", shouldDisable)
+        .css("background-color", shouldDisable ? "#d3d3d3" : "");
+}
+
+
     function handleEnterToHide(currentNumber,) {
         edit =false
       const textarea = document.getElementById(`slide_text_${currentNumber}`);
@@ -1197,6 +1206,7 @@ select::-webkit-dropdown-arrow {
                 wrapper.style.display = 'flex';
                 edit_.style.display = 'flex';
                 slide_span.textContent = textarea.value;
+                toggleColumns(textarea,true)
 
               const check=checkSubtitlesLength();
 
@@ -1251,6 +1261,8 @@ select::-webkit-dropdown-arrow {
 
                                   };
                                   updateBackendOrder()
+                                    toggleColumns(textarea,false)
+
                                     showSuccessMessage(`Subtitle submitted successfully!`);
         
                                 } else {
