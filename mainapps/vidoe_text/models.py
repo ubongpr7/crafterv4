@@ -220,7 +220,7 @@ class TextLineVideoClip(models.Model):
     class Meta:
         # unique_together = ("text_file", "line_number")
 
-        ordering = ['position',"line_number", "text_file"]
+        ordering = ['position', "text_file"]
     # def save(self, *args, **kwargs):
     #     if not self.line_number:
     #         max_line_number = (
