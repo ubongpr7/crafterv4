@@ -457,6 +457,8 @@
             </div>
 
           </div>
+          <p id="font_error" style="color:red; margin-top:-20px; "></p>
+
 
           <div class="Font-Color-text" style="display: flex;
                         align-items: center;
@@ -537,7 +539,6 @@
                             transition: 0.3s ease;
                             padding-left: 55px" />
           </div>
-          <p id="font_error" style="color:red; margin-top:-20px; "></p>
 
           <div class="Font-Size-text" style="display: flex;
                         align-items: center;
@@ -583,8 +584,8 @@
               <span id="subtitleBorderRadiusValue" class="subtitle-border-radius-value"
                 style="font-size: 18px; font-weight: 600;letter-spacing: 0.02em; color: #000000B2;">18</span>
             </div>
-            <input type="range" name="box_radius" id="subtitleBorderRadiusSlider" class="subtitle-border-radius-slider" min="0" max="50"
-              value="18"
+            <input type="range" name="box_radius" id="subtitleBorderRadiusSlider" class="subtitle-border-radius-slider"
+              min="0" max="50" value="18"
               style="width: 100%; margin-top: 10px; -webkit-appearance: none; appearance: none; margin: 0; height: 20px; border-radius: 10px; 
     background: linear-gradient(to right, #864AF9 0%, #864AF9 18%, #D9D9D9 18%, #D9D9D9 100%); outline: none; cursor: pointer; position: relative;">
           </div>
@@ -635,8 +636,8 @@
             <span id="subtitleOpacityValue" class="subtitle-opacity-value"
               style="font-size: 18px; font-weight: 600;letter-spacing: 0.02em; color: #000000B2;">70%</span>
           </div>
-          <input name="subtitle_opacity" type="range" id="subtitleOpacitySlider" class="subtitle-opacity-slider" min="0" max="100" step="1"
-            value="70"
+          <input name="subtitle_opacity" type="range" id="subtitleOpacitySlider" class="subtitle-opacity-slider" min="0"
+            max="100" step="1" value="70"
             style="width: 100%; margin-top: 10px; -webkit-appearance: none; appearance: none; margin: 0; height: 20px; border-radius: 10px; 
 background: linear-gradient(to right, #864AF9 0%, #864AF9 70%, #D9D9D9 70%, #D9D9D9 100%); outline: none; cursor: pointer; position: relative;">
         </div>
@@ -959,12 +960,21 @@ background: linear-gradient(to right, #864AF9 0%, #864AF9 70%, #D9D9D9 70%, #D9D
 
     });
   </script>
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-  // Function to update the subtitle background color
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+  // Function to update the subtitle background color with the selected transparency
   function updateSubtitleBackgroundColor(color) {
     const previewBackground = document.getElementById('previewBackground');
-    previewBackground.style.backgroundColor = color;
+    
+    // Check if the color has an alpha value (rgba format)
+    if (color.includes('rgba')) {
+      // If the color is in RGBA format, extract only the RGB part (remove the alpha value)
+      const rgbColor = color.replace(/,.*\)$/, ')');  // Remove the alpha part
+      previewBackground.style.backgroundColor = rgbColor;  // Apply RGB color without transparency
+    } else {
+      // If the color is in hex or other format, just apply it directly
+      previewBackground.style.backgroundColor = color;
+    }
   }
 
   // Select the subtitle background color picker and text input
@@ -990,7 +1000,8 @@ background: linear-gradient(to right, #864AF9 0%, #864AF9 70%, #D9D9D9 70%, #D9D
   // Initialize the subtitle background color with the default value
   updateSubtitleBackgroundColor(colorPicker2.value);
 });
-</script>
+
+  </script>
 </body>
 
 </html>
