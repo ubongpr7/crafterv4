@@ -2098,12 +2098,12 @@ style="grid-template-columns: 0.7fr 1fr;width:100%;">
                 return response.json();
             })
             .then(videos => {
-                const defaultOption = document.createElement("option");
+                // const defaultOption = document.createElement("option");
                 // defaultOption.value = "";
                 // defaultOption.textContent = "Select A Video Clip";
                 // defaultOption.disabled = true;
                 // defaultOption.selected = true;
-                selectElement.appendChild(defaultOption);
+                // selectElement.appendChild(defaultOption);
 
                 videos.forEach(video => {
                     const option = document.createElement("option");
