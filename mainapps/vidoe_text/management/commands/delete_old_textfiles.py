@@ -8,7 +8,7 @@ class Command(BaseCommand):
     help = "Deletes TextFile objects older than 2 weeks."
 
     def handle(self, *args, **kwargs):
-        two_weeks_ago = now() - timedelta(days=4)
+        two_weeks_ago = now() - timedelta(weeks=2)
 
         old_files = TextFile.objects.filter(created_at__lt=two_weeks_ago)
         count = old_files.count()
