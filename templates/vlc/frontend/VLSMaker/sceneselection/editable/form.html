@@ -1983,7 +1983,6 @@ style="grid-template-columns: 0.7fr 1fr;width:100%;">
 </form>
     `;
             const errorElements = document.querySelectorAll('[id^="error"]');
-            // sessionStorage.clear();
 
             errorElements.forEach(element => {
                 element.textContent = "";
@@ -2160,12 +2159,7 @@ style="grid-template-columns: 0.7fr 1fr;width:100%;">
                     option.textContent = video.title;
                     selectElement.appendChild(option);
 
-                    // if (video.id === String(videoId)){
-                    // console.log('They are same')
-                    // selectElement.value=String(videoId)
-
-                    // }
-
+             
 
                 })
 
@@ -2533,6 +2527,7 @@ style="grid-template-columns: 0.7fr 1fr;width:100%;">
 
         }
         videoClip.value = sessionStorage.getItem(`${liItem.dataset.id}`)
+        console.log(videoClip.value,sessionStorage.getItem(`${liItem.dataset.id}`))
 
     };
     function clearCurrentFile() {
