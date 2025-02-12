@@ -2190,14 +2190,7 @@ style="grid-template-columns: 0.7fr 1fr;width:100%;">
 
 
     function attachValidation(formId, clipId, cNumber, li) {
-        // const li = document.getElementById(`current_li_${cNumber}`);
 
-        if (li) {
-            li.disabled = true;
-            li.style.cursor = 'wait';
-            li.id = 'processing_' + cNumber
-            console.log(li, ' has been disabled');
-        }
 
         const form = document.getElementById(formId);
 
@@ -2219,7 +2212,13 @@ style="grid-template-columns: 0.7fr 1fr;width:100%;">
                 document.getElementById('upload-text').style.color = 'inherit'
 
                 document.getElementById('error-slide').textContent = ''; // Clear error message
-
+                
+                if (li) {
+                    li.disabled = true;
+                    li.style.cursor = 'wait';
+                    li.id = 'processing_' + cNumber
+                    console.log(li, ' has been disabled');
+                }
                 const popup = document.getElementById('add-subclip-popup');
                 if (popup) popup.style.display = 'none';
                 const formData = new FormData(form);
