@@ -430,7 +430,7 @@
         border-radius: 8px;
         cursor: pointer;
         transition: background 0.3s ease;
-        width: 508px !important;
+        width: 555px !important;
         text-align: center !important;
         justify-content: center !important;
     }
@@ -967,21 +967,20 @@
     <br>
     <br>
     <div class="button"
-        style="margin-top: 60px;position: absolute; right: 20px; bottom: 16px;height: 24px; width: fit-content; display: flex; justify-content: flex-end;">
-        <div
-            style="display: flex; align-items: center; justify-content: center; border-radius: 8px; background: #864AF9; cursor: pointer;">
-            <button type="button" onclick="highlightNoSubclipIcons(this)" id="proceed-button"
-                style="text-decoration: none; padding: 10px 20px; color: white; font-family: Montserrat; font-size: 18px; font-weight: 500; line-height: 24px; text-align: left; background: none; border: none; cursor: pointer;">
-                Proceed To Background Music Selection
-            </button>
-            <svg width="24" height="24" type="button" viewBox="0 0 24 24" fill="none"
+     style="margin-top: 60px; position: absolute; right: 20px; bottom: 16px; height: 24px; width: 555px; display: flex; justify-content: flex-end;">
+    <div style="display: flex; align-items: center; justify-content: center; border-radius: 8px; background: #864AF9; cursor: pointer; width: 555px;">
+        <button type="button" onclick="highlightNoSubclipIcons(this)" id="proceed-button"
+            style="text-decoration: none; padding: 0 20px; color: white; font-family: Montserrat; font-size: 18px; font-weight: 500; line-height: 24px; text-align: left; background: none; border: none; cursor: pointer; height: 24px; display: flex; align-items: center; justify-content: space-between; width: 100%;">
+            <span id="button-text">Proceed To Background Music Selection</span>
+            <svg id="proceed-svg" width="24" height="24" type="button" viewBox="0 0 24 24" fill="none"
                 xmlns="http://www.w3.org/2000/svg">
                 <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="white" stroke-width="2" stroke-linecap="round"
                     stroke-linejoin="round" />
             </svg>
-        </div>
+        </button>
     </div>
 </div>
+
 <!-- Scripts start -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
@@ -1364,39 +1363,46 @@
     
 
     function startProcessingAnimation() {
-    const button_text = $('#proceed-button');
-    const svg_icon = $('svg'); // Reference to the SVG element
+    const buttonText = $('#button-text');
+    const svgIcon = $('#proceed-svg'); // Reference to the SVG element
     let dots = 0;
 
     // Hide the SVG icon when processing starts
-    svg_icon.css('display', 'none'); 
+    svgIcon.css('display', 'none'); 
 
-    if (button_text.data('intervalId')) {
-        clearInterval(button_text.data('intervalId'));
+    // Fix the button text content and size before starting animation
+    buttonText.css({
+        'white-space': 'nowrap', // Prevent text wrapping
+        'overflow': 'hidden',    // Hide any overflowed text if needed
+        'text-overflow': 'ellipsis', // Ensure ellipsis is applied if text overflows
+    });
+
+    if (buttonText.data('intervalId')) {
+        clearInterval(buttonText.data('intervalId'));
     }
 
     const intervalId = setInterval(function () {
         dots = (dots + 1) % 4;
         let loadingText = 'Processing' + '.'.repeat(dots);
-        button_text.text(loadingText);
+        buttonText.text(loadingText);
     }, 500);
 
-    button_text.data('intervalId', intervalId);
+    buttonText.data('intervalId', intervalId);
 }
 
 function stopProcessingAnimation() {
-    const button_text = $('#proceed-button');
-    const svg_icon = $('svg'); // Reference to the SVG element
-    const intervalId = button_text.data('intervalId');
+    const buttonText = $('#button-text');
+    const svgIcon = $('#proceed-svg');
+    const intervalId = buttonText.data('intervalId');
 
     if (intervalId) {
         clearInterval(intervalId);
-        button_text.data('intervalId', null);
-        button_text.text('Proceed To Background Music Selection');
+        buttonText.data('intervalId', null);
+        buttonText.text('Proceed To Background Music Selection');
     }
 
     // Show the SVG icon again once processing stops
-    svg_icon.css('display', 'inline-block');
+    svgIcon.css('display', 'inline-block');
 }
 
 
