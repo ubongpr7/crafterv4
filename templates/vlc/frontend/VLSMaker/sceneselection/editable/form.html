@@ -994,22 +994,26 @@
 
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
-
+<!-- <script src="{% static 'add_scene/script.js' %}"></script> -->
 <script>
+    const textFileID ='{{textfile.id}}'
+    textfile_id = '{{textfile.id}}'
+    let num
+    let clip_id
+    let submitCheck
     $(document).ready(function () {
-        // Initialize sortable on the table body
         let tableBody = document.querySelector("#leadsTable tbody");
 
         $("#leadsTable tbody").sortable({
-            axis: "y", // Restrict dragging to the vertical axis
-            containment: "parent", // Contain dragging within the parent element
-            handle: "td:first-child", // Allow dragging only from the first column (Subtitle)
-            placeholder: "ui-sortable-placeholder", // Add a placeholder for visual feedback
-            forcePlaceholderSize: true, // Ensure the placeholder maintains a consistent size
-            tolerance: "pointer", // Use pointer-based tolerance for smoother placement
-            cursorAt: { top: 10 }, // Align the dragged element with the mouse cursor
+            axis: "y", 
+            containment: "parent",
+            handle: "td:first-child", 
+            placeholder: "ui-sortable-placeholder",
+            forcePlaceholderSize: true, 
+            tolerance: "pointer",
+            cursorAt: { top: 10 },
             start: function (event, ui) {
-                console.log("Drag started"); // Debugging: Log when dragging starts
+                console.log("Drag started");
             },
             update: function (event, ui) {
                 console.log("Drag ended, updating order");
@@ -1107,6 +1111,7 @@
         }
     }
 </script>
+
 <script>
     function toggleColumns(li, shouldDisable) {
         let $row = $(li).closest("tr");
@@ -1358,11 +1363,12 @@
         });
     }
 </script>
+<!-- copied -->
 <!-- subclip  -->
 <script>
     
 
-    function startProcessingAnimation() {
+function startProcessingAnimation() {
     const buttonText = $('#button-text');
     const svgIcon = $('#proceed-svg'); // Reference to the SVG element
     let dots = 0;
@@ -1557,7 +1563,7 @@ function stopProcessingAnimation() {
 
 
 </script>
-
+<!-- copied -->
 <!-- popup manipulation and submission/validation -->
 <script>
 
@@ -1598,7 +1604,7 @@ function stopProcessingAnimation() {
     };
 
 </script>
-
+<!-- copied -->
 
 <script>
 
@@ -1806,12 +1812,10 @@ function stopProcessingAnimation() {
 
 
 </script>
+<!-- copied -->
 <!-- old script -->
 <script>
-    textfile_id = '{{textfile.id}}'
-    let num
-    let clip_id
-    let submitCheck
+    
 
     function subclipReset(mainId) {
 
@@ -2522,6 +2526,7 @@ style="grid-template-columns: 0.7fr 1fr;width:100%;">
     });
 
 </script>
+<!-- copied -->
 <script>
     // Initialize drag events
     document.querySelectorAll('.subtitle_clip').forEach(item => {

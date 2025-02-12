@@ -250,17 +250,6 @@ class Command(BaseCommand):
 
         replacement_videos_per_combination = []
 
-        # for replacement_video_file in replacement_video_files:
-        #     replacement_video = self.load_video_from_file_field(replacement_video_file)
-        #     cropped_replacement_video = self.crop_to_aspect_ratio_(
-        #         replacement_video, MAINRESOLUTIONS[text_file_instance.resolution]
-        #     )  # MAINRESOLUTIONS[resolution]
-
-        #     logging.info(
-        #         f"Replacement video {replacement_video_file} cropped to desired aspect ratio"
-        #     )
-        #     if len(replacement_videos_per_combination) < len(replacement_video_files):
-        #         replacement_videos_per_combination.append({})
         logging.info("Concatination Done")
         self.text_file_instance.track_progress(48)
 
@@ -985,21 +974,16 @@ class Command(BaseCommand):
         return crop(clip, x1=x1, y1=y1, x2=x2, y2=y2)
 
     def concatenate_clips(self, clips, target_resolution=None, target_fps=None):
-        """
-        Concatenates a list of VideoFileClip objects into a single video clip.
-
-        Args:
-            clips (list): List of VideoFileClip objects to concatenate.
-            target_resolution (tuple, optional): Target resolution (width, height) to resize videos. Defaults to None.
-            target_fps (int, optional): Target frames per second to unify videos. Defaults to None.
-
-        Returns:
-            VideoFileClip: The concatenated video clip.
-        """
-        final_clip = concatenate_videoclips(clips, method="compose")
+        for  i in range(1, len(clips)):
+            clips[i] = clips[i].set_start(clips[i-1].end)
+    
+        for clip in clips:
+            clip = clip.subclip(0, clip.duration)
+            clip.set_fps(30) 
+    
+        final_clip = concatenate_videoclips(clips, method="chain")
         logging.info("Clip has been concatenated: ")
         return final_clip
-
     def resize_clips_to_max_size(self, clips):
         max_width = max(clip.w for clip in clips)
         max_height = max(clip.h for clip in clips)

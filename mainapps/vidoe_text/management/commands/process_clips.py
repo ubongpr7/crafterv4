@@ -391,8 +391,6 @@ class Command(BaseCommand):
                 logging.debug(f"Processing subclip with ID: {subclip.id}")
                 mv_clip = self.load_video_from_file_field(subclip.to_dict().get('video_path'))
                 clip_with_duration = self.adjust_segment_duration(mv_clip,float(subclip.end - subclip.start))
-
-                # clip_with_duration = mv_clip.set_duration(float(subclip.end - subclip.start))
                 logging.debug(f"Loaded video clip from path: {subclip.to_dict().get('video_path')}")
                 cropped_clip = self.crop_to_aspect_ratio_(clip_with_duration, MAINRESOLUTIONS[self.text_file_instance.resolution])
                 logging.debug(f"Cropped clip to resolution: {MAINRESOLUTIONS[self.text_file_instance.resolution]}")
@@ -408,6 +406,7 @@ class Command(BaseCommand):
 
         return True 
              
+      
     def process_for_clip(self,clip):
         logging.debug(f"Processing clip with ID: {clip.id}")
         clip_subclips = []
@@ -486,6 +485,7 @@ class Command(BaseCommand):
         
         return video_clips
 
+
     def write_clip_file(self, clip,file_to_write,main_clip):
         with tempfile.NamedTemporaryFile(
             suffix=".mp4", delete=False
@@ -497,9 +497,7 @@ class Command(BaseCommand):
                 preset="ultrafast",
                 audio_codec="aac",
                 fps=30,
-                # temp_audiofile='temp-audio.m4a', 
-                # remove_temp=True
-                # ffmpeg_params=["-movflags", "+faststart"],
+                
             )
 
             if file_to_write:
@@ -513,7 +511,6 @@ class Command(BaseCommand):
                     ContentFile(video_content),
                 )
             return True
-
 
     def generate_random_string(self,length=10):
         import random
@@ -1215,11 +1212,15 @@ class Command(BaseCommand):
     ) -> VideoFileClip:
         current_duration = segment.duration
         if current_duration < duration:
-            return loop(segment, duration=duration)
+            speed_factor = current_duration / duration
+            return segment.fx(vfx.speedx, speed_factor)
+    
+
+            # return loop(segment, duration=duration)
         elif current_duration > duration:
             return segment.subclip(0, duration)
         return segment
-
+    
     def get_video_paths_for_text_file(self):
         """
         Get a list of video paths for all TextLineVideoClip instances associated with the given text_file_instance.
@@ -1540,12 +1541,18 @@ class Command(BaseCommand):
         """
         return isinstance(clip, VideoFileClip)
     
-    def concatenate_clips(self, clips, target_resolution=None, target_fps=None):
 
-        final_clip = concatenate_videoclips(clips, method="compose")
+    def concatenate_clips(self, clips, target_resolution=None, target_fps=None):
+        for  i in range(1, len(clips)):
+            clips[i] = clips[i].set_start(clips[i-1].end)
+    
+        for clip in clips:
+            clip = clip.subclip(0, clip.duration)
+            clip.set_fps(30) 
+    
+        final_clip = concatenate_videoclips(clips, method="chain")
         logging.info("Clip has been concatenated: ")
         return final_clip
-
     def resize_clips_to_max_size(self, clips):
         max_width = max(clip.w for clip in clips)
         max_height = max(clip.h for clip in clips)

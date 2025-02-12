@@ -357,7 +357,6 @@
                 <a href="javascript:void(0);" onclick="openModal('upload-video')">Watch Video Tutorial</a>
             </div>
         </div>
-        <!-- Modal for video tutorial -->
         <div id="tutorial-modal" class="modal">
             <div class="modal-content">
                 <span class="close" onclick="closeMModal()">&times;</span>
@@ -366,7 +365,6 @@
             </div>
         </div>
 
-        <!-- Modal for video tutorial upload -->
         <div id="upload-modal" class="modal">
             <div class="modal-content">
                 <span class="close" onclick="closeMModal()">&times;</span>
@@ -378,7 +376,7 @@
 
     </div>
     
-    {%include 'vlc/frontend/VLSMaker/sceneselection/editable/form.html' %}
+    {%include 'vlc/frontend/VLSMaker/test_scene/edit/form.html' %}
     {%include 'vlc/frontend/VLSMaker/test_scene/subclipform1.html' %}
     
     
@@ -421,18 +419,15 @@
             const span = headerElement.querySelector('span');
             const otherSections = document.querySelectorAll('.section');
 
-            // First, reset all section backgrounds to default
             otherSections.forEach(function (section) {
                 const header = section.querySelector('.section-header');
-                header.style.backgroundColor = '#fff'; // Reset background color
-                header.style.color = '#6c25be'; // Reset text color
+                header.style.backgroundColor = '#fff'; 
+                header.style.color = '#6c25be';
             });
 
-            // Toggle the clicked section's content
             content.classList.toggle('open');
             if (content.classList.contains('open')) {
                 span.classList.add('rotate');
-                // Set the background color for the active section
                 headerElement.style.backgroundColor = '#6c25be';
                 headerElement.style.color = '#fff';
             } else {
@@ -446,6 +441,8 @@
         function closeMModal() {
             document.querySelectorAll('.modal').forEach(modal => modal.style.display = 'none');
         }
+
+
     </script>
 
 </body>
