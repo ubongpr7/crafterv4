@@ -2509,7 +2509,7 @@ style="grid-template-columns: 0.7fr 1fr;width:100%;">
     async function restoreSelectFields(liItem) {
         const topic = document.getElementById('selected_topic')
         const videoClip = document.getElementById('videoSelect')
-        if (liItem.dataset.clipid) {
+        if (liItem.dataset.cat_id) {
             topic.value = liItem.dataset.cat_id
 
             await fetchVideoClips(topic,);
