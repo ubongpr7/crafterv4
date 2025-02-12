@@ -430,7 +430,7 @@
         border-radius: 8px;
         cursor: pointer;
         transition: background 0.3s ease;
-        width: 508px !important;
+        width: 555px !important;
         text-align: center !important;
         justify-content: center !important;
     }
@@ -894,7 +894,7 @@
 
                                     {% for subclip in clip.subclips.all %}
                                     <li data-id="{{subclip.id}}" class="subtitle_clip"
-                                        style="font-size: 1.4rem; border-color: #864AF9;"
+                                        style="font-size: 1.2rem; border-color: #864AF9;"
                                         data-cat_id="{{subclip.video_clip.category.id}}"
                                         data-current_file="{{subclip.get_video_file_name}}" id="saved_li_{{subclip.id}}"
                                         onclick="editCurrentLi(this)">
@@ -967,8 +967,8 @@
     <br>
     <br>
     <div class="button"
-     style="margin-top: 60px; position: absolute; right: 20px; bottom: 16px; height: 24px; width: 508px; display: flex; justify-content: flex-end;">
-    <div style="display: flex; align-items: center; justify-content: center; border-radius: 8px; background: #864AF9; cursor: pointer; width: 508px;">
+     style="margin-top: 60px; position: absolute; right: 20px; bottom: 16px; height: 24px; width: 555px; display: flex; justify-content: flex-end;">
+    <div style="display: flex; align-items: center; justify-content: center; border-radius: 8px; background: #864AF9; cursor: pointer; width: 555px;">
         <button type="button" onclick="highlightNoSubclipIcons(this)" id="proceed-button"
             style="text-decoration: none; padding: 0 20px; color: white; font-family: Montserrat; font-size: 18px; font-weight: 500; line-height: 24px; text-align: left; background: none; border: none; cursor: pointer; height: 24px; display: flex; align-items: center; justify-content: space-between; width: 100%;">
             <span id="button-text">Proceed To Background Music Selection</span>
