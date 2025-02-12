@@ -1556,79 +1556,6 @@ function stopProcessingAnimation() {
     }
 
 
-//     function editCurrentLi(liItem) {
-//         if (liItem.disabled) {
-
-//         } else {
-//             liItem.disabled = true
-//             liItem.style.cursor = 'wait';
-
-//             console.log(liItem)
-//             id = liItem.dataset.id;
-//             text = liItem.textContent
-//             const modalContainer = document.getElementById('modal-cont')
-//             const popup = document.getElementById('add-subclip-popup')
-
-//             if (modalContainer && popup) {
-//                 modalContainer.innerHTML = `
-//   <form   class="popup-content" method="POST" enctype="multipart/form-data"
-//    id="edit-subclip-form"
-   
-//       style="grid-template-columns: 1fr;width:100%;">
-//       <br>
-//       {% csrf_token %}
-  
-//       <div id="submit-cont">
-//           <div class="form-group">
-//               <input id="slide_text" hidden  name="slide_text" value="some text" readonly required class="form-input">
-//           </div>
-          
-//           <input id="clipId" type="number" hidden name="clipId" value="${liItem.dataset.id}">
-          
-  
-//           <input type="text" value="some text" hidden id="remaining" name="remaining">
-//           <div style="display: grid;grid-template-columns:  1fr;border-radius: 8px;border: 1px solid #00000080;overflow: hidden;"  class="form-grid-cont">
-//           <div class="grid-item title  form-grid-item begin column-1"><span style="height:50px;align-items: center;color:white">Upload Scene</span></div>
-//             <div class="form-grid-item main-item">
-//                 <div  class="form-group" style="height:100%;">
-//                     <div class="upload-container">
-//                     <label for="slide_file" class="upload-label">
-//                         <i class="ri-upload-line"></i>
-//                         <span id="upload-text">Choose File</span>
-//                         </label>
-//                         <i id="clear-file" style="display:none" onclick="clearFileInput()" class="ri-close-circle-line"></i>
-//                     <input type="file" onchange="saveInput(this)" id="slide_file" name="slide_file" class="upload-input" accept="video/*">
-  
-//                 </div>
-                
-//                 <p id="currentFile"></p>
-//             </div>
-//           </div>
-//       </div>
-//       <div style="align-items: end;" class="form-group">
-//           <button type="submit" id="submit-clip" class="submit-btn">Submit</button>
-//       </div>
-//   </form>`;
-//             }
-//             popup.style.display = 'flex'
-//             const current_ = document.getElementById('currentFile')
-//             if (liItem.dataset.current_file) {
-
-//                 document.getElementById('currentFile').innerHTML = `Current File: ${liItem.dataset.current_file} 
-//                       <i id="clearCurrentFile" style="font-size:large;"  onclick="clearCurrentFile()" class="ri-close-circle-line"></i>
-          
-//           `
-
-//             }
-//             document.getElementById('edit-subclip-form').addEventListener('submit', (e) => {
-//                 e.preventDefault();
-//                 editAttachValidation('edit-subclip-form', id, `/text/edit_subcliphtmx/${liItem.dataset.id}/`, liItem);
-//             });
-
-
-//         }
-//     }
-
 </script>
 
 <!-- popup manipulation and submission/validation -->
@@ -1716,7 +1643,7 @@ function stopProcessingAnimation() {
 
         setTimeout(() => {
             document.body.removeChild(successMessage);
-        }, 900);
+        }, 2000);
     }
 
     let currentNumber = document.getElementById('no_of_slides').value
@@ -2172,10 +2099,10 @@ style="grid-template-columns: 0.7fr 1fr;width:100%;">
             })
             .then(videos => {
                 const defaultOption = document.createElement("option");
-                defaultOption.value = "";
-                defaultOption.textContent = "Select A Video Clip";
-                defaultOption.disabled = true;
-                defaultOption.selected = true;
+                // defaultOption.value = "";
+                // defaultOption.textContent = "Select A Video Clip";
+                // defaultOption.disabled = true;
+                // defaultOption.selected = true;
                 selectElement.appendChild(defaultOption);
 
                 videos.forEach(video => {
@@ -2532,28 +2459,6 @@ style="grid-template-columns: 0.7fr 1fr;width:100%;">
 
     }
 
-    // async function restoreSelectFields(liItem) {
-    //     const topic = document.getElementById('selected_topic')
-    //     const videoClip = document.getElementById('videoSelect')
-    //     if (liItem.dataset.cat_id) {
-    //         topic.value = liItem.dataset.cat_id
-
-    //         await fetchVideoClips(topic,);
-    //     } else if (liItem.dataset.current_file) {
-    //         topic.value = ''
-    //         videoClip.value = ''
-
-    //         document.getElementById('currentFile').innerHTML = `Current File: ${liItem.dataset.current_file} 
-    //             <i id="clearCurrentFile" style="font-size:large;"  onclick="clearCurrentFile()" class="ri-close-circle-line"></i>
-    
-    // `
-
-
-    //     }
-    //     videoClip.value = sessionStorage.getItem(`${liItem.dataset.id}`)
-    //     console.log('videoClip.value: ',videoClip.value,sessionStorage.getItem(`${liItem.dataset.id}`))
-
-    // };
 
     async function restoreSelectFields(liItem) {
     const topic = document.getElementById('selected_topic');
@@ -2562,8 +2467,13 @@ style="grid-template-columns: 0.7fr 1fr;width:100%;">
     if (liItem.dataset.cat_id) {
         topic.value = liItem.dataset.cat_id;
 
-        // Fetch video clips and wait for them to load
+
         await fetchVideoClips(topic);
+        
+        const savedValue = sessionStorage.getItem(`${liItem.dataset.id}`);
+        if (savedValue) {
+            videoClip.value = savedValue;
+        }
     } else if (liItem.dataset.current_file) {
         topic.value = '';
         videoClip.value = '';
@@ -2573,14 +2483,6 @@ style="grid-template-columns: 0.7fr 1fr;width:100%;">
         `;
     }
 
-    // Wait for a slight delay to ensure the options are rendered
-    setTimeout(() => {
-        const savedValue = sessionStorage.getItem(`${liItem.dataset.id}`);
-        if (savedValue) {
-            videoClip.value = savedValue;
-        }
-        console.log('videoClip.value: ', videoClip.value, savedValue);
-    }, 2000);
 }
 
     function clearCurrentFile() {
