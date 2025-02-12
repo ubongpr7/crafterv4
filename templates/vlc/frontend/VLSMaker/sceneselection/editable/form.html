@@ -892,6 +892,7 @@
                                     {% for subclip in clip.subclips.all %}
                                     <li data-id="{{subclip.id}}" class="subtitle_clip"
                                         style="font-size: 1.4rem; border-color: #864AF9;"
+                                        data-cat_id="{{subclip.video_clip.category.id}}"
                                         data-current_file="{{subclip.get_video_file_name}}" id="saved_li_{{subclip.id}}"
                                         onclick="editCurrentLi(this)">
                                         <!-- Wrap the subtitle text inside a div with class 'drag-container' -->
@@ -1539,78 +1540,78 @@ function startProcessingAnimation() {
     }
 
 
-    function editCurrentLi(liItem) {
-        if (liItem.disabled) {
+//     function editCurrentLi(liItem) {
+//         if (liItem.disabled) {
 
-        } else {
-            liItem.disabled = true
-            liItem.style.cursor = 'wait';
+//         } else {
+//             liItem.disabled = true
+//             liItem.style.cursor = 'wait';
 
-            console.log(liItem)
-            id = liItem.dataset.id;
-            text = liItem.textContent
-            const modalContainer = document.getElementById('modal-cont')
-            const popup = document.getElementById('add-subclip-popup')
+//             console.log(liItem)
+//             id = liItem.dataset.id;
+//             text = liItem.textContent
+//             const modalContainer = document.getElementById('modal-cont')
+//             const popup = document.getElementById('add-subclip-popup')
 
-            if (modalContainer && popup) {
-                modalContainer.innerHTML = `
-  <form   class="popup-content" method="POST" enctype="multipart/form-data"
-   id="edit-subclip-form"
+//             if (modalContainer && popup) {
+//                 modalContainer.innerHTML = `
+//   <form   class="popup-content" method="POST" enctype="multipart/form-data"
+//    id="edit-subclip-form"
    
-      style="grid-template-columns: 1fr;width:100%;">
-      <br>
-      {% csrf_token %}
+//       style="grid-template-columns: 1fr;width:100%;">
+//       <br>
+//       {% csrf_token %}
   
-      <div id="submit-cont">
-          <div class="form-group">
-              <input id="slide_text" hidden  name="slide_text" value="some text" readonly required class="form-input">
-          </div>
+//       <div id="submit-cont">
+//           <div class="form-group">
+//               <input id="slide_text" hidden  name="slide_text" value="some text" readonly required class="form-input">
+//           </div>
           
-          <input id="clipId" type="number" hidden name="clipId" value="${liItem.dataset.id}">
+//           <input id="clipId" type="number" hidden name="clipId" value="${liItem.dataset.id}">
           
   
-          <input type="text" value="some text" hidden id="remaining" name="remaining">
-          <div style="display: grid;grid-template-columns:  1fr;border-radius: 8px;border: 1px solid #00000080;overflow: hidden;"  class="form-grid-cont">
-          <div class="grid-item title  form-grid-item begin column-1"><span style="height:50px;align-items: center;color:white">Upload Scene</span></div>
-            <div class="form-grid-item main-item">
-                <div  class="form-group" style="height:100%;">
-                    <div class="upload-container">
-                    <label for="slide_file" class="upload-label">
-                        <i class="ri-upload-line"></i>
-                        <span id="upload-text">Choose File</span>
-                        </label>
-                        <i id="clear-file" style="display:none" onclick="clearFileInput()" class="ri-close-circle-line"></i>
-                    <input type="file" onchange="saveInput(this)" id="slide_file" name="slide_file" class="upload-input" accept="video/*">
+//           <input type="text" value="some text" hidden id="remaining" name="remaining">
+//           <div style="display: grid;grid-template-columns:  1fr;border-radius: 8px;border: 1px solid #00000080;overflow: hidden;"  class="form-grid-cont">
+//           <div class="grid-item title  form-grid-item begin column-1"><span style="height:50px;align-items: center;color:white">Upload Scene</span></div>
+//             <div class="form-grid-item main-item">
+//                 <div  class="form-group" style="height:100%;">
+//                     <div class="upload-container">
+//                     <label for="slide_file" class="upload-label">
+//                         <i class="ri-upload-line"></i>
+//                         <span id="upload-text">Choose File</span>
+//                         </label>
+//                         <i id="clear-file" style="display:none" onclick="clearFileInput()" class="ri-close-circle-line"></i>
+//                     <input type="file" onchange="saveInput(this)" id="slide_file" name="slide_file" class="upload-input" accept="video/*">
   
-                </div>
+//                 </div>
                 
-                <p id="currentFile"></p>
-            </div>
-          </div>
-      </div>
-      <div style="align-items: end;" class="form-group">
-          <button type="submit" id="submit-clip" class="submit-btn">Submit</button>
-      </div>
-  </form>`;
-            }
-            popup.style.display = 'flex'
-            const current_ = document.getElementById('currentFile')
-            if (liItem.dataset.current_file) {
+//                 <p id="currentFile"></p>
+//             </div>
+//           </div>
+//       </div>
+//       <div style="align-items: end;" class="form-group">
+//           <button type="submit" id="submit-clip" class="submit-btn">Submit</button>
+//       </div>
+//   </form>`;
+//             }
+//             popup.style.display = 'flex'
+//             const current_ = document.getElementById('currentFile')
+//             if (liItem.dataset.current_file) {
 
-                document.getElementById('currentFile').innerHTML = `Current File: ${liItem.dataset.current_file} 
-                      <i id="clearCurrentFile" style="font-size:large;"  onclick="clearCurrentFile()" class="ri-close-circle-line"></i>
+//                 document.getElementById('currentFile').innerHTML = `Current File: ${liItem.dataset.current_file} 
+//                       <i id="clearCurrentFile" style="font-size:large;"  onclick="clearCurrentFile()" class="ri-close-circle-line"></i>
           
-          `
+//           `
 
-            }
-            document.getElementById('edit-subclip-form').addEventListener('submit', (e) => {
-                e.preventDefault();
-                editAttachValidation('edit-subclip-form', id, `/text/edit_subcliphtmx/${liItem.dataset.id}/`, liItem);
-            });
+//             }
+//             document.getElementById('edit-subclip-form').addEventListener('submit', (e) => {
+//                 e.preventDefault();
+//                 editAttachValidation('edit-subclip-form', id, `/text/edit_subcliphtmx/${liItem.dataset.id}/`, liItem);
+//             });
 
 
-        }
-    }
+//         }
+//     }
 
 </script>
 
