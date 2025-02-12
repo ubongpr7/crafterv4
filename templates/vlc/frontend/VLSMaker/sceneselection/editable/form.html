@@ -2521,7 +2521,6 @@ style="grid-template-columns: 0.7fr 1fr;width:100%;">
             topic.value = liItem.dataset.cat_id
 
             await fetchVideoClips(topic,);
-            videoClip.value = sessionStorage.getItem(`${liItem.dataset.id}`)
         } else if (liItem.dataset.current_file) {
             topic.value = ''
             videoClip.value = ''
@@ -2533,6 +2532,8 @@ style="grid-template-columns: 0.7fr 1fr;width:100%;">
 
 
         }
+        videoClip.value = sessionStorage.getItem(`${liItem.dataset.id}`)
+
     };
     function clearCurrentFile() {
         document.getElementById('currentFile').innerHTML = ''
