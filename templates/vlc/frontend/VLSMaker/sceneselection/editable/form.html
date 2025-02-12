@@ -2227,6 +2227,8 @@ style="grid-template-columns: 0.7fr 1fr;width:100%;">
                                     li.dataset.name = response.video_clip.name
                                     li.dataset.clipid = response.video_clip.id
                                     li.dataset.cat_id = response.video_clip.cat_id
+                                    sessionStorage.setItem(`${liItem.dataset.id}` ,response.video_clip.id)
+
 
 
                                 };
@@ -2312,8 +2314,12 @@ style="grid-template-columns: 0.7fr 1fr;width:100%;">
                 videoSelect.focus();
             } else {
                 document.getElementById('upload-text').style.color = 'black'
+                if (videoSelect.value){
+                    sessionStorage.setItem(`${liItem.dataset.id}` ,videoSelect.value)
 
-                document.getElementById('error-slide').textContent = ''; // Clear error message
+                }
+
+                document.getElementById('error-slide').textContent = ''; 
                 const popup = document.getElementById('add-subclip-popup');
                 if (popup) popup.style.display = 'none';
                 const formData = new FormData(form);
@@ -2334,6 +2340,8 @@ style="grid-template-columns: 0.7fr 1fr;width:100%;">
                                     li.dataset.name = response.video_clip.name
                                     li.dataset.clipid = response.video_clip.id
                                     li.dataset.cat_id = response.video_clip.cat_id
+                                    sessionStorage.setItem(`${liItem.dataset.id}` ,response.video_clip.id)
+
 
 
                                 };
@@ -2551,10 +2559,8 @@ style="grid-template-columns: 0.7fr 1fr;width:100%;">
                         subclipList.appendChild(newItem);
                     }
 
-                    // Display success message
                     alert(`Subclip created successfully with ID: ${subclipId}`);
                 } else {
-                    // Handle error scenario
                     console.error("Error creating subclip:", jsonResponse.error);
                     alert(`Failed to create subclip: ${jsonResponse.error}`);
                 }
