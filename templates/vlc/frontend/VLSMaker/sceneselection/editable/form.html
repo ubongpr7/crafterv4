@@ -2508,28 +2508,57 @@ style="grid-template-columns: 0.7fr 1fr;width:100%;">
 
     }
 
-    async function restoreSelectFields(liItem) {
-        const topic = document.getElementById('selected_topic')
-        const videoClip = document.getElementById('videoSelect')
-        if (liItem.dataset.cat_id) {
-            topic.value = liItem.dataset.cat_id
+    // async function restoreSelectFields(liItem) {
+    //     const topic = document.getElementById('selected_topic')
+    //     const videoClip = document.getElementById('videoSelect')
+    //     if (liItem.dataset.cat_id) {
+    //         topic.value = liItem.dataset.cat_id
 
-            await fetchVideoClips(topic,);
-        } else if (liItem.dataset.current_file) {
-            topic.value = ''
-            videoClip.value = ''
+    //         await fetchVideoClips(topic,);
+    //     } else if (liItem.dataset.current_file) {
+    //         topic.value = ''
+    //         videoClip.value = ''
 
-            document.getElementById('currentFile').innerHTML = `Current File: ${liItem.dataset.current_file} 
-                <i id="clearCurrentFile" style="font-size:large;"  onclick="clearCurrentFile()" class="ri-close-circle-line"></i>
+    //         document.getElementById('currentFile').innerHTML = `Current File: ${liItem.dataset.current_file} 
+    //             <i id="clearCurrentFile" style="font-size:large;"  onclick="clearCurrentFile()" class="ri-close-circle-line"></i>
     
-    `
+    // `
 
 
+    //     }
+    //     videoClip.value = sessionStorage.getItem(`${liItem.dataset.id}`)
+    //     console.log('videoClip.value: ',videoClip.value,sessionStorage.getItem(`${liItem.dataset.id}`))
+
+    // };
+
+    async function restoreSelectFields(liItem) {
+    const topic = document.getElementById('selected_topic');
+    const videoClip = document.getElementById('videoSelect');
+
+    if (liItem.dataset.cat_id) {
+        topic.value = liItem.dataset.cat_id;
+
+        // Fetch video clips and wait for them to load
+        await fetchVideoClips(topic);
+    } else if (liItem.dataset.current_file) {
+        topic.value = '';
+        videoClip.value = '';
+
+        document.getElementById('currentFile').innerHTML = `Current File: ${liItem.dataset.current_file} 
+            <i id="clearCurrentFile" style="font-size:large;"  onclick="clearCurrentFile()" class="ri-close-circle-line"></i>
+        `;
+    }
+
+    // Wait for a slight delay to ensure the options are rendered
+    setTimeout(() => {
+        const savedValue = sessionStorage.getItem(`${liItem.dataset.id}`);
+        if (savedValue) {
+            videoClip.value = savedValue;
         }
-        videoClip.value = sessionStorage.getItem(`${liItem.dataset.id}`)
-        console.log('videoClip.value: ',videoClip.value,sessionStorage.getItem(`${liItem.dataset.id}`))
+        console.log('videoClip.value: ', videoClip.value, savedValue);
+    }, 100);
+}
 
-    };
     function clearCurrentFile() {
         document.getElementById('currentFile').innerHTML = ''
     }
