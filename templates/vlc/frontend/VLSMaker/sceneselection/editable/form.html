@@ -430,6 +430,9 @@
         border-radius: 8px;
         cursor: pointer;
         transition: background 0.3s ease;
+        width: 433px !important;
+        text-align: center !important;
+        justify-content: center !important;
     }
 
     #proceed-button:hover {
@@ -1360,33 +1363,42 @@
 <script>
     
 
-function startProcessingAnimation() {
-        const button_text = $('#proceed-button');
-        let dots = 0;
+    function startProcessingAnimation() {
+    const button_text = $('#proceed-button');
+    const svg_icon = $('svg'); // Reference to the SVG element
+    let dots = 0;
 
-        if (button_text.data('intervalId')) {
-          clearInterval(button_text.data('intervalId'));
-        }
+    // Hide the SVG icon when processing starts
+    svg_icon.css('display', 'none'); 
 
-        const intervalId = setInterval(function () {
-          dots = (dots + 1) % 4; 
-          let loadingText = 'Processing' + '.'.repeat(dots);
-          button_text.text(loadingText);
-        }, 500); 
+    if (button_text.data('intervalId')) {
+        clearInterval(button_text.data('intervalId'));
+    }
 
-        button_text.data('intervalId', intervalId);
-      }
+    const intervalId = setInterval(function () {
+        dots = (dots + 1) % 4;
+        let loadingText = 'Processing' + '.'.repeat(dots);
+        button_text.text(loadingText);
+    }, 500);
 
-      function stopProcessingAnimation() {
-        const button_text = $('#proceed-button');
-        const intervalId = button_text.data('intervalId');
+    button_text.data('intervalId', intervalId);
+}
 
-        if (intervalId) {
-          clearInterval(intervalId);
-          button_text.data('intervalId', null);
-          button_text.text('Proceed To Background Music Selection');
-        }
-      }
+function stopProcessingAnimation() {
+    const button_text = $('#proceed-button');
+    const svg_icon = $('svg'); // Reference to the SVG element
+    const intervalId = button_text.data('intervalId');
+
+    if (intervalId) {
+        clearInterval(intervalId);
+        button_text.data('intervalId', null);
+        button_text.text('Proceed To Background Music Selection');
+    }
+
+    // Show the SVG icon again once processing stops
+    svg_icon.css('display', 'inline-block');
+}
+
 
 
 
