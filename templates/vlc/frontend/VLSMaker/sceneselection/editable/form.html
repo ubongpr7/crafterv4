@@ -2227,7 +2227,7 @@ style="grid-template-columns: 0.7fr 1fr;width:100%;">
                                     li.dataset.name = response.video_clip.name
                                     li.dataset.clipid = response.video_clip.id
                                     li.dataset.cat_id = response.video_clip.cat_id
-                                    sessionStorage.setItem(`${liItem.dataset.id}` ,response.video_clip.id)
+                                    sessionStorage.setItem(`${li.dataset.id}` ,response.video_clip.id)
 
 
 
@@ -2315,7 +2315,7 @@ style="grid-template-columns: 0.7fr 1fr;width:100%;">
             } else {
                 document.getElementById('upload-text').style.color = 'black'
                 if (videoSelect.value){
-                    sessionStorage.setItem(`${liItem.dataset.id}` ,videoSelect.value)
+                    sessionStorage.setItem(`${li.dataset.id}` ,videoSelect.value)
 
                 }
 
