@@ -962,19 +962,21 @@
     <br>
     <br>
     <br>
-    <div class="button"
-    style="margin-top: 60px; position: absolute; right: 20px; bottom: 16px; height: 24px; width: fit-content; display: flex; justify-content: flex-end;">
-    <div
-        style="display: flex; align-items: center; justify-content: center; border-radius: 8px; background: #864AF9; cursor: pointer;">
-        <button type="button" id="proceed-button" style="text-decoration: none; padding: 10px 20px; color: white; font-family: Montserrat; font-size: 18px; font-weight: 500; line-height: 24px; text-align: left; background: none; border: none; cursor: pointer;">
-            <span id="button-text">Proceed To Background Music Selection</span>
-        </button>
-        <svg width="24" height="24" type="button" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
-    </div>
-</div>
-
+        <div class="button"
+            style="margin-top: 60px;position: absolute; right: 20px; bottom: 16px;height: 24px; width: fit-content; display: flex; justify-content: flex-end;">
+            <div
+                style="display: flex; align-items: center; justify-content: center; border-radius: 8px; background: #864AF9; cursor: pointer;">
+                <button type="button" onclick="highlightNoSubclipIcons(this)" id="proceed-button"
+                    style="text-decoration: none; padding: 10px 20px; color: white; font-family: Montserrat; font-size: 18px; font-weight: 500; line-height: 24px; text-align: left; background: none; border: none; cursor: pointer;">
+                    Proceed To Background Music Selection
+                </button>
+                <svg width="24" height="24" type="button" viewBox="0 0 24 24" fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="white" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+            </div>
+        </div>
 
 
 </div>
@@ -988,18 +990,19 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
     integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
     crossorigin="anonymous"></script>
+
     <script>
         $(document).ready(function () {
     const proceedButton = $('#proceed-button');
     const buttonText = $('#button-text');
+    const svgIcon = $('svg'); // Reference to the SVG icon inside the button
 
     // Function to start processing animation
-    function startProcessingAnimation(selector) {
+    function startProcessingAnimation() {
         let dots = 0;
-        // Clear any existing interval to avoid multiple intervals running
-        if (buttonText.data('intervalId')) {
-            clearInterval(buttonText.data('intervalId'));
-        }
+
+        // Hide the SVG icon when processing starts
+        svgIcon.hide();
 
         // Set the interval to change the text every 500 milliseconds
         const intervalId = setInterval(function () {
@@ -1012,32 +1015,37 @@
         buttonText.data('intervalId', intervalId);
     }
 
-    // Function to stop processing animation
-    function stopProcessingAnimation(selector) {
+    // Function to stop processing animation and navigate to the next page
+    function stopProcessingAnimation() {
         const intervalId = buttonText.data('intervalId');
+        
         // Clear the interval if it exists
         if (intervalId) {
             clearInterval(intervalId);
             buttonText.data('intervalId', null); // Remove the stored interval ID
-            buttonText.text('Proceed To Background Music Selection'); // Optionally reset the text
+            buttonText.text('Proceed To Background Music Selection'); // Reset the text
         }
+
+        // Show the SVG icon again after processing
+        svgIcon.show();
+
+        // After processing animation, navigate to the second page (replace with actual URL)
+        window.location.href = "secondPageURL.html";  // Replace with actual URL for the second page
     }
 
     // When the proceed button is clicked, start processing animation
     proceedButton.on('click', function () {
-        startProcessingAnimation('#button-text');
-        
+        startProcessingAnimation();
+
         // Simulate an action (e.g., AJAX request, form submission, etc.)
         setTimeout(function () {
-            // Once the action is done, stop the animation
-            stopProcessingAnimation('#button-text');
-            // Optionally, add code to transition to the next step
+            // After the animation ends, stop it and navigate to the next page
+            stopProcessingAnimation();
         }, 3000); // Simulate a delay of 3 seconds (replace with your actual action)
     });
 });
 
     </script>
-
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
 
