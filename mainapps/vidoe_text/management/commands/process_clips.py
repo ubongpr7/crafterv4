@@ -1861,6 +1861,8 @@ class Command(BaseCommand):
             
             scaling_factor = clip.h / 1080
             base_font_size = self.text_file_instance.font_size 
+            if self.text_file_instance.resolution == '9:16' and base_font_size >40:
+                base_font_size=40
 
             color = self.text_file_instance.font_color
             margin = 29
