@@ -1902,12 +1902,12 @@ class Command(BaseCommand):
 
             max_text_width = int(clip.w * 0.9) 
             if self.text_file_instance.resolution =='9:16':
-                max_text_width = int(clip.w * 0.7) 
+                max_text_width = int(clip.w * 0.8) 
 
             max_line_width = max_text_width // (font_size // 2)  
             wrapped_text = wrap_text_dynamically(
                     subtitle.text, 
-                    max_text_width=int(clip.w * 0.7), 
+                    max_text_width=max_text_width, 
                     font_size=font_size, 
                     font=self.text_file_instance.font,
                     max_lines=4
@@ -1937,7 +1937,7 @@ class Command(BaseCommand):
             
             box_width = min(text_width + small_margin, clip.w * 0.95)
             if self.text_file_instance.resolution =='9:16':
-                box_width=min(text_width + small_margin, clip.w * 0.7)
+                box_width=min(text_width + small_margin, clip.w * 0.8)
 
             box_height = text_height + margin
             rounded_box_array = self.create_rounded_rectangle((int(box_width), int(box_height)), int(box_radius))
