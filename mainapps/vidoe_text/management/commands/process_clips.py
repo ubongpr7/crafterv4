@@ -1750,6 +1750,108 @@ class Command(BaseCommand):
 
 #         return CompositeVideoClip([clip, box_clip, subtitle_clip])
 
+    # def add_subtitles_to_clip(
+    #         self, clip: VideoFileClip, subtitle: pysrt.SubRipItem
+    #     ) -> VideoFileClip:
+    #         logging.info(f"Adding subtitle: {subtitle.text}")
+    #         subtitle_box_color = self.text_file_instance.subtitle_box_color
+            
+    #         scaling_factor = clip.h / 1080
+    #         base_font_size = max(18, int((self.text_file_instance.font_size - 3) * scaling_factor))
+
+    #         color = self.text_file_instance.font_color
+    #         margin = 29
+    #         box_radius = self.text_file_instance.box_radius
+    #         subtitle_opacity = self.text_file_instance.subtitle_opacity
+    #         font_path = self.text_file_instance.font
+            
+    #         x, y, z = mcolors.to_rgb(subtitle_box_color)
+    #         subtitle_box_color = (x * 255, y * 255, z * 255)
+    #         rectangle_color = (int(x * 255), int(y * 255), int(z * 255))
+            
+    #         font_size = int(base_font_size * scaling_factor)
+
+    #         def split_text(text: str, max_line_width: int, max_lines: int = 3) -> str:
+    #             words = text.split()
+    #             lines = []
+    #             current_line = []
+    #             current_length = 0
+
+    #             for word in words:
+    #                 if current_length + len(word) <= max_line_width:
+    #                     current_line.append(word)
+    #                     current_length += len(word) + 1  # +1 for space
+    #                 else:
+    #                     lines.append(" ".join(current_line))
+    #                     current_line = [word]
+    #                     current_length = len(word) + 1
+
+    #                 if len(lines) >= max_lines:
+    #                     break
+
+    #             if current_line and len(lines) < max_lines:
+    #                 lines.append(" ".join(current_line))
+
+    #             return "\n".join(lines)
+
+    #         def ensure_two_lines(
+    #             text: str, initial_max_line_width: int, initial_font_size: int
+    #         ) -> (str, int):
+    #             max_line_width = initial_max_line_width
+    #             font_size = initial_font_size
+    #             wrapped_text = split_text(text, max_line_width)
+
+    #             while wrapped_text.count("\n") > 1:
+    #                 max_line_width += 1
+    #                 font_size -= 1
+    #                 wrapped_text = split_text(text, max_line_width)
+    #                 if font_size < 18:
+    #                     break
+
+    #             return wrapped_text, font_size
+
+    #         max_line_width = 35 
+    #         wrapped_text, adjusted_font_size = ensure_two_lines(
+    #             subtitle.text, max_line_width, font_size
+    #         ) if len(subtitle.text) > 60 else (split_text(subtitle.text, max_line_width, max_lines=3), font_size)
+
+    #         temp_subtitle_clip = TextClip(
+    #             wrapped_text,
+    #             fontsize=font_size,
+    #             font=self.text_file_instance.font
+    #         )
+    #         longest_line_width, text_height = temp_subtitle_clip.size
+
+    #         subtitle_clip = TextClip(
+    #             wrapped_text,
+    #             fontsize=adjusted_font_size,
+    #             color=color,
+    #             stroke_width=0,
+    #             font=self.text_file_instance.font,
+    #             method="caption",
+    #             align="center",
+    #             size=(longest_line_width, None),
+    #         ).set_duration(clip.duration)
+
+    #         text_width, text_height = subtitle_clip.size
+    #         small_margin = max(10, int(box_radius * 1.5))
+    #         box_width = text_width + small_margin
+    #         box_height = text_height + margin
+    #         rounded_box_array = self.create_rounded_rectangle((int(box_width), int(box_height)), int(box_radius))
+    #         logging.info('done with')
+    #         box_clip = ImageClip(rounded_box_array, ismask=False).set_duration(subtitle_clip.duration)
+
+    #         print("this is the used box color:", subtitle_box_color)
+    #         box_position = ("center", clip.h - box_height - 2 * margin)
+    #         subtitle_position = (
+    #             "center",
+    #             clip.h - box_height - 2 * margin + (box_height - text_height) / 2,
+    #         )
+
+    #         box_clip = box_clip.set_position(box_position)
+    #         subtitle_clip = subtitle_clip.set_position(subtitle_position)
+
+    #         return CompositeVideoClip([clip, box_clip, subtitle_clip])
     def add_subtitles_to_clip(
             self, clip: VideoFileClip, subtitle: pysrt.SubRipItem
         ) -> VideoFileClip:
@@ -1771,7 +1873,7 @@ class Command(BaseCommand):
             
             font_size = int(base_font_size * scaling_factor)
 
-            def split_text(text: str, max_line_width: int, max_lines: int = 3) -> str:
+            def wrap_text_dynamically(text: str, max_line_width: int, max_lines: int = 3) -> str:
                 words = text.split()
                 lines = []
                 current_line = []
@@ -1794,26 +1896,8 @@ class Command(BaseCommand):
 
                 return "\n".join(lines)
 
-            def ensure_two_lines(
-                text: str, initial_max_line_width: int, initial_font_size: int
-            ) -> (str, int):
-                max_line_width = initial_max_line_width
-                font_size = initial_font_size
-                wrapped_text = split_text(text, max_line_width)
-
-                while wrapped_text.count("\n") > 1:
-                    max_line_width += 1
-                    font_size -= 1
-                    wrapped_text = split_text(text, max_line_width)
-                    if font_size < 18:
-                        break
-
-                return wrapped_text, font_size
-
             max_line_width = 35 
-            wrapped_text, adjusted_font_size = ensure_two_lines(
-                subtitle.text, max_line_width, font_size
-            ) if len(subtitle.text) > 60 else (split_text(subtitle.text, max_line_width, max_lines=3), font_size)
+            wrapped_text = wrap_text_dynamically(subtitle.text, max_line_width, max_lines=3)
 
             temp_subtitle_clip = TextClip(
                 wrapped_text,
@@ -1824,7 +1908,7 @@ class Command(BaseCommand):
 
             subtitle_clip = TextClip(
                 wrapped_text,
-                fontsize=adjusted_font_size,
+                fontsize=font_size,
                 color=color,
                 stroke_width=0,
                 font=self.text_file_instance.font,
@@ -1860,6 +1944,14 @@ class Command(BaseCommand):
         draw = ImageDraw.Draw(img)        
         draw.rounded_rectangle((0, 0, size[0], size[1]), radius=radius, fill=rectangle_color)
         return np.array(img)
+
+    # def create_rounded_rectangle(self, size, radius):
+    #     """ Create an RGBA image with a rounded rectangle """
+    #     rectangle_color = ImageColor.getrgb(self.text_file_instance.subtitle_box_color) + (255,)
+    #     img = Image.new("RGBA", size, (0, 0, 0, 0))  
+    #     draw = ImageDraw.Draw(img)        
+    #     draw.rounded_rectangle((0, 0, size[0], size[1]), radius=radius, fill=rectangle_color)
+    #     return np.array(img)
 
 
 
