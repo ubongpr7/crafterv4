@@ -1874,7 +1874,7 @@ class Command(BaseCommand):
             
             font_size = int(base_font_size * scaling_factor)
 
-            def wrap_text_dynamically(text: str, max_text_width: int, font_size: int, font: str, max_lines: int = 3) -> str:
+            def wrap_text_dynamically(text: str, max_text_width: int, font_size: int, font: str, max_lines: int = 4) -> str:
                 words = text.split()
                 lines = []
                 current_line = []
@@ -1906,7 +1906,7 @@ class Command(BaseCommand):
                     max_text_width=int(clip.w * 0.9), 
                     font_size=font_size, 
                     font=self.text_file_instance.font,
-                    max_lines=3
+                    max_lines=4
                 )
 
             # wrapped_text = wrap_text_dynamically(subtitle.text, max_line_width, max_lines=3)
