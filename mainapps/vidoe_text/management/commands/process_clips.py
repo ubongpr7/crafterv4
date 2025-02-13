@@ -1852,6 +1852,7 @@ class Command(BaseCommand):
     #         subtitle_clip = subtitle_clip.set_position(subtitle_position)
 
     #         return CompositeVideoClip([clip, box_clip, subtitle_clip])
+    
     def add_subtitles_to_clip(
             self, clip: VideoFileClip, subtitle: pysrt.SubRipItem
         ) -> VideoFileClip:
@@ -1873,44 +1874,22 @@ class Command(BaseCommand):
             
             font_size = int(base_font_size * scaling_factor)
 
-            # def wrap_text_dynamically(text: str, max_line_width: int, max_lines: int = 3) -> str:
-            #     words = text.split()
-            #     lines = []
-            #     current_line = []
-            #     current_length = 0
-
-            #     for word in words:
-            #         if current_length + len(word) <= max_line_width:
-            #             current_line.append(word)
-            #             current_length += len(word) + 1  # +1 for space
-            #         else:
-            #             lines.append(" ".join(current_line))
-            #             current_line = [word]
-            #             current_length = len(word) + 1
-
-            #         if len(lines) >= max_lines:
-            #             break
-
-            #     if current_line and len(lines) < max_lines:
-            #         lines.append(" ".join(current_line))
-
-            #     return "\n".join(lines)
-            
-            def wrap_text_dynamically(text: str, max_line_width: int, max_lines: int = 3) -> str:
+            def wrap_text_dynamically(text: str, max_text_width: int, font_size: int, font: str, max_lines: int = 3) -> str:
                 words = text.split()
                 lines = []
                 current_line = []
-                current_length = 0
-
+                
                 for word in words:
-                    if current_length + len(word) <= max_line_width:
+                    test_line = " ".join(current_line + [word])
+                    test_clip = TextClip(test_line, fontsize=font_size, font=font)
+                    
+                    if test_clip.w <= max_text_width:
                         current_line.append(word)
-                        current_length += len(word) + 1  # +1 for space
                     else:
-                        lines.append(" ".join(current_line))
+                        if current_line:
+                            lines.append(" ".join(current_line))
                         current_line = [word]
-                        current_length = len(word) + 1
-
+                    
                     if len(lines) >= max_lines:
                         break
 
@@ -1922,8 +1901,15 @@ class Command(BaseCommand):
             # max_line_width = 35 
             max_text_width = int(clip.w * 0.9) 
             max_line_width = max_text_width // (font_size // 2)  
+            wrapped_text = wrap_text_dynamically(
+                    subtitle.text, 
+                    max_text_width=int(clip.w * 0.9), 
+                    font_size=font_size, 
+                    font=self.text_file_instance.font,
+                    max_lines=3
+                )
 
-            wrapped_text = wrap_text_dynamically(subtitle.text, max_line_width, max_lines=3)
+            # wrapped_text = wrap_text_dynamically(subtitle.text, max_line_width, max_lines=3)
 
             temp_subtitle_clip = TextClip(
                 wrapped_text,
