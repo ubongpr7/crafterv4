@@ -410,26 +410,22 @@ class Command(BaseCommand):
         return True 
 
     def crop_video_ffmpeg(self,video_url):
-        # Create a temporary file for the processed output
         with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_output:
             output_path = temp_output.name
 
-        # FFmpeg command to stream and crop the video directly
-        cmd = [
-            "ffmpeg", "-i", video_url,  # Stream from URL
-            "-vf", "crop=in_h*9/16:in_h",  # Crop to 9:16 aspect ratio
-            "-c:v", "libx264", "-preset", "fast", "-crf", "23",  # Encode efficiently
-            "-c:a", "copy",  # Keep original audio
-            output_path
-        ]
+            cmd = [
+                "ffmpeg", "-i", video_url,  
+                "-vf", "crop=in_h*9/16:in_h",  
+                "-c:v", "libx264", "-preset", "fast", "-crf", "23", 
+                "-c:a", "copy", 
+                output_path
+            ]
 
-        # Run FFmpeg
-        subprocess.run(cmd, check=True)
+            subprocess.run(cmd, check=True)
 
-        # Load the processed video into MoviePy
-        clip = VideoFileClip(output_path)
+            clip = VideoFileClip(output_path)
 
-        return clip  # Returns the cropped video as a MoviePy object
+            return clip 
 
              
       
