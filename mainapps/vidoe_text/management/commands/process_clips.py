@@ -1907,7 +1907,7 @@ class Command(BaseCommand):
             max_line_width = max_text_width // (font_size // 2)  
             wrapped_text = wrap_text_dynamically(
                     subtitle.text, 
-                    max_text_width=int(clip.w * 0.85), 
+                    max_text_width=int(clip.w * 0.7), 
                     font_size=font_size, 
                     font=self.text_file_instance.font,
                     max_lines=4
@@ -1937,7 +1937,7 @@ class Command(BaseCommand):
             
             box_width = min(text_width + small_margin, clip.w * 0.95)
             if self.text_file_instance.resolution =='9:16':
-                box_width=min(text_width + small_margin, clip.w * 0.85)
+                box_width=min(text_width + small_margin, clip.w * 0.7)
 
             box_height = text_height + margin
             rounded_box_array = self.create_rounded_rectangle((int(box_width), int(box_height)), int(box_radius))
@@ -1948,17 +1948,12 @@ class Command(BaseCommand):
             safe_zone_offset = int(clip.h * 0.15) if self.text_file_instance.resolution == '9:16' else 0
             x_offset = int(clip.w * 0.1) if self.text_file_instance.resolution == '9:16' else 0 
             box_position = (
-                ("center", clip.h - box_height - 2 * margin - safe_zone_offset)
-                if not x_offset else 
-                ((clip.w // 2) - x_offset, clip.h - box_height - 2 * margin - safe_zone_offset)
+                "center" if not x_offset else ("left", clip.h - box_height - 2 * margin - safe_zone_offset)
             )
 
             subtitle_position = (
-                ("center", clip.h - box_height - 2 * margin + (box_height - text_height) / 2 - safe_zone_offset)
-                if not x_offset else 
-                ((clip.w // 2) - x_offset, clip.h - box_height - 2 * margin + (box_height - text_height) / 2 - safe_zone_offset)
+                "center" if not x_offset else ("left", clip.h - box_height - 2 * margin + (box_height - text_height) / 2 - safe_zone_offset)
             )
-
             box_clip = box_clip.set_position(box_position)
             subtitle_clip = subtitle_clip.set_position(subtitle_position)
 
