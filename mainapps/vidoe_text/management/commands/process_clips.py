@@ -414,7 +414,7 @@ class Command(BaseCommand):
             output_path = temp_output.name
 
             cmd = [
-                "ffmpeg", "-i", video_url,  
+                "ffmpeg","-y", "-i", video_url,  
                 "-vf", "crop=in_h*9/16:in_h",  
                 "-c:v", "libx264", "-preset", "fast", "-crf", "23", 
                 "-c:a", "copy", 
