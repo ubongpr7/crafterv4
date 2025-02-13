@@ -1873,6 +1873,29 @@ class Command(BaseCommand):
             
             font_size = int(base_font_size * scaling_factor)
 
+            # def wrap_text_dynamically(text: str, max_line_width: int, max_lines: int = 3) -> str:
+            #     words = text.split()
+            #     lines = []
+            #     current_line = []
+            #     current_length = 0
+
+            #     for word in words:
+            #         if current_length + len(word) <= max_line_width:
+            #             current_line.append(word)
+            #             current_length += len(word) + 1  # +1 for space
+            #         else:
+            #             lines.append(" ".join(current_line))
+            #             current_line = [word]
+            #             current_length = len(word) + 1
+
+            #         if len(lines) >= max_lines:
+            #             break
+
+            #     if current_line and len(lines) < max_lines:
+            #         lines.append(" ".join(current_line))
+
+            #     return "\n".join(lines)
+            
             def wrap_text_dynamically(text: str, max_line_width: int, max_lines: int = 3) -> str:
                 words = text.split()
                 lines = []
@@ -1896,7 +1919,10 @@ class Command(BaseCommand):
 
                 return "\n".join(lines)
 
-            max_line_width = 35 
+            # max_line_width = 35 
+            max_text_width = int(clip.w * 0.9) 
+            max_line_width = max_text_width // (font_size // 2)  
+
             wrapped_text = wrap_text_dynamically(subtitle.text, max_line_width, max_lines=3)
 
             temp_subtitle_clip = TextClip(
@@ -1919,7 +1945,8 @@ class Command(BaseCommand):
 
             text_width, text_height = subtitle_clip.size
             small_margin = max(10, int(box_radius * 1.5))
-            box_width = text_width + small_margin
+            # box_width = text_width + small_margin
+            box_width = min(text_width + small_margin, clip.w * 0.95)
             box_height = text_height + margin
             rounded_box_array = self.create_rounded_rectangle((int(box_width), int(box_height)), int(box_radius))
             logging.info('done with')
