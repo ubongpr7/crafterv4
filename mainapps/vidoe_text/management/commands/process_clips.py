@@ -1859,7 +1859,7 @@ class Command(BaseCommand):
             subtitle_box_color = self.text_file_instance.subtitle_box_color
             
             scaling_factor = clip.h / 1080
-            base_font_size = max(18, int((self.text_file_instance.font_size - 3) * scaling_factor))
+            base_font_size = self.text_file_instance.font_size 
 
             color = self.text_file_instance.font_color
             margin = 29
