@@ -1627,8 +1627,8 @@ class Command(BaseCommand):
         logging.info(f"Adding subtitle: {subtitle.text}")
         subtitle_box_color = self.text_file_instance.subtitle_box_color
         base_font_size = self.text_file_instance.font_size -3
-        if self.text_file_instance.resolution=='9:16' and base_font_size>30:
-            base_font_size=30
+        if self.text_file_instance.resolution=='9:16' and base_font_size>28:
+            base_font_size=28
         if self.text_file_instance.resolution=='4:5' and base_font_size>41:
             base_font_size=41
 
