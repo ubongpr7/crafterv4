@@ -396,6 +396,7 @@ class Command(BaseCommand):
 
                 else:
                     mv_clip = self.load_video_from_file_field(subclip.to_dict().get('video_path'))
+                    clip_with_duration = self.adjust_segment_duration(mv_clip,float(subclip.end - subclip.start))
                     logging.debug(f"Loaded video clip from path: {subclip.to_dict().get('video_path')}")
                     cropped_clip = self.crop_to_aspect_ratio_(clip_with_duration, MAINRESOLUTIONS[self.text_file_instance.resolution])
                     logging.debug(f"Cropped clip to resolution: {MAINRESOLUTIONS[self.text_file_instance.resolution]}")
@@ -428,25 +429,6 @@ class Command(BaseCommand):
             return clip 
 
              
-      
-    def process_for_clip(self,clip):
-        logging.debug(f"Processing clip with ID: {clip.id}")
-        clip_subclips = []
-        for subclip in clip.subclips.all():
-            logging.debug(f"Processing subclip with ID: {subclip.id}")
-            mv_clip = self.load_video_from_file_field(subclip.to_dict().get('video_path'))
-            clip_with_duration = mv_clip.set_duration(float(subclip.end - subclip.start))
-            logging.debug(f"Loaded video clip from path: {subclip.to_dict().get('video_path')}")
-            cropped_clip = self.crop_to_aspect_ratio_(clip_with_duration, MAINRESOLUTIONS[self.text_file_instance.resolution])
-            logging.debug(f"Cropped clip to resolution: {MAINRESOLUTIONS[self.text_file_instance.resolution]}")
-            clip_subclips.append(cropped_clip)
-        if len(clip_subclips) == 1:
-            self.write_clip_file(clip_subclips[0], clip.video_file,clip)
-        else:
-
-            resized_subclips = self.resize_clips_to_max_size(clip_subclips)
-            concatenated_clip = self.concatenate_clips(resized_subclips)
-            self.write_clip_file(concatenated_clip, clip.video_file,clip)
 
 
     def extract_start_end(self,generated_srt):
