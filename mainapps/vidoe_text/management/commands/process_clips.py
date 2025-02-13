@@ -1937,7 +1937,7 @@ class Command(BaseCommand):
             
             box_width = min(text_width + small_margin, clip.w * 0.95)
             if self.text_file_instance.resolution =='9:16':
-                box_width=min(text_width + small_margin, clip.w * 0.8)
+                box_width=min(text_width + small_margin, clip.w * 0.82)
 
             box_height = text_height + margin
             rounded_box_array = self.create_rounded_rectangle((int(box_width), int(box_height)), int(box_radius))
@@ -1948,11 +1948,11 @@ class Command(BaseCommand):
             safe_zone_offset = int(clip.h * 0.15) if self.text_file_instance.resolution == '9:16' else 0
             x_offset = int(clip.w * 0.1) if self.text_file_instance.resolution == '9:16' else 0 
             box_position = (
-                "center" if not x_offset else ("left", clip.h - box_height - 2 * margin - safe_zone_offset)
+                ("center",clip.h - box_height - 2 * margin - safe_zone_offset) if not x_offset else (x_offset, clip.h - box_height - 2 * margin - safe_zone_offset)
             )
 
             subtitle_position = (
-                "center" if not x_offset else ("left", clip.h - box_height - 2 * margin + (box_height - text_height) / 2 - safe_zone_offset)
+                ("center",clip.h - box_height - 2 * margin - safe_zone_offset) if not x_offset else (x_offset, clip.h - box_height - 2 * margin + (box_height - text_height) / 2 - safe_zone_offset)
             )
             box_clip = box_clip.set_position(box_position)
             subtitle_clip = subtitle_clip.set_position(subtitle_position)
