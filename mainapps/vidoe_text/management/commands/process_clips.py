@@ -1902,7 +1902,7 @@ class Command(BaseCommand):
 
             max_text_width = int(clip.w * 0.9) 
             if self.text_file_instance.resolution =='9:16':
-                max_text_width = int(clip.w * 0.9) 
+                max_text_width = int(clip.w * 0.8) 
 
             max_line_width = max_text_width // (font_size // 2)  
             wrapped_text = wrap_text_dynamically(
