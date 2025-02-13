@@ -389,12 +389,17 @@ class Command(BaseCommand):
             clip_subclips = []
             for subclip in clip.subclips.all():
                 logging.debug(f"Processing subclip with ID: {subclip.id}")
-                mv_clip = self.load_video_from_file_field(subclip.to_dict().get('video_path'))
-                clip_with_duration = self.adjust_segment_duration(mv_clip,float(subclip.end - subclip.start))
-                logging.debug(f"Loaded video clip from path: {subclip.to_dict().get('video_path')}")
-                cropped_clip = self.crop_to_aspect_ratio_(clip_with_duration, MAINRESOLUTIONS[self.text_file_instance.resolution])
-                logging.debug(f"Cropped clip to resolution: {MAINRESOLUTIONS[self.text_file_instance.resolution]}")
-                clip_subclips.append(cropped_clip)
+                if self.text_file_instance.resolution=='9:16':
+                    mv_clip=self.crop_video_ffmpeg(subclip.video_file.url)
+                    clip_with_duration = self.adjust_segment_duration(mv_clip,float(subclip.end - subclip.start))
+                    clip_subclips.append(clip_with_duration)
+
+                else:
+                    mv_clip = self.load_video_from_file_field(subclip.to_dict().get('video_path'))
+                    logging.debug(f"Loaded video clip from path: {subclip.to_dict().get('video_path')}")
+                    cropped_clip = self.crop_to_aspect_ratio_(clip_with_duration, MAINRESOLUTIONS[self.text_file_instance.resolution])
+                    logging.debug(f"Cropped clip to resolution: {MAINRESOLUTIONS[self.text_file_instance.resolution]}")
+                    clip_subclips.append(cropped_clip)
             if len(clip_subclips) == 1:
                 self.write_clip_file(clip_subclips[0], clip.video_file,clip)
             else:
@@ -402,9 +407,30 @@ class Command(BaseCommand):
                 resized_subclips = self.resize_clips_to_max_size(clip_subclips)
                 concatenated_clip = self.concatenate_clips(resized_subclips)
                 self.write_clip_file(concatenated_clip, clip.video_file,clip)
-
-
         return True 
+
+    def crop_video_ffmpeg(self,video_url):
+        # Create a temporary file for the processed output
+        with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_output:
+            output_path = temp_output.name
+
+        # FFmpeg command to stream and crop the video directly
+        cmd = [
+            "ffmpeg", "-i", video_url,  # Stream from URL
+            "-vf", "crop=in_h*9/16:in_h",  # Crop to 9:16 aspect ratio
+            "-c:v", "libx264", "-preset", "fast", "-crf", "23",  # Encode efficiently
+            "-c:a", "copy",  # Keep original audio
+            output_path
+        ]
+
+        # Run FFmpeg
+        subprocess.run(cmd, check=True)
+
+        # Load the processed video into MoviePy
+        clip = VideoFileClip(output_path)
+
+        return clip  # Returns the cropped video as a MoviePy object
+
              
       
     def process_for_clip(self,clip):
