@@ -1510,7 +1510,7 @@ class Command(BaseCommand):
         if desired_aspect_ratio==9/16:
             crop_width = original_height * 9/16
 
-            cropped_clip = fix_all_crop(clip, width=600, height=5000, x_center=original_width/2, y_center=original_height/2)
+            cropped_clip = fix_all_crop(clip, width=600, height=1067, x_center=original_width/2, y_center=original_height/2)
             return cropped_clip
         
         if original_aspect_ratio > desired_aspect_ratio:
@@ -1627,8 +1627,8 @@ class Command(BaseCommand):
         logging.info(f"Adding subtitle: {subtitle.text}")
         subtitle_box_color = self.text_file_instance.subtitle_box_color
         base_font_size = self.text_file_instance.font_size -3
-        if self.text_file_instance.resolution=='9:16' and base_font_size>28:
-            base_font_size=28
+        if self.text_file_instance.resolution=='9:16' and base_font_size>25:
+            base_font_size=25
         if self.text_file_instance.resolution=='4:5' and base_font_size>41:
             base_font_size=41
 
