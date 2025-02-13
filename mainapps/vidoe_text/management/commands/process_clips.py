@@ -390,7 +390,7 @@ class Command(BaseCommand):
             for subclip in clip.subclips.all():
                 logging.debug(f"Processing subclip with ID: {subclip.id}")
                 if self.text_file_instance.resolution=='9:16':
-                    mv_clip=self.crop_video_ffmpeg(subclip.video_file.url)
+                    mv_clip=self.crop_video_ffmpeg(subclip.to_dict().get('video_path').url)
                     clip_with_duration = self.adjust_segment_duration(mv_clip,float(subclip.end - subclip.start))
                     clip_subclips.append(clip_with_duration)
 
