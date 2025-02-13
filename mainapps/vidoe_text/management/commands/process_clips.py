@@ -1907,7 +1907,7 @@ class Command(BaseCommand):
             max_line_width = max_text_width // (font_size // 2)  
             wrapped_text = wrap_text_dynamically(
                     subtitle.text, 
-                    max_text_width=int(clip.w * 0.9), 
+                    max_text_width=int(clip.w * 0.8), 
                     font_size=font_size, 
                     font=self.text_file_instance.font,
                     max_lines=4
