@@ -416,7 +416,7 @@ class Command(BaseCommand):
 
             cmd = [
                 "ffmpeg","-y", "-i", video_url,  
-                "-vf", "crop=in_h*9/16:in_h",  
+                "-vf", "crop=in_h*720/1280:in_h",  
                 "-c:v", "libx264", "-preset", "fast", "-crf", "23", 
                 "-c:a", "copy", 
                 output_path
@@ -1927,7 +1927,7 @@ class Command(BaseCommand):
         video_width, video_height = clip.size
 
         base_char_width = video_width * 0.055
-        max_allowed_width = int(video_width * 0.8) 
+        max_allowed_width = int(video_width * 0.7) 
 
         for line in lines:
             if not line.strip():
@@ -1943,7 +1943,7 @@ class Command(BaseCommand):
                 color='white', 
                 method="caption",
                 align="center",
-                size=(estimated_text_width, None),  # Set calculated width, height auto-adjusts
+                size=(estimated_text_width, None), 
             )
 
             if text_clip.size is not None:
@@ -1958,7 +1958,7 @@ class Command(BaseCommand):
                 box_clip = ImageClip(rounded_box_array, ismask=False).set_duration(clip.duration)
 
                 # Set positions relative to the main clip
-                box_clip = box_clip.set_position(("center",(video_height//2)+ y_offset-3))
+                box_clip = box_clip.set_position(("center",(video_height)- y_offset+3))
                 text_clip = text_clip.set_position(("center", y_offset-3)).set_duration(clip.duration)
 
                 text_clips.append(text_clip)
