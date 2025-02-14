@@ -1818,7 +1818,7 @@ class Command(BaseCommand):
                     max_text_width=max_text_width, 
                     font_size=30, 
                     font=self.text_file_instance.font,
-                    max_lines=4
+                    max_lines=2
                 )
                 tiktok= self.create_text_clips_for_tiktok(wrapped_text,30,clip)
                 logging.info(f'Done with tiktok')
@@ -1879,7 +1879,22 @@ class Command(BaseCommand):
         draw = ImageDraw.Draw(img)        
         draw.rounded_rectangle((0, 0, size[0], size[1]), radius=radius, fill=rectangle_color)
         return np.array(img)
+    def create_bottom_rounded_rectangle(self, size, radius):
+        """ Create an RGBA image with only the bottom corners rounded """
+        rectangle_color = ImageColor.getrgb('#ffffff') + (255,)
+        img = Image.new("RGBA", size, (0, 0, 0, 0))  
+        draw = ImageDraw.Draw(img)
         
+        width, height = size
+        draw.rectangle((0, 0, width, height - radius), fill=rectangle_color)  # Top part (no rounding)
+        
+        # Bottom rounded corners
+        draw.pieslice([0, height - (2 * radius), 2 * radius, height], 180, 270, fill=rectangle_color)  # Bottom-left
+        draw.pieslice([width - (2 * radius), height - (2 * radius), width, height], 270, 360, fill=rectangle_color)  # Bottom-right
+        draw.rectangle([radius, height - radius, width - radius, height], fill=rectangle_color)  # Bottom middle section
+
+        return np.array(img)
+
     # def create_text_clips_for_tiktok(self, text, font_size, clip):
     #     lines = text.split("\n")  # Split text into lines
     #     text_clips = []
@@ -1941,7 +1956,7 @@ class Command(BaseCommand):
                 line, 
                 font=self.text_file_instance.font, 
                 fontsize=font_size, 
-                color='white', 
+                color='black', 
                 method="caption",
                 align="center",
                 size=(estimated_text_width, None), 
@@ -1961,8 +1976,7 @@ class Command(BaseCommand):
             box_radius = 10
             logging.info(f'box_width: {box_width} box_height: {box_height}')
 
-            # Create rounded background with adjusted width
-            rounded_box_array = self.create_rounded_rectangle(
+            rounded_box_array = self.create_bottom_rounded_rectangle(
                 (int(box_width) + 10, int(box_height + 5)), int(box_radius)
             )
             box_clip = ImageClip(rounded_box_array, ismask=False).set_duration(clip.duration)
