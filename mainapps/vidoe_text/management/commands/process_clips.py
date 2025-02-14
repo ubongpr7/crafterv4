@@ -1935,6 +1935,8 @@ class Command(BaseCommand):
                 )
 
                 # Check if the text fits within max_allowed_width
+                if first_font_size:
+                    break
                 if text_clip.size and text_clip.size[0] <= max_allowed_width:
                     first_font_size=current_font_size
 
