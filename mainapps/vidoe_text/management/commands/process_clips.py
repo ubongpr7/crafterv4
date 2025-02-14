@@ -1948,7 +1948,7 @@ class Command(BaseCommand):
             text_clip = TextClip(
                 line, 
                 font='tiktokfont', 
-                fontsize=first_font_size,  # Apply consistent font size
+                fontsize=25,  # Apply consistent font size
                 color='black', 
                 method="caption",
                 align="center",
