@@ -1914,68 +1914,87 @@ class Command(BaseCommand):
 
         total_text_height = 0
         text_clip_sizes = []
-        first_font_size=None
+        first_font_size = None
+
+        # Determine a single font size from the first line
         for line in lines:
             if not line.strip():
                 continue 
 
-            current_font_size = 26
+            current_font_size = 26  # Start font size adjustment
             
-            while True :
+            while True:
                 estimated_text_width = min(len(line) * base_char_width, max_allowed_width)
 
                 text_clip = TextClip(
                     line, 
                     font='tiktokfont', 
-                    fontsize=first_font_size if first_font_size else current_font_size, 
+                    fontsize=current_font_size, 
                     color='black', 
                     method="label",
                     align="center",
-                    size=(estimated_text_width,None)
+                    size=(estimated_text_width, None)
                 )
 
-                # Check if the text fits within max_allowed_width
-                if first_font_size:
-                    break
                 if text_clip.size and text_clip.size[0] <= max_allowed_width:
-                    first_font_size=current_font_size
-
-                    break  # If it fits, stop reducing font size
-                
-                # Reduce font size
-                current_font_size -= 2
-                if current_font_size < 16:  # Prevents too small text
+                    first_font_size = current_font_size  # Lock font size from the first line
                     break  
+
+                # Reduce font size if needed
+                current_font_size -= 2
+                if current_font_size < 16:  # Prevents text from being too small
+                    break  
+
+            if first_font_size:
+                break  # Stop after determining font size from the first line
+
+        if not first_font_size:
+            first_font_size = 26  # Default fallback
+
+        # Now create text clips for all lines using the determined font size
+        for line in lines:
+            if not line.strip():
+                continue 
+
+            estimated_text_width = min(len(line) * base_char_width, max_allowed_width)
+
+            text_clip = TextClip(
+                line, 
+                font='tiktokfont', 
+                fontsize=first_font_size,  # Apply consistent font size
+                color='black', 
+                method="label",
+                align="center",
+                size=(estimated_text_width, None)
+            )
 
             if text_clip.size:
                 box_width, box_height = text_clip.size
-                total_text_height += box_height  # Sum up heights
+                total_text_height += box_height
                 text_clip_sizes.append((text_clip, box_width, box_height))
 
         bottom_margin = int(video_height * 0.15)
         y_offset = video_height - bottom_margin - total_text_height  
-        text_offset=25
+        text_offset = 25
+
         for text_clip, box_width, box_height in text_clip_sizes:
             box_radius = 15
-            logging.info(f'box_width: {box_width} box_height: {box_height}')
 
             rounded_box_array = self.create_bottom_rounded_rectangle(
                 (int(box_width) + 30, int(box_height + 50)), int(box_radius)
             )
             box_clip = ImageClip(rounded_box_array, ismask=False).set_duration(clip.duration)
 
-            # Set positions relative to the main clip
             box_clip = box_clip.set_position(("center", y_offset + 3))
-            text_clip = text_clip.set_position(("center", y_offset +text_offset)).set_duration(clip.duration)
+            text_clip = text_clip.set_position(("center", y_offset + text_offset)).set_duration(clip.duration)
 
             text_clips.append(text_clip)
             box_clips.append(box_clip)
 
             if box_height:
-                y_offset += box_height  # Move down for the next line
-                text_offset+=text_offset
+                y_offset += box_height  
+                text_offset += text_offset  
 
-        logging.info('done create_text_clips_for_tiktok')
         return CompositeVideoClip([clip] + box_clips + text_clips)
 
     def add_static_watermark_to_instance(
