@@ -1950,7 +1950,7 @@ class Command(BaseCommand):
                 font='tiktokfont', 
                 fontsize=first_font_size,  # Apply consistent font size
                 color='black', 
-                method="label",
+                method="caption",
                 align="center",
                 size=(estimated_text_width, None)
             )
