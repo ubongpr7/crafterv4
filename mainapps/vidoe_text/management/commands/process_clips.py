@@ -1797,7 +1797,7 @@ class Command(BaseCommand):
 
                 return "\n".join(lines)
             def split_text_two_lines(text: str) -> str:
-                if len(text) <= 40:
+                if len(text) <= 30:
                     return text  
 
                 words = text.split()
@@ -1805,7 +1805,7 @@ class Command(BaseCommand):
                 char_count = 0
 
                 for word in words:
-                    if char_count + len(word) + (1 if first_line else 0) <= 40:  # Ensuring first line gets at least 40 chars
+                    if char_count + len(word) + (1 if first_line else 0) <= 30:  # Ensuring first line gets at least 40 chars
                         first_line.append(word)
                         char_count += len(word) + (1 if first_line else 0)  # Account for spaces
                     else:
@@ -1965,7 +1965,7 @@ class Command(BaseCommand):
 
             # Set positions relative to the main clip
             box_clip = box_clip.set_position(("center", y_offset + 3))
-            text_clip = text_clip.set_position(("center", y_offset+ 3)).set_duration(clip.duration)
+            text_clip = text_clip.set_position(("center", y_offset+ 4)).set_duration(clip.duration)
 
             text_clips.append(text_clip)
             box_clips.append(box_clip)
