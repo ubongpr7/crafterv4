@@ -1901,7 +1901,6 @@ class Command(BaseCommand):
         draw = ImageDraw.Draw(img)        
         draw.rounded_rectangle((0, 0, size[0], size[1]), radius=radius, fill=rectangle_color)
         return np.array(img)
-
     def create_text_clips_for_tiktok(self, text, font_size, clip):
         lines = text.split("\n") 
         text_clips = []
@@ -1916,7 +1915,7 @@ class Command(BaseCommand):
         text_clip_sizes = []
         first_font_size = None
 
-        # Determine a single font size from the first line
+        # Determine font size from the FIRST line only
         for line in lines:
             if not line.strip():
                 continue 
@@ -1961,7 +1960,7 @@ class Command(BaseCommand):
             text_clip = TextClip(
                 line, 
                 font='tiktokfont', 
-                fontsize=first_font_size,  # Apply consistent font size
+                fontsize=first_font_size,  # Apply consistent font size from the first line
                 color='black', 
                 method="label",
                 align="center",
