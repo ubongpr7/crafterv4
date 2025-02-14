@@ -1885,7 +1885,7 @@ class Command(BaseCommand):
                 font=self.text_file_instance.font, 
                 fontsize=font_size, 
                 color=self.text_file_instance.subtitle_box_color, 
-                method="chain",
+                method="caption",
                 align="center",
 
             )
