@@ -1240,112 +1240,6 @@ class Command(BaseCommand):
 
         return [clip.video_file for clip in video_clips ]
 
-    # def load_video_from_file_field(self, file_field) -> VideoFileClip:
-    #     """
-    #     Load a video from a file field, downloading it from S3,
-    #     and return it as a MoviePy VideoFileClip.
-
-    #     Args:
-    #         file_field: The FileField containing the S3 path for the video file.
-
-    #     Returns:
-    #         VideoFileClip: The loaded video clip.
-
-    #     Raises:
-    #         ValueError: If the file field is empty or not a valid video file.
-    #     """
-    #     try:
-    #         if not file_field or not file_field.name:
-    #             raise ValueError("File field is empty or invalid.")
-    #         file_extension = os.path.splitext(file_field.name)[1].lower()
-
-    #         with tempfile.NamedTemporaryFile(suffix=file_extension, delete=False) as temp_file:
-    #             file_content = download_from_s3(file_field.name, temp_file.name)
-
-    #             if not file_content:
-    #                 raise ValueError("Failed to download the video from S3.")
-    #             clip=None
-    #             with open(temp_file.name, "wb") as video_file:
-    #                 video_file.write(file_content)
-    #             if file_extension in VIDEO_EXTENSIONS:
-    #                 clip = VideoFileClip(os.path.normpath(temp_file.name))
-    #             elif file_extension in IMAGE_EXTENSIONS:
-    #                 clip = ImageClip(os.path.normpath(temp_file.name))
-
-    #             # Return the video clip
-    #             return clip
-
-    #     except Exception as e:
-    #         logging.error(f"Error loading video from file field: {e}")
-    #         raise
-
-    # def load_video_from_file_field(self,file_field) -> VideoFileClip:
-    #     """
-    #     Load a video or image from a file field, downloading it from S3, converting if necessary,
-    #     and returning it as a MoviePy VideoFileClip or ImageClip.
-
-    #     Args:
-    #         file_field: The FileField containing the S3 path for the file.
-
-    #     Returns:
-    #         VideoFileClip or ImageClip: The loaded clip.
-
-    #     Raises:
-    #         ValueError: If the file field is empty or not a valid video/image file.
-    #     """
-    #     try:
-    #         if not file_field or not file_field.name:
-    #             raise ValueError("File field is empty or invalid.")
-
-    #         file_extension = os.path.splitext(file_field.name)[1].lower()
-
-    #         # Create a temporary file to store the downloaded content
-    #         with tempfile.NamedTemporaryFile(suffix=file_extension, delete=False) as temp_file:
-    #             file_path = temp_file.name
-    #             file_content = download_from_s3(file_field.name, file_path)
-
-    #             if not file_content:
-    #                 raise ValueError("Failed to download the file from S3.")
-
-    #             # Check if the file is a video
-    #             if file_extension in VIDEO_EXTENSIONS:
-    #                 if file_extension == ".mp4":
-    #                     # Load the video clip directly if it's already an mp4
-    #                     clip = VideoFileClip(os.path.normpath(file_path))
-    #                 else:
-    #                     # Convert to mp4 using ffmpeg
-    #                     with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as converted_file:
-    #                         converted_path = converted_file.name
-    #                         ffmpeg_command = [
-    #                             "ffmpeg",
-    #                             "-i", os.path.normpath(file_path),
-    #                             "-vcodec", "h264",
-    #                             "-acodec", "mp2",
-    #                             os.path.normpath(converted_path)
-    #                         ]
-
-    #                         subprocess.run(ffmpeg_command, check=True)
-    #                         logging.info(f'ffmpeg is done converting {file_extension} to .mp4')
-    #                         # Load the converted video clip
-    #                         clip = VideoFileClip(os.path.normpath(converted_path))
-
-    #             # Check if the file is an image
-    #             elif file_extension in IMAGE_EXTENSIONS:
-    #                 clip = ImageClip(os.path.normpath(file_path))
-
-    #             else:
-    #                 raise ValueError("Unsupported file type.")
-
-    #             # Return the loaded clip
-    #             return clip
-
-    #     except subprocess.CalledProcessError as ffmpeg_error:
-    #         logging.error(f"FFmpeg error during conversion: {ffmpeg_error}")
-    #         raise
-
-    #     except Exception as e:
-    #         logging.error(f"Error loading video from file field: {e}")
-    #     raise
    
     def repair_and_load_video(self, file_field) -> VideoFileClip:
         """
@@ -1557,6 +1451,7 @@ class Command(BaseCommand):
         final_clip = concatenate_videoclips(clips, method="chain")
         logging.info("Clip has been concatenated: ")
         return final_clip
+    
     def resize_clips_to_max_size(self, clips):
         max_width = max(clip.w for clip in clips)
         max_height = max(clip.h for clip in clips)
@@ -1564,6 +1459,7 @@ class Command(BaseCommand):
         resized_clips = [clip.resize(newsize=(max_width, max_height)) for clip in clips]
 
         return resized_clips
+    
     def image_to_video(self,clip, duration):
         """
         Converts an ImageClip to a VideoClip with the specified duration.
@@ -1585,6 +1481,7 @@ class Command(BaseCommand):
             video_clip = clip.set_duration(duration)
             return video_clip
         return None
+    
     def replace_video_segments(
         self,
         original_segments: List[VideoFileClip],
@@ -1900,6 +1797,8 @@ class Command(BaseCommand):
 
                 return "\n".join(lines)
 
+
+
             max_text_width = int(clip.w * 0.9) 
             if self.text_file_instance.resolution =='9:16':
                 max_text_width = int(clip.w * 0.72) 
@@ -1912,8 +1811,9 @@ class Command(BaseCommand):
                     font=self.text_file_instance.font,
                     max_lines=4
                 )
-
-
+            
+            if self.text_file_instance.resolution=='9:16':
+                return self.create_text_clips_for_tiktok(wrapped_text,25,clip)
             temp_subtitle_clip = TextClip(
                 wrapped_text,
                 fontsize=font_size,
@@ -1941,7 +1841,6 @@ class Command(BaseCommand):
 
             box_height = text_height + margin
             rounded_box_array = self.create_rounded_rectangle((int(box_width), int(box_height)), int(box_radius))
-            logging.info('done with')
             box_clip = ImageClip(rounded_box_array, ismask=False).set_duration(subtitle_clip.duration)
 
             print("this is the used box color:", subtitle_box_color)
@@ -1971,26 +1870,40 @@ class Command(BaseCommand):
         draw = ImageDraw.Draw(img)        
         draw.rounded_rectangle((0, 0, size[0], size[1]), radius=radius, fill=rectangle_color)
         return np.array(img)
+        
+    def create_text_clips_for_tiktok(self, text, font_size, clip):
+        lines = text.split("\n")  # Split text into lines
+        text_clips = []
+        box_clips = []
 
-    # def create_rounded_rectangle(self, size, radius):
-    #     """ Create an RGBA image with a rounded rectangle """
-    #     rectangle_color = ImageColor.getrgb(self.text_file_instance.subtitle_box_color) + (255,)
-    #     img = Image.new("RGBA", size, (0, 0, 0, 0))  
-    #     draw = ImageDraw.Draw(img)        
-    #     draw.rounded_rectangle((0, 0, size[0], size[1]), radius=radius, fill=rectangle_color)
-    #     return np.array(img)
+        y_offset = 0 
+        for line in lines:
+            text_clip = TextClip(
+                line, 
+                font=self.text_file_instance.font, 
+                fontsize=font_size, 
+                color=self.text_file_instance.subtitle_box_color, 
+                bg_color=None,  
+                method="chain"
+            )
+            
+            box_width, box_height = text_clip.size
+            box_radius = 10
 
+            # Create rounded background
+            rounded_box_array = self.create_rounded_rectangle((int(box_width) + 30, int(box_height)), int(box_radius))
+            box_clip = ImageClip(rounded_box_array, ismask=False).set_duration(clip.duration)
+            
+            # Set positions relative to the main clip
+            box_clip = box_clip.set_position(("center", y_offset))
+            text_clip = text_clip.set_position(("center", y_offset))
+            
+            text_clips.append(text_clip)
+            box_clips.append(box_clip)
+            
+            y_offset += box_height  
 
-
-    # def create_rounded_rectangle(self,size, radius ):
-    #     """ Create an RGBA image with a rounded rectangle """
-
-    #     rectangle_color = ImageColor.getrgb(self.text_file_instance.subtitle_box_color) + (255,)
-    #     img = Image.new("RGBA", size, (0, 0, 0, 0))  
-    #     draw = ImageDraw.Draw(img)        
-    #     draw.rounded_rectangle((0, 0, size[0], size[1]), radius=radius, fill=rectangle_color)
-    #     return np.array(img)
-
+        return CompositeVideoClip([clip] + box_clips + text_clips)
 
     def add_static_watermark_to_instance(
         self,

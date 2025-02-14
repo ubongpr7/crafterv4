@@ -18,6 +18,7 @@ RUN apt -y install \
   ffmpeg \
   espeak \
   imagemagick \
+  libpango1.0-dev \
   git \
   postgresql \
   postgresql-contrib \
