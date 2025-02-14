@@ -1914,28 +1914,29 @@ class Command(BaseCommand):
 
         total_text_height = 0
         text_clip_sizes = []
-
+        first_font_size=None
         for line in lines:
             if not line.strip():
                 continue 
 
             current_font_size = 26
-
-            while True:
+            
+            while True and not first_font_size:
                 estimated_text_width = min(len(line) * base_char_width, max_allowed_width)
 
                 text_clip = TextClip(
                     line, 
                     font=self.text_file_instance.font, 
-                    fontsize=current_font_size, 
+                    fontsize=first_font_size if first_font_size else current_font_size, 
                     color='black', 
                     method="label",
                     align="center",
-                    size=(estimated_text_width, None), 
                 )
 
                 # Check if the text fits within max_allowed_width
                 if text_clip.size and text_clip.size[0] <= max_allowed_width:
+                    first_font_size=current_font_size
+
                     break  # If it fits, stop reducing font size
                 
                 # Reduce font size
