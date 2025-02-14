@@ -1919,7 +1919,7 @@ class Command(BaseCommand):
         y_offset = 0
         video_width, video_height = clip.size
 
-        base_char_width = video_width * 0.05  
+        base_char_width = video_width * 0.07  
         max_allowed_width = int(video_width * 0.9) 
 
         for line in lines:
@@ -1946,13 +1946,13 @@ class Command(BaseCommand):
 
                 # Create rounded background with adjusted width
                 rounded_box_array = self.create_rounded_rectangle(
-                    (int(box_width) + 30, int(box_height)), int(box_radius)
+                    (int(box_width) + 30, int(box_height+5)), int(box_radius)
                 )
                 box_clip = ImageClip(rounded_box_array, ismask=False).set_duration(clip.duration)
 
                 # Set positions relative to the main clip
-                box_clip = box_clip.set_position(("center", y_offset))
-                text_clip = text_clip.set_position(("center", y_offset)).set_duration(clip.duration)
+                box_clip = box_clip.set_position(("center", y_offset-3))
+                text_clip = text_clip.set_position(("center", y_offset-3)).set_duration(clip.duration)
 
                 text_clips.append(text_clip)
                 box_clips.append(box_clip)
