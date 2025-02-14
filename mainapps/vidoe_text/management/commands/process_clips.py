@@ -1798,25 +1798,24 @@ class Command(BaseCommand):
                 return "\n".join(lines)
             def split_text_two_lines(text: str) -> str:
                 if len(text) <= 30:
-                    return text  
+                    return text  # Return as a single line if ≤ 30 chars
 
                 words = text.split()
                 first_line, second_line = [], []
                 char_count = 0
 
                 for word in words:
-                    if char_count + len(word) + (1 if first_line else 0) <= 30:  # Ensuring first line gets at least 40 chars
+                    if char_count + len(word) + (1 if first_line else 0) <= 30:  # Ensure first line gets at least 30 chars
                         first_line.append(word)
                         char_count += len(word) + (1 if first_line else 0)  # Account for spaces
                     else:
                         second_line.append(word)
 
-                # If second line is longer, rebalance by shifting words from second line to first
-                while len(" ".join(second_line)) > len(" ".join(first_line)):
-                    first_line.append(second_line.pop(0))
+                # Rebalance if second line is longer than 20 chars
+                while len(" ".join(second_line)) > 20:
+                    first_line.append(second_line.pop(0))  # Move words to first line
 
                 return " ".join(first_line) + ("\n" + " ".join(second_line) if second_line else "")
-
 
             max_text_width = int(clip.w * 0.9) 
 
@@ -1904,7 +1903,7 @@ class Command(BaseCommand):
         return np.array(img)
 
     def create_text_clips_for_tiktok(self, text, font_size, clip):
-        lines = text.split("\n")  # Split text into lines
+        lines = text.split("\n") 
         text_clips = []
         box_clips = []
 
