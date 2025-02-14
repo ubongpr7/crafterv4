@@ -1947,13 +1947,19 @@ class Command(BaseCommand):
             print("this is the used box color:", subtitle_box_color)
             safe_zone_offset = int(clip.h * 0.15) if self.text_file_instance.resolution == '9:16' else 0
             x_offset = int(clip.w * 0.1) if self.text_file_instance.resolution == '9:16' else 0 
+
+            # Place box at x_offset if 9:16, otherwise center
             box_position = (
-                ("center",clip.h - box_height - 2 * margin - safe_zone_offset) if not x_offset else (x_offset, clip.h - box_height - 2 * margin - safe_zone_offset)
+                ("center", clip.h - box_height - 2 * margin - safe_zone_offset)
+                if not x_offset else (x_offset, clip.h - box_height - 2 * margin - safe_zone_offset)
             )
 
-            subtitle_position = (
-                ("center",clip.h - box_height - 2 * margin - safe_zone_offset) if not x_offset else (x_offset, clip.h - box_height - 2 * margin + (box_height - text_height) / 2 - safe_zone_offset)
-            )
+            # Center subtitle inside the box (use box's width)
+            subtitle_x = x_offset + (box_width - text_width) // 2 if x_offset else "center"
+            subtitle_y = clip.h - box_height - 2 * margin + (box_height - text_height) / 2 - safe_zone_offset
+
+            subtitle_position = (subtitle_x, subtitle_y)
+
             box_clip = box_clip.set_position(box_position)
             subtitle_clip = subtitle_clip.set_position(subtitle_position)
 
