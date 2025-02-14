@@ -1919,8 +1919,8 @@ class Command(BaseCommand):
         y_offset = 0
         video_width, video_height = clip.size
 
-        base_char_width = video_width * 0.07  
-        max_allowed_width = int(video_width * 0.9) 
+        base_char_width = video_width * 0.06 
+        max_allowed_width = int(video_width * 0.8) 
 
         for line in lines:
             if not line.strip():
