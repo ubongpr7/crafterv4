@@ -1929,7 +1929,7 @@ class Command(BaseCommand):
                     font=self.text_file_instance.font, 
                     fontsize=current_font_size, 
                     color='black', 
-                    method="caption",
+                    method="label",
                     align="center",
                     size=(estimated_text_width, None), 
                 )
@@ -1950,7 +1950,7 @@ class Command(BaseCommand):
 
         bottom_margin = int(video_height * 0.15)
         y_offset = video_height - bottom_margin - total_text_height  
-        text_offset=20
+        text_offset=25
         for text_clip, box_width, box_height in text_clip_sizes:
             box_radius = 15
             logging.info(f'box_width: {box_width} box_height: {box_height}')
