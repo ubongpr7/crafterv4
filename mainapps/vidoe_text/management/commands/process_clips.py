@@ -1883,8 +1883,9 @@ class Command(BaseCommand):
                 font=self.text_file_instance.font, 
                 fontsize=font_size, 
                 color=self.text_file_instance.subtitle_box_color, 
-                bg_color=None,  
-                method="chain"
+                method="chain",
+                align="center",
+
             )
             
             box_width, box_height = text_clip.size
