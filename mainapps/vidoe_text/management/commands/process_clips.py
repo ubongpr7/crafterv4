@@ -1919,7 +1919,7 @@ class Command(BaseCommand):
             if not line.strip():
                 continue 
 
-            current_font_size = 24
+            current_font_size = 26
 
             while True:
                 estimated_text_width = min(len(line) * base_char_width, max_allowed_width)
@@ -1952,11 +1952,11 @@ class Command(BaseCommand):
         y_offset = video_height - bottom_margin - total_text_height  
         text_offset=20
         for text_clip, box_width, box_height in text_clip_sizes:
-            box_radius = 20
+            box_radius = 15
             logging.info(f'box_width: {box_width} box_height: {box_height}')
 
             rounded_box_array = self.create_bottom_rounded_rectangle(
-                (int(box_width) + 30, int(box_height + 40)), int(box_radius)
+                (int(box_width) + 30, int(box_height + 50)), int(box_radius)
             )
             box_clip = ImageClip(rounded_box_array, ismask=False).set_duration(clip.duration)
 
