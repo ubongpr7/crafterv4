@@ -1950,7 +1950,7 @@ class Command(BaseCommand):
 
         bottom_margin = int(video_height * 0.15)
         y_offset = video_height - bottom_margin - total_text_height  
-
+        text_offset=20
         for text_clip, box_width, box_height in text_clip_sizes:
             box_radius = 20
             logging.info(f'box_width: {box_width} box_height: {box_height}')
@@ -1962,13 +1962,14 @@ class Command(BaseCommand):
 
             # Set positions relative to the main clip
             box_clip = box_clip.set_position(("center", y_offset + 3))
-            text_clip = text_clip.set_position(("center", y_offset +20)).set_duration(clip.duration)
+            text_clip = text_clip.set_position(("center", y_offset +text_offset)).set_duration(clip.duration)
 
             text_clips.append(text_clip)
             box_clips.append(box_clip)
 
             if box_height:
                 y_offset += box_height  # Move down for the next line
+                text_offset+=text_offset
 
         logging.info('done create_text_clips_for_tiktok')
         return CompositeVideoClip([clip] + box_clips + text_clips)
