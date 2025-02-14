@@ -1841,7 +1841,7 @@ class Command(BaseCommand):
                 )
             
             if self.text_file_instance.resolution=='9:16':
-                max_text_width = int(clip.w * 0.72) 
+                max_text_width = int(clip.w * 0.8) 
 
                 wrapped_text = wrap_text_two_lines(
                     subtitle.text, 
