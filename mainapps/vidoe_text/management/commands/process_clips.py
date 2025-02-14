@@ -1962,7 +1962,7 @@ class Command(BaseCommand):
 
             # Set positions relative to the main clip
             box_clip = box_clip.set_position(("center", y_offset + 3))
-            text_clip = text_clip.set_position(("center", y_offset +13)).set_duration(clip.duration)
+            text_clip = text_clip.set_position(("center", y_offset +20)).set_duration(clip.duration)
 
             text_clips.append(text_clip)
             box_clips.append(box_clip)
