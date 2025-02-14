@@ -1907,28 +1907,23 @@ class Command(BaseCommand):
         box_clips = []
 
         video_width, video_height = clip.size
-
         base_char_width = video_width * 0.025
         max_allowed_width = int(video_width * 0.8)  
 
         total_text_height = 0
         text_clip_sizes = []
-        first_font_size = None
+        
+        first_font_size = 26  # Default starting font size
+        first_line = next((line for line in lines if line.strip()), None)  # Get the first non-empty line
 
-        # Determine font size from the FIRST line only
-        for line in lines:
-            if not line.strip():
-                continue 
-
-            current_font_size = 26  # Start font size adjustment
-            
+        if first_line:
             while True:
-                estimated_text_width = min(len(line) * base_char_width, max_allowed_width)
+                estimated_text_width = min(len(first_line) * base_char_width, max_allowed_width)
 
                 text_clip = TextClip(
-                    line, 
+                    first_line, 
                     font='tiktokfont', 
-                    fontsize=current_font_size, 
+                    fontsize=first_font_size, 
                     color='black', 
                     method="label",
                     align="center",
@@ -1936,19 +1931,12 @@ class Command(BaseCommand):
                 )
 
                 if text_clip.size and text_clip.size[0] <= max_allowed_width:
-                    first_font_size = current_font_size  # Lock font size from the first line
                     break  
 
                 # Reduce font size if needed
-                current_font_size -= 2
-                if current_font_size < 16:  # Prevents text from being too small
+                first_font_size -= 2
+                if first_font_size < 16:  # Prevents text from being too small
                     break  
-
-            if first_font_size:
-                break  # Stop after determining font size from the first line
-
-        if not first_font_size:
-            first_font_size = 26  # Default fallback
 
         # Now create text clips for all lines using the determined font size
         for line in lines:
@@ -1960,7 +1948,7 @@ class Command(BaseCommand):
             text_clip = TextClip(
                 line, 
                 font='tiktokfont', 
-                fontsize=first_font_size,  # Apply consistent font size from the first line
+                fontsize=first_font_size,  # Apply consistent font size
                 color='black', 
                 method="label",
                 align="center",
