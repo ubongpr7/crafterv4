@@ -2038,7 +2038,7 @@ class Command(BaseCommand):
         video_width, video_height = clip.size
 
         base_char_width = video_width * 0.055
-        max_allowed_width = int(video_width * 0.7)  
+        max_allowed_width = int(video_width * 0.85)  
 
         total_text_height = 0
         text_clip_sizes = []
@@ -2062,7 +2062,7 @@ class Command(BaseCommand):
                     color='black', 
                     method="caption",
                     align="center",
-                    size=(estimated_text_width, None), 
+                    # size=(estimated_text_width, None), 
                 )
 
                 # Check if the text fits within max_allowed_width
