@@ -1878,6 +1878,8 @@ class Command(BaseCommand):
 
         y_offset = 0 
         for line in lines:
+            if not  line.strip():
+                break
             text_clip = TextClip(
                 line, 
                 font=self.text_file_instance.font, 
