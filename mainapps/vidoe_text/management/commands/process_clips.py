@@ -1916,29 +1916,28 @@ class Command(BaseCommand):
         first_font_size = 26  # Default starting font size
         first_line = next((line for line in lines if line.strip()), None)  # Get the first non-empty line
 
-        if first_line:
-            while True:
-                estimated_text_width = min(len(first_line) * base_char_width, max_allowed_width)
+        # if first_line:
+        #     while True:
+        #         estimated_text_width = min(len(first_line) * base_char_width, max_allowed_width)
 
-                text_clip = TextClip(
-                    first_line, 
-                    font='tiktokfont', 
-                    fontsize=first_font_size, 
-                    color='black', 
-                    method="label",
-                    align="center",
-                    size=(estimated_text_width, None)
-                )
+        #         text_clip = TextClip(
+        #             first_line, 
+        #             font='tiktokfont', 
+        #             fontsize=first_font_size, 
+        #             color='black', 
+        #             method="label",
+        #             align="center",
+        #             size=(estimated_text_width, None)
+        #         )
 
-                if text_clip.size and text_clip.size[0] <= max_allowed_width:
-                    break  
+        #         if text_clip.size and text_clip.size[0] <= max_allowed_width:
+        #             break  
 
-                # Reduce font size if needed
-                first_font_size -= 2
-                if first_font_size < 16:  # Prevents text from being too small
-                    break  
+        #         # Reduce font size if needed
+        #         first_font_size -= 2
+        #         if first_font_size < 16:  # Prevents text from being too small
+        #             break  
 
-        # Now create text clips for all lines using the determined font size
         for line in lines:
             if not line.strip():
                 continue 
@@ -1948,7 +1947,7 @@ class Command(BaseCommand):
             text_clip = TextClip(
                 line, 
                 font='tiktokfont', 
-                fontsize=25, 
+                fontsize=40, 
                 color='black', 
                 method="caption",
                 align="center",
