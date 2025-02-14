@@ -1796,37 +1796,26 @@ class Command(BaseCommand):
                     lines.append(" ".join(current_line))
 
                 return "\n".join(lines)
+            def split_text_two_lines(text: str) -> str:
+                if len(text) <= 40:
+                    return text  # Return as a single line if <= 40 chars
 
-            def wrap_text_two_lines(text: str, max_text_width: int, font_size: int, font: str) -> str:
                 words = text.split()
+                first_line, second_line = [], []
+                char_count = 0
 
-                if len(words) < 2:
-                    return text  # If it's just one word, return it as is
-
-                # Binary search approach to balance two lines
-                left, right = 1, len(words) - 1  
-                best_split = 1  
-
-                while left <= right:
-                    mid = (left + right) // 2
-
-                    first_line = " ".join(words[:mid])
-                    second_line = " ".join(words[mid:])
-
-                    first_clip = TextClip(first_line, fontsize=font_size, font=font)
-                    second_clip = TextClip(second_line, fontsize=font_size, font=font)
-
-                    if first_clip.w <= max_text_width and second_clip.w <= max_text_width:
-                        best_split = mid  # Keep track of best split
-                        left = mid + 1  # Try to fit more words in the first line
+                for word in words:
+                    if char_count + len(word) + (1 if first_line else 0) <= 40:  # Ensuring first line gets at least 40 chars
+                        first_line.append(word)
+                        char_count += len(word) + (1 if first_line else 0)  # Account for spaces
                     else:
-                        right = mid - 1  # Reduce words in the first line
+                        second_line.append(word)
 
-                # Final split based on best fit
-                first_line = " ".join(words[:best_split])
-                second_line = " ".join(words[best_split:])
+                # If second line is longer, rebalance by shifting words from second line to first
+                while len(" ".join(second_line)) > len(" ".join(first_line)):
+                    first_line.append(second_line.pop(0))
 
-                return f"{first_line}\n{second_line}"
+                return " ".join(first_line) + ("\n" + " ".join(second_line) if second_line else "")
 
 
             max_text_width = int(clip.w * 0.9) 
@@ -1843,11 +1832,8 @@ class Command(BaseCommand):
             if self.text_file_instance.resolution=='9:16':
                 max_text_width = int(clip.w * 0.8) 
 
-                wrapped_text = wrap_text_two_lines(
-                    subtitle.text, 
-                    max_text_width=max_text_width, 
-                    font_size=30, 
-                    font=self.text_file_instance.font,
+                wrapped_text = split_text_two_lines(
+                    subtitle.text 
                 )
                 tiktok= self.create_text_clips_for_tiktok(wrapped_text,30,clip)
                 logging.info(f'Done with tiktok')
@@ -1915,120 +1901,6 @@ class Command(BaseCommand):
         draw = ImageDraw.Draw(img)        
         draw.rounded_rectangle((0, 0, size[0], size[1]), radius=radius, fill=rectangle_color)
         return np.array(img)
-    # def create_bottom_rounded_rectangle(self, size, radius):
-    #     """ Create an RGBA image with only the bottom corners rounded """
-    #     rectangle_color = ImageColor.getrgb('#ffffff') + (255,)
-    #     img = Image.new("RGBA", size, (0, 0, 0, 0))  
-    #     draw = ImageDraw.Draw(img)
-        
-    #     width, height = size
-    #     draw.rectangle((0, 0, width, height - radius), fill=rectangle_color)  # Top part (no rounding)
-        
-    #     # Bottom rounded corners
-    #     draw.pieslice([0, height - (2 * radius), 2 * radius, height], 180, 270, fill=rectangle_color)  # Bottom-left
-    #     draw.pieslice([width - (2 * radius), height - (2 * radius), width, height], 270, 360, fill=rectangle_color)  # Bottom-right
-    #     draw.rectangle([radius, height - radius, width - radius, height], fill=rectangle_color)  # Bottom middle section
-
-    #     return np.array(img)
-
-    # def create_text_clips_for_tiktok(self, text, font_size, clip):
-    #     lines = text.split("\n")  # Split text into lines
-    #     text_clips = []
-    #     box_clips = []
-
-    #     y_offset = 0 
-    #     w,h=clip.size
-    #     for line in lines:
-    #         if not  line.strip():
-    #             break
-    #         text_clip = TextClip(
-    #             line, 
-    #             font=self.text_file_instance.font, 
-    #             fontsize=font_size, 
-    #             color='white', 
-    #             method="caption",
-    #             align="center",
-
-    #         )
-    #         if  text_clip.size  != None:
-    #             box_width, box_height = text_clip.size
-    #             box_radius = 10
-    #             logging.info(f'box_width: {box_width} box_height: {box_height}')
-    #             # Create rounded background
-    #             rounded_box_array = self.create_rounded_rectangle((int(box_width) + 30, int(box_height)), int(box_radius))
-    #             box_clip = ImageClip(rounded_box_array, ismask=False).set_duration(clip.duration)
-                
-    #             # Set positions relative to the main clip
-    #             box_clip = box_clip.set_position(("center", y_offset))
-    #             text_clip = text_clip.set_position(("center", y_offset))
-    #             text_clip=text_clip.set_duration(clip.duration)
-    #             text_clips.append(text_clip)
-    #             box_clips.append(box_clip)
-    #             if box_height:
-    #                 y_offset += box_height  
-    #     logging.info('done create_text_clips_for_tiktok')
-    #     return CompositeVideoClip([clip] + box_clips + text_clips)
-    # def create_text_clips_for_tiktok(self, text, font_size, clip):
-    #     lines = text.split("\n")  # Split text into lines
-    #     text_clips = []
-    #     box_clips = []
-
-    #     video_width, video_height = clip.size
-
-    #     base_char_width = video_width * 0.055
-    #     max_allowed_width = int(video_width * 0.7)  
-
-    #     total_text_height = 0
-    #     text_clip_sizes = []
-
-    #     # First pass: Calculate total text height before placing clips
-    #     for line in lines:
-    #         if not line.strip():
-    #             continue 
-
-    #         estimated_text_width = min(len(line) * base_char_width, max_allowed_width)
-
-    #         text_clip = TextClip(
-    #             line, 
-    #             font=self.text_file_instance.font, 
-    #             fontsize=font_size, 
-    #             color='black', 
-    #             method="caption",
-    #             align="center",
-    #             size=(estimated_text_width, None), 
-    #         )
-
-    #         if text_clip.size is not None:
-    #             box_width, box_height = text_clip.size
-    #             total_text_height += box_height  # Sum up heights
-    #             text_clip_sizes.append((text_clip, box_width, box_height))
-
-    #     # Calculate the starting y_offset so that the last text clip is 15% above the bottom
-    #     bottom_margin = int(video_height * 0.15)
-    #     y_offset = video_height - bottom_margin - total_text_height  
-
-    #     # Second pass: Place text clips from the calculated y_offset
-    #     for text_clip, box_width, box_height in text_clip_sizes:
-    #         box_radius = 10
-    #         logging.info(f'box_width: {box_width} box_height: {box_height}')
-
-    #         rounded_box_array = self.create_rounded_rectangle(
-    #             (int(box_width) + 10, int(box_height + 5)), int(box_radius)
-    #         )
-    #         box_clip = ImageClip(rounded_box_array, ismask=False).set_duration(clip.duration)
-
-    #         # Set positions relative to the main clip
-    #         box_clip = box_clip.set_position(("center", y_offset -3))
-    #         text_clip = text_clip.set_position(("center", y_offset - 3)).set_duration(clip.duration)
-
-    #         text_clips.append(text_clip)
-    #         box_clips.append(box_clip)
-
-    #         if box_height:
-    #             y_offset += box_height  # Move down for the next line
-
-    #     logging.info('done create_text_clips_for_tiktok')
-    #     return CompositeVideoClip([clip] + box_clips + text_clips)
 
     def create_text_clips_for_tiktok(self, text, font_size, clip):
         lines = text.split("\n")  # Split text into lines
