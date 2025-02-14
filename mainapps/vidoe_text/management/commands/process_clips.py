@@ -1909,7 +1909,7 @@ class Command(BaseCommand):
 
         video_width, video_height = clip.size
 
-        base_char_width = video_width * 0.051
+        base_char_width = video_width * 0.03
         max_allowed_width = int(video_width * 0.8)  
 
         total_text_height = 0
@@ -1958,13 +1958,13 @@ class Command(BaseCommand):
             logging.info(f'box_width: {box_width} box_height: {box_height}')
 
             rounded_box_array = self.create_bottom_rounded_rectangle(
-                (int(box_width) + 30, int(box_height + 20)), int(box_radius)
+                (int(box_width) + 30, int(box_height + 40)), int(box_radius)
             )
             box_clip = ImageClip(rounded_box_array, ismask=False).set_duration(clip.duration)
 
             # Set positions relative to the main clip
             box_clip = box_clip.set_position(("center", y_offset + 3))
-            text_clip = text_clip.set_position(("center", y_offset+ 4)).set_duration(clip.duration)
+            text_clip = text_clip.set_position(("center", y_offset+ 6)).set_duration(clip.duration)
 
             text_clips.append(text_clip)
             box_clips.append(box_clip)
