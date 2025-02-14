@@ -1902,7 +1902,7 @@ class Command(BaseCommand):
 
             max_text_width = int(clip.w * 0.9) 
             if self.text_file_instance.resolution =='9:16':
-                max_text_width = int(clip.w * 0.78) 
+                max_text_width = int(clip.w * 0.75) 
 
             max_line_width = max_text_width // (font_size // 2)  
             wrapped_text = wrap_text_dynamically(
@@ -1937,7 +1937,7 @@ class Command(BaseCommand):
             
             box_width = min(text_width + small_margin, clip.w * 0.9)
             if self.text_file_instance.resolution =='9:16':
-                box_width=max(text_width + small_margin, clip.w * 0.82)
+                box_width=max(text_width + small_margin, clip.w * 0.79)
 
             box_height = text_height + margin
             rounded_box_array = self.create_rounded_rectangle((int(box_width), int(box_height)), int(box_radius))
@@ -1946,7 +1946,7 @@ class Command(BaseCommand):
 
             print("this is the used box color:", subtitle_box_color)
             safe_zone_offset = int(clip.h * 0.15) if self.text_file_instance.resolution == '9:16' else 0
-            x_offset = 20 if self.text_file_instance.resolution == '9:16' else 0 
+            x_offset = 30 if self.text_file_instance.resolution == '9:16' else 0 
 
             # Place box at x_offset if 9:16, otherwise center
             box_position = (
@@ -1954,7 +1954,6 @@ class Command(BaseCommand):
                 if not x_offset else (x_offset, clip.h - box_height - 2 * margin - safe_zone_offset)
             )
 
-            # Center subtitle inside the box (use box's width)
             subtitle_x = x_offset + (box_width - text_width) // 2 if x_offset else "center"
             subtitle_y = clip.h - box_height - 2 * margin + (box_height - text_height) / 2 - safe_zone_offset
 
