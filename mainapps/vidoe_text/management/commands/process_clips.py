@@ -1889,22 +1889,22 @@ class Command(BaseCommand):
                 align="center",
 
             )
-            
-            box_width, box_height = text_clip.size
-            box_radius = 10
-            logging.info(f'box_width: {box_width} box_height: {box_height}')
-            # Create rounded background
-            rounded_box_array = self.create_rounded_rectangle((int(box_width) + 30, int(box_height)), int(box_radius))
-            box_clip = ImageClip(rounded_box_array, ismask=False).set_duration(clip.duration)
-            
-            # Set positions relative to the main clip
-            box_clip = box_clip.set_position(("center", y_offset))
-            text_clip = text_clip.set_position(("center", y_offset))
-            
-            text_clips.append(text_clip)
-            box_clips.append(box_clip)
-            
-            y_offset += 20  
+            if  text_clip.size  != None:
+                box_width, box_height = text_clip.size
+                box_radius = 10
+                logging.info(f'box_width: {box_width} box_height: {box_height}')
+                # Create rounded background
+                rounded_box_array = self.create_rounded_rectangle((int(box_width) + 30, int(box_height)), int(box_radius))
+                box_clip = ImageClip(rounded_box_array, ismask=False).set_duration(clip.duration)
+                
+                # Set positions relative to the main clip
+                box_clip = box_clip.set_position(("center", y_offset))
+                text_clip = text_clip.set_position(("center", y_offset))
+                
+                text_clips.append(text_clip)
+                box_clips.append(box_clip)
+                
+                y_offset += box_height  
 
         return CompositeVideoClip([clip] + box_clips + text_clips)
 
