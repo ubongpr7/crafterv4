@@ -1892,7 +1892,7 @@ class Command(BaseCommand):
             
             box_width, box_height = text_clip.size
             box_radius = 10
-
+            logging.info(f'box_width: {box_width} box_height: {box_height}')
             # Create rounded background
             rounded_box_array = self.create_rounded_rectangle((int(box_width) + 30, int(box_height)), int(box_radius))
             box_clip = ImageClip(rounded_box_array, ismask=False).set_duration(clip.duration)
@@ -1904,7 +1904,7 @@ class Command(BaseCommand):
             text_clips.append(text_clip)
             box_clips.append(box_clip)
             
-            y_offset += box_height  
+            y_offset += 20  
 
         return CompositeVideoClip([clip] + box_clips + text_clips)
 
