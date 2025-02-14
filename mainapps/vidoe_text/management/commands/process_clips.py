@@ -1946,7 +1946,7 @@ class Command(BaseCommand):
 
             print("this is the used box color:", subtitle_box_color)
             safe_zone_offset = int(clip.h * 0.15) if self.text_file_instance.resolution == '9:16' else 0
-            x_offset = int(clip.w * 0.1) if self.text_file_instance.resolution == '9:16' else 0 
+            x_offset = 10 if self.text_file_instance.resolution == '9:16' else 0 
 
             # Place box at x_offset if 9:16, otherwise center
             box_position = (
