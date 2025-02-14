@@ -1797,6 +1797,36 @@ class Command(BaseCommand):
 
                 return "\n".join(lines)
 
+            def wrap_text_two_lines(text: str, max_text_width: int, font_size: int, font: str) -> str:
+                words = text.split()
+
+                if len(words) < 2:
+                    return text  # If it's just one word, return it as is
+
+                # Binary search approach to balance two lines
+                left, right = 1, len(words) - 1  
+                best_split = 1  
+
+                while left <= right:
+                    mid = (left + right) // 2
+
+                    first_line = " ".join(words[:mid])
+                    second_line = " ".join(words[mid:])
+
+                    first_clip = TextClip(first_line, fontsize=font_size, font=font)
+                    second_clip = TextClip(second_line, fontsize=font_size, font=font)
+
+                    if first_clip.w <= max_text_width and second_clip.w <= max_text_width:
+                        best_split = mid  # Keep track of best split
+                        left = mid + 1  # Try to fit more words in the first line
+                    else:
+                        right = mid - 1  # Reduce words in the first line
+
+                # Final split based on best fit
+                first_line = " ".join(words[:best_split])
+                second_line = " ".join(words[best_split:])
+
+                return f"{first_line}\n{second_line}"
 
 
             max_text_width = int(clip.w * 0.9) 
@@ -1813,12 +1843,11 @@ class Command(BaseCommand):
             if self.text_file_instance.resolution=='9:16':
                 max_text_width = int(clip.w * 0.72) 
 
-                wrapped_text = wrap_text_dynamically(
+                wrapped_text = wrap_text_two_lines(
                     subtitle.text, 
                     max_text_width=max_text_width, 
                     font_size=30, 
                     font=self.text_file_instance.font,
-                    max_lines=2
                 )
                 tiktok= self.create_text_clips_for_tiktok(wrapped_text,30,clip)
                 logging.info(f'Done with tiktok')
