@@ -2062,7 +2062,7 @@ class Command(BaseCommand):
                     color='black', 
                     method="caption",
                     align="center",
-                    # size=(estimated_text_width, None), 
+                    size=(estimated_text_width, None), 
                 )
 
                 # Check if the text fits within max_allowed_width
@@ -2087,7 +2087,7 @@ class Command(BaseCommand):
             logging.info(f'box_width: {box_width} box_height: {box_height}')
 
             rounded_box_array = self.create_bottom_rounded_rectangle(
-                (int(box_width) + 10, int(box_height + 10)), int(box_radius)
+                (int(box_width) + 30, int(box_height + 20)), int(box_radius)
             )
             box_clip = ImageClip(rounded_box_array, ismask=False).set_duration(clip.duration)
 
