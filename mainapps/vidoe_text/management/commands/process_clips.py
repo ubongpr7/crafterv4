@@ -1816,11 +1816,11 @@ class Command(BaseCommand):
                 wrapped_text = wrap_text_dynamically(
                     subtitle.text, 
                     max_text_width=max_text_width, 
-                    font_size=25, 
+                    font_size=30, 
                     font=self.text_file_instance.font,
                     max_lines=4
                 )
-                tiktok= self.create_text_clips_for_tiktok(wrapped_text,25,clip)
+                tiktok= self.create_text_clips_for_tiktok(wrapped_text,30,clip)
                 logging.info(f'Done with tiktok')
                 return tiktok
             temp_subtitle_clip = TextClip(
