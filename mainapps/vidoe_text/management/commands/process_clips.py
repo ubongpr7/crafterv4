@@ -1903,8 +1903,8 @@ class Command(BaseCommand):
                 
                 text_clips.append(text_clip)
                 box_clips.append(box_clip)
-                
-                y_offset += box_height  
+                if box_height:
+                    y_offset += box_height  
 
         return CompositeVideoClip([clip] + box_clips + text_clips)
 
