@@ -1917,23 +1917,24 @@ class Command(BaseCommand):
     #                 y_offset += box_height  
     #     logging.info('done create_text_clips_for_tiktok')
     #     return CompositeVideoClip([clip] + box_clips + text_clips)
-
     def create_text_clips_for_tiktok(self, text, font_size, clip):
         lines = text.split("\n")  # Split text into lines
         text_clips = []
         box_clips = []
 
-        y_offset = 100
         video_width, video_height = clip.size
 
         base_char_width = video_width * 0.055
-        max_allowed_width = int(video_width * 0.7) 
+        max_allowed_width = int(video_width * 0.7)  
 
+        total_text_height = 0
+        text_clip_sizes = []
+
+        # First pass: Calculate total text height before placing clips
         for line in lines:
             if not line.strip():
                 continue 
 
-            # Dynamically calculate max width based on character count
             estimated_text_width = min(len(line) * base_char_width, max_allowed_width)
 
             text_clip = TextClip(
@@ -1948,24 +1949,33 @@ class Command(BaseCommand):
 
             if text_clip.size is not None:
                 box_width, box_height = text_clip.size
-                box_radius = 10
-                logging.info(f'box_width: {box_width} box_height: {box_height}')
+                total_text_height += box_height  # Sum up heights
+                text_clip_sizes.append((text_clip, box_width, box_height))
 
-                # Create rounded background with adjusted width
-                rounded_box_array = self.create_rounded_rectangle(
-                    (int(box_width) + 10, int(box_height+5)), int(box_radius)
-                )
-                box_clip = ImageClip(rounded_box_array, ismask=False).set_duration(clip.duration)
+        # Calculate the starting y_offset so that the last text clip is 15% above the bottom
+        bottom_margin = int(video_height * 0.15)
+        y_offset = video_height - bottom_margin - total_text_height  
 
-                # Set positions relative to the main clip
-                box_clip = box_clip.set_position(("center",(video_height)- y_offset+3))
-                text_clip = text_clip.set_position(("center", y_offset-3)).set_duration(clip.duration)
+        # Second pass: Place text clips from the calculated y_offset
+        for text_clip, box_width, box_height in text_clip_sizes:
+            box_radius = 10
+            logging.info(f'box_width: {box_width} box_height: {box_height}')
 
-                text_clips.append(text_clip)
-                box_clips.append(box_clip)
+            # Create rounded background with adjusted width
+            rounded_box_array = self.create_rounded_rectangle(
+                (int(box_width) + 10, int(box_height + 5)), int(box_radius)
+            )
+            box_clip = ImageClip(rounded_box_array, ismask=False).set_duration(clip.duration)
 
-                if box_height:
-                    y_offset += box_height  
+            # Set positions relative to the main clip
+            box_clip = box_clip.set_position(("center", y_offset + 3))
+            text_clip = text_clip.set_position(("center", y_offset - 3)).set_duration(clip.duration)
+
+            text_clips.append(text_clip)
+            box_clips.append(box_clip)
+
+            if box_height:
+                y_offset += box_height  # Move down for the next line
 
         logging.info('done create_text_clips_for_tiktok')
         return CompositeVideoClip([clip] + box_clips + text_clips)
