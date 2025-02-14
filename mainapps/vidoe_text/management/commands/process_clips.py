@@ -1798,7 +1798,7 @@ class Command(BaseCommand):
                 return "\n".join(lines)
             def split_text_two_lines(text: str) -> str:
                 if len(text) <= 40:
-                    return text  # Return as a single line if <= 40 chars
+                    return text  
 
                 words = text.split()
                 first_line, second_line = [], []
@@ -1835,6 +1835,7 @@ class Command(BaseCommand):
                 wrapped_text = split_text_two_lines(
                     subtitle.text 
                 )
+                print('wrapped_text, ',wrapped_text)
                 tiktok= self.create_text_clips_for_tiktok(wrapped_text,30,clip)
                 logging.info(f'Done with tiktok')
                 return tiktok
@@ -1915,7 +1916,6 @@ class Command(BaseCommand):
         total_text_height = 0
         text_clip_sizes = []
 
-        # First pass: Calculate total text height before placing clips
         for line in lines:
             if not line.strip():
                 continue 
@@ -1965,7 +1965,7 @@ class Command(BaseCommand):
 
             # Set positions relative to the main clip
             box_clip = box_clip.set_position(("center", y_offset + 3))
-            text_clip = text_clip.set_position(("center", y_offset - 3)).set_duration(clip.duration)
+            text_clip = text_clip.set_position(("center", y_offset+ 3)).set_duration(clip.duration)
 
             text_clips.append(text_clip)
             box_clips.append(box_clip)
