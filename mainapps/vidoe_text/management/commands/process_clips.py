@@ -1800,8 +1800,6 @@ class Command(BaseCommand):
 
 
             max_text_width = int(clip.w * 0.9) 
-            if self.text_file_instance.resolution =='9:16':
-                max_text_width = int(clip.w * 0.72) 
 
             max_line_width = max_text_width // (font_size // 2)  
             wrapped_text = wrap_text_dynamically(
@@ -1809,10 +1807,19 @@ class Command(BaseCommand):
                     max_text_width=max_text_width, 
                     font_size=font_size, 
                     font=self.text_file_instance.font,
-                    max_lines=4
+                    max_lines=3
                 )
             
             if self.text_file_instance.resolution=='9:16':
+                max_text_width = int(clip.w * 0.72) 
+
+                wrapped_text = wrap_text_dynamically(
+                    subtitle.text, 
+                    max_text_width=max_text_width, 
+                    font_size=25, 
+                    font=self.text_file_instance.font,
+                    max_lines=4
+                )
                 tiktok= self.create_text_clips_for_tiktok(wrapped_text,25,clip)
                 logging.info(f'Done with tiktok')
                 return tiktok
@@ -1916,10 +1923,10 @@ class Command(BaseCommand):
         text_clips = []
         box_clips = []
 
-        y_offset = 0
+        y_offset = 100
         video_width, video_height = clip.size
 
-        base_char_width = video_width * 0.06 
+        base_char_width = video_width * 0.055
         max_allowed_width = int(video_width * 0.8) 
 
         for line in lines:
@@ -1946,12 +1953,12 @@ class Command(BaseCommand):
 
                 # Create rounded background with adjusted width
                 rounded_box_array = self.create_rounded_rectangle(
-                    (int(box_width) + 30, int(box_height+5)), int(box_radius)
+                    (int(box_width) + 10, int(box_height+5)), int(box_radius)
                 )
                 box_clip = ImageClip(rounded_box_array, ismask=False).set_duration(clip.duration)
 
                 # Set positions relative to the main clip
-                box_clip = box_clip.set_position(("center", y_offset-3))
+                box_clip = box_clip.set_position(("center",(video_height//2)+ y_offset-3))
                 text_clip = text_clip.set_position(("center", y_offset-3)).set_duration(clip.duration)
 
                 text_clips.append(text_clip)
