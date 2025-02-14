@@ -1902,7 +1902,7 @@ class Command(BaseCommand):
 
             max_text_width = int(clip.w * 0.9) 
             if self.text_file_instance.resolution =='9:16':
-                max_text_width = int(clip.w * 0.8) 
+                max_text_width = int(clip.w * 0.78) 
 
             max_line_width = max_text_width // (font_size // 2)  
             wrapped_text = wrap_text_dynamically(
@@ -1935,7 +1935,7 @@ class Command(BaseCommand):
             text_width, text_height = subtitle_clip.size
             small_margin = max(10, int(box_radius * 1.5))
             
-            box_width = min(text_width + small_margin, clip.w * 0.95)
+            box_width = min(text_width + small_margin, clip.w * 0.9)
             if self.text_file_instance.resolution =='9:16':
                 box_width=min(text_width + small_margin, clip.w * 0.82)
 
