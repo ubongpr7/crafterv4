@@ -1909,7 +1909,7 @@ class Command(BaseCommand):
 
         video_width, video_height = clip.size
 
-        base_char_width = video_width * 0.03
+        base_char_width = video_width * 0.025
         max_allowed_width = int(video_width * 0.8)  
 
         total_text_height = 0
@@ -1922,10 +1922,8 @@ class Command(BaseCommand):
             current_font_size = 24
 
             while True:
-                # Estimate text width
                 estimated_text_width = min(len(line) * base_char_width, max_allowed_width)
 
-                # Create text clip
                 text_clip = TextClip(
                     line, 
                     font=self.text_file_instance.font, 
@@ -1964,7 +1962,7 @@ class Command(BaseCommand):
 
             # Set positions relative to the main clip
             box_clip = box_clip.set_position(("center", y_offset + 3))
-            text_clip = text_clip.set_position(("center", y_offset+ 6)).set_duration(clip.duration)
+            text_clip = text_clip.set_position(("center", y_offset +13)).set_duration(clip.duration)
 
             text_clips.append(text_clip)
             box_clips.append(box_clip)
