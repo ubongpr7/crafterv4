@@ -1813,7 +1813,9 @@ class Command(BaseCommand):
                 )
             
             if self.text_file_instance.resolution=='9:16':
-                return self.create_text_clips_for_tiktok(wrapped_text,25,clip)
+                tiktok= self.create_text_clips_for_tiktok(wrapped_text,25,clip)
+                logging.info(f'Done with tiktok')
+                return tiktok
             temp_subtitle_clip = TextClip(
                 wrapped_text,
                 fontsize=font_size,
@@ -1900,12 +1902,12 @@ class Command(BaseCommand):
                 # Set positions relative to the main clip
                 box_clip = box_clip.set_position(("center", y_offset))
                 text_clip = text_clip.set_position(("center", y_offset))
-                
+                text_clip=text_clip.set_duration(clip.duration)
                 text_clips.append(text_clip)
                 box_clips.append(box_clip)
                 if box_height:
                     y_offset += box_height  
-
+        logging.info('done create_text_clips_for_tiktok')
         return CompositeVideoClip([clip] + box_clips + text_clips)
 
     def add_static_watermark_to_instance(
