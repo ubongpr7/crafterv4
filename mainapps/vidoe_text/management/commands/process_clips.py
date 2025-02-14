@@ -1921,16 +1921,17 @@ class Command(BaseCommand):
 
             current_font_size = 26
             
-            while True and not first_font_size:
+            while True :
                 estimated_text_width = min(len(line) * base_char_width, max_allowed_width)
 
                 text_clip = TextClip(
                     line, 
-                    font=self.text_file_instance.font, 
+                    font='tiktokfont', 
                     fontsize=first_font_size if first_font_size else current_font_size, 
                     color='black', 
                     method="label",
                     align="center",
+                    size=(estimated_text_width,None)
                 )
 
                 # Check if the text fits within max_allowed_width
