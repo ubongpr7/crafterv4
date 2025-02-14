@@ -1919,12 +1919,12 @@ class Command(BaseCommand):
         y_offset = 0
         video_width, video_height = clip.size
 
-        base_char_width = video_width * 0.02  # Approximate width per character (adjust as needed)
-        max_allowed_width = int(video_width * 0.9)  # Ensure text doesn't exceed 90% of video width
+        base_char_width = video_width * 0.05  
+        max_allowed_width = int(video_width * 0.9) 
 
         for line in lines:
             if not line.strip():
-                continue  # Skip empty lines
+                continue 
 
             # Dynamically calculate max width based on character count
             estimated_text_width = min(len(line) * base_char_width, max_allowed_width)
