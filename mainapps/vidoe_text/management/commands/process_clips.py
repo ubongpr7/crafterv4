@@ -1879,6 +1879,7 @@ class Command(BaseCommand):
         box_clips = []
 
         y_offset = 0 
+        w,h=clip.size
         for line in lines:
             if not  line.strip():
                 break
@@ -1886,7 +1887,7 @@ class Command(BaseCommand):
                 line, 
                 font=self.text_file_instance.font, 
                 fontsize=font_size, 
-                color=self.text_file_instance.subtitle_box_color, 
+                color='white', 
                 method="caption",
                 align="center",
 
