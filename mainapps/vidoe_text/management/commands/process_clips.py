@@ -1920,7 +1920,7 @@ class Command(BaseCommand):
             if not line.strip():
                 continue 
 
-            current_font_size = font_size  # Start with the given font size
+            current_font_size = 24
 
             while True:
                 # Estimate text width
