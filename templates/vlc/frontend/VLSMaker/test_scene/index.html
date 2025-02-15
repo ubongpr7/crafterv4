@@ -382,15 +382,60 @@
     
 
     <script>
-        const validateTextFile = async (file) => {
-    if (!file) return;
+        textFileResolution='{{textfile.resolution}}' 
+//         const validateTextFile = async (file) => {
+//     if (!file) return;
+
+//     try {
+//         const text = await file.text(); // Read file content
+//         if (text.length > 5000) {
+//             alert("The text file exceeds the 5000-character limit!");
+//             return false;
+//         }
+//         return true;
+//     } catch (error) {
+//         console.error("Error reading file:", error);
+//         alert("An error occurred while reading the file.");
+//         return false;
+//     }
+// };
+document.addEventListener("DOMContentLoaded", () => {
+    const textareas = document.querySelectorAll("textarea");
+    if (textFileResolution==='9:16'){
+
+        textareas.forEach((textarea) => {
+            textarea.addEventListener("input", () => {
+                if (textarea.value.length > 50) {
+                    alert("Text cannot exceed 50 characters!");
+                }
+            });
+        });
+    }
+
+});
+
+const validateTextFile = async (file) => {
+    if (!file) return false;
 
     try {
         const text = await file.text(); // Read file content
+
+        // Check total character limit
         if (text.length > 5000) {
             alert("The text file exceeds the 5000-character limit!");
             return false;
         }
+        if (textFileResolution==='9:16'){
+            
+            const lines = text.split(/\r?\n/); 
+            for (let i = 0; i < lines.length; i++) {
+                if (lines[i].length > 50) {
+                    alert(`Line ${i + 1} exceeds 50 characters!`);
+                    return false;
+                }
+            }
+        }
+
         return true;
     } catch (error) {
         console.error("Error reading file:", error);
@@ -404,8 +449,15 @@
         fileUpload.addEventListener('change', (event) => {
             const file = event.target.files[0];
             if (file) {
-                fileName.textContent = `${file.name.slice(0, 15)}`;
-                validateTextFile(file)
+                const checkfile=validateTextFile(file)
+                if (checkfile){
+                    fileName.textContent = `${file.name.slice(0, 15)}`;
+
+
+                }else{
+                    fileName.textContent = 'No file selected';
+                    event.target.value=''
+                }
             } else {
                 fileName.textContent = 'No file selected';
             }

@@ -1797,7 +1797,7 @@ class Command(BaseCommand):
 
                 return "\n".join(lines)
             def split_text_two_lines(text: str) -> str:
-                if len(text) <= 37:
+                if len(text) <= 30:
                     return text  # Return as a single line if ≤ 30 chars
 
                 words = text.split()
@@ -1805,7 +1805,7 @@ class Command(BaseCommand):
                 char_count = 0
 
                 for word in words:
-                    if char_count + len(word) + (1 if first_line else 0) <= 37:  # Ensure first line gets at least 30 chars
+                    if char_count + len(word) + (1 if first_line else 0) <= 30:  # Ensure first line gets at least 30 chars
                         first_line.append(word)
                         char_count += len(word) + (1 if first_line else 0)  # Account for spaces
                     else:
@@ -1907,29 +1907,41 @@ class Command(BaseCommand):
         text_clips = []
         box_clips = []
         video_width, video_height = clip.size
-        base_char_width = video_width * 0.0251
+        base_char_width = video_width * 0.0245
         max_allowed_width = int(video_width * 0.85)  
         total_text_height = 0
         text_clip_sizes = []
         box_padding = 20  # Extra padding for the box
         box_radius = 10  # Border radius of the rounded box
         first_line = next((line for line in lines if line.strip()), None)  # Get the first non-empty line
-
+        def is_single_word(text):
+            return len(text.split()) <= 1
         for line in lines:
             if not line.strip():
                 continue 
 
             estimated_text_width = min(len(line) * base_char_width, max_allowed_width)
-
-            text_clip = TextClip(       
-                line, 
-                font='tiktokfont', 
-                fontsize=30, 
-                color='black', 
-                method="caption",
-                align="center",
-                size=(estimated_text_width, None)
-            )
+            if is_single_word(line):
+                text_clip = TextClip(       
+                    line, 
+                    font='tiktokfont', 
+                    fontsize=30, 
+                    color='black', 
+                    method="caption",
+                    align="center",
+                    size=(estimated_text_width +15, None)
+                )
+                
+            else:
+                text_clip = TextClip(       
+                    line, 
+                    font='tiktokfont', 
+                    fontsize=30, 
+                    color='black', 
+                    method="caption",
+                    align="center",
+                    size=(estimated_text_width, None)
+                )
 
             if text_clip.size:
                 box_width, box_height = text_clip.size
