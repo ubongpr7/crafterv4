@@ -1812,7 +1812,7 @@ class Command(BaseCommand):
                         second_line.append(word)
 
                 # Rebalance if second line is longer than 20 chars
-                while len(" ".join(second_line)) > 20:
+                while len(" ".join(second_line)) > 25:
                     first_line.append(second_line.pop(0))  # Move words to first line
 
                 return " ".join(first_line) + ("\n" + " ".join(second_line) if second_line else "")
@@ -1907,8 +1907,8 @@ class Command(BaseCommand):
         box_clips = []
 
         video_width, video_height = clip.size
-        base_char_width = video_width * 0.025
-        max_allowed_width = int(video_width * 0.8)  
+        base_char_width = video_width * 0.024
+        max_allowed_width = int(video_width * 0.85)  
 
         total_text_height = 0
         text_clip_sizes = []
@@ -1967,7 +1967,7 @@ class Command(BaseCommand):
             box_radius = 10
 
             rounded_box_array = self.create_bottom_rounded_rectangle(
-                (int(box_width) + 20, int(box_height + 50)), int(box_radius)
+                (int(box_width) + 20, int(box_height + 20)), int(box_radius)
             )
             box_clip = ImageClip(rounded_box_array, ismask=False).set_duration(clip.duration)
 
