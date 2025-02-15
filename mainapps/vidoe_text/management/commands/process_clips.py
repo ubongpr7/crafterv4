@@ -1902,62 +1902,6 @@ class Command(BaseCommand):
         draw.rounded_rectangle((0, 0, size[0], size[1]), radius=radius, fill=rectangle_color)
         return np.array(img)
 
-    # def create_text_clips_for_tiktok(self, text, font_size, clip):
-    #     lines = text.split("\n") 
-    #     text_clips = []
-    #     box_clips = []
-    #     video_width, video_height = clip.size
-    #     base_char_width = video_width * 0.0245
-    #     max_allowed_width = int(video_width * 0.85)  
-    #     total_text_height = 0
-    #     text_clip_sizes = []
-    #     box_padding = 10  
-    #     apparent_padding = 0  
-    #     x_padding = 20  
-    #     box_radius = 10
-
-        
-    #     for line in lines:
-    #         if not line.strip():
-    #             continue 
-
-
-    #         text_clip = TextClip(       
-    #             line, 
-    #             font='tiktokfont', 
-    #             fontsize=30, 
-    #             color='black', 
-    #             align="center",
-    #         )
-
-    #         if text_clip.size:
-    #             box_width, box_height = text_clip.size
-    #             total_text_height += box_height
-    #             text_clip_sizes.append((text_clip, box_width, box_height))
-
-    #     first_text_top = int(video_height * 0.75-18)
-
-    #     y_offset = first_text_top
-
-    #     for idx, (text_clip, box_width, box_height) in enumerate(text_clip_sizes):
-    #         rounded_box_array = self.create_bottom_rounded_rectangle(
-    #             (int(box_width) + x_padding, int(box_height + box_padding +apparent_padding)), int(box_radius)
-    #         )
-    #         box_clip = ImageClip(rounded_box_array, ismask=False).set_duration(clip.duration)
-
-    #         box_clip = box_clip.set_position(("center", y_offset))
-
-    #         text_clip = text_clip.set_position((
-    #             "center", 
-    #             y_offset + (box_height / 2) - (text_clip.size[1] / 2) + box_padding / 2
-    #         )).set_duration(clip.duration)
-
-    #         text_clips.append(text_clip)
-    #         box_clips.append(box_clip)
-
-    #         y_offset += box_height + 10  
-
-    #     return CompositeVideoClip([clip] + box_clips + text_clips)
     def create_text_clips_for_tiktok(self, text, font_size, clip):
         lines = text.split("\n") 
         text_clips = []
@@ -1997,7 +1941,7 @@ class Command(BaseCommand):
                 apparent_padding = 15  # Set apparent padding after the first text clip
 
             rounded_box_array = self.create_bottom_rounded_rectangle(
-                (int(box_width) + x_padding, int(box_height + box_padding + apparent_padding-5)), int(box_radius)
+                (int(box_width) + x_padding, int(box_height + box_padding + apparent_padding)), int(box_radius)
             )
             box_clip = ImageClip(rounded_box_array, ismask=False).set_duration(clip.duration)
 
