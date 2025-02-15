@@ -1444,18 +1444,40 @@ class Command(BaseCommand):
         return isinstance(clip, VideoFileClip)
     
 
-    def concatenate_clips(self, clips, target_resolution=None, target_fps=None):
-        for  i in range(1, len(clips)):
+    # def concatenate_clips(self, clips, target_resolution=None, target_fps=None):
+    #     for  i in range(1, len(clips)):
+    #         clips[i] = clips[i].set_start(clips[i-1].end)
+    
+    #     for clip in clips:
+    #         clip = clip.subclip(0, clip.duration)
+    #         clip.set_fps(30) 
+    
+    #     final_clip = concatenate_videoclips(clips, method="chain")
+    #     logging.info("Clip has been concatenated: ")
+    #     return final_clip
+    def concatenate_clips(self, clips, target_resolution=None, target_fps=30):
+        """Concatenates video clips safely, ensuring smooth transitions without glitches."""
+
+        def prepare_clip(clip, fps=30):
+            """Standardizes FPS and trims last frame to avoid glitches."""
+            clip = clip.set_fps(fps)  # Ensure uniform frame rate
+            exact_duration = int(clip.fps * clip.duration) / clip.fps  # Align duration with frames
+            clip = clip.subclip(0, exact_duration)  # Trim last frame
+            return clip.copy()  # Prevent caching issues
+
+        # Standardize all clips
+        clips = [prepare_clip(clip, target_fps) for clip in clips]
+
+        # Set start times explicitly (redundant if using 'chain' method)
+        for i in range(1, len(clips)):
             clips[i] = clips[i].set_start(clips[i-1].end)
-    
-        for clip in clips:
-            clip = clip.subclip(0, clip.duration)
-            clip.set_fps(30) 
-    
-        final_clip = concatenate_videoclips(clips, method="chain")
-        logging.info("Clip has been concatenated: ")
+
+        # Concatenate clips safely
+        final_clip = concatenate_videoclips(clips, method="chain") 
+
+        logging.info("Clips have been concatenated successfully.")
         return final_clip
-    
+
     def resize_clips_to_max_size(self, clips):
         max_width = max(clip.w for clip in clips)
         max_height = max(clip.h for clip in clips)
@@ -1649,11 +1671,9 @@ class Command(BaseCommand):
                  )
             box_clip = ImageClip(rounded_box_array, ismask=False).set_duration(subtitle_clip.duration)
 
-            print("this is the used box color:", subtitle_box_color)
             safe_zone_offset = int(clip.h * 0.15) if self.text_file_instance.resolution == '9:16' else 0
             x_offset = 30 if self.text_file_instance.resolution == '9:16' else 0 
 
-            # Place box at x_offset if 9:16, otherwise center
             box_position = (
                 ("center", clip.h - box_height - 2 * margin - safe_zone_offset)
                 if not x_offset else (x_offset, clip.h - box_height - 2 * margin - safe_zone_offset)
