@@ -1459,13 +1459,11 @@ class Command(BaseCommand):
         """Concatenates video clips safely, ensuring smooth transitions without glitches."""
 
         def prepare_clip(clip, fps=30):
-            """Standardizes FPS and trims last frame to avoid glitches."""
+            """Standardizes FPS and trims exact duration to avoid glitches."""
             clip = clip.set_fps(fps)  # Ensure uniform frame rate
             exact_duration = int(clip.fps * clip.duration) / clip.fps  # Align duration with frames
-            clip = clip.subclip(0, exact_duration)  # Trim last frame
-            return clip.copy()  # Prevent caching issues
+            return clip.subclip(0, exact_duration).copy()  # Trim last frame and prevent caching issues
 
-        # Standardize all clips
         clips = [prepare_clip(clip, target_fps) for clip in clips]
 
         # Set start times explicitly (redundant if using 'chain' method)
