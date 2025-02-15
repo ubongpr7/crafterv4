@@ -1911,9 +1911,10 @@ class Command(BaseCommand):
         max_allowed_width = int(video_width * 0.85)  
         total_text_height = 0
         text_clip_sizes = []
-        box_padding = 15  # Extra padding for the box
-        box_radius = 10  # Border radius of the rounded box
-        first_line = next((line for line in lines if line.strip()), None)  # Get the first non-empty line
+        box_padding = 15  
+        box_radius = 10
+        reduce_padding=2
+        first_line = next((line for line in lines if line.strip()), None)  
         def is_single_word(text):
             return len(text.split()) <= 1
         for line in lines:
@@ -1954,7 +1955,7 @@ class Command(BaseCommand):
 
         for idx, (text_clip, box_width, box_height) in enumerate(text_clip_sizes):
             rounded_box_array = self.create_bottom_rounded_rectangle(
-                (int(box_width) + box_padding, int(box_height + box_padding)), int(box_radius)
+                (int(box_width) + box_padding-reduce_padding, int(box_height + box_padding)), int(box_radius)
             )
             box_clip = ImageClip(rounded_box_array, ismask=False).set_duration(clip.duration)
 
@@ -1969,6 +1970,7 @@ class Command(BaseCommand):
             box_clips.append(box_clip)
 
             y_offset += box_height + 10  
+            reduce_padding-=2
 
         return CompositeVideoClip([clip] + box_clips + text_clips)
 
