@@ -1931,7 +1931,7 @@ class Command(BaseCommand):
                     align="center",
                     size=(estimated_text_width +15, None)
                 )
-                
+
             else:
                 text_clip = TextClip(       
                     line, 
@@ -1948,7 +1948,7 @@ class Command(BaseCommand):
                 total_text_height += box_height
                 text_clip_sizes.append((text_clip, box_width, box_height))
 
-        bottom_margin = int(video_height * 0.15)
+        bottom_margin = int(video_height * 0.20)
         y_offset = video_height - bottom_margin - total_text_height  
 
         for text_clip, box_width, box_height in text_clip_sizes:
