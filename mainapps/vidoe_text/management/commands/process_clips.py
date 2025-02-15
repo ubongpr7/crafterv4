@@ -1641,7 +1641,12 @@ class Command(BaseCommand):
                 box_width=max(text_width + small_margin, clip.w * 0.75)
 
             box_height = text_height + margin
-            rounded_box_array = self.create_rounded_rectangle((int(box_width), int(box_height)), int(box_radius))
+            rounded_box_array = self.create_rounded_rectangle(
+                (int(box_width), 
+                 int(box_height)), 
+                 int(box_radius),
+                 bg_color=self.text_file_instance.subtitle_box_color
+                 )
             box_clip = ImageClip(rounded_box_array, ismask=False).set_duration(subtitle_clip.duration)
 
             print("this is the used box color:", subtitle_box_color)
@@ -1672,13 +1677,13 @@ class Command(BaseCommand):
     #     draw.rounded_rectangle((0, 0, size[0], size[1]), radius=radius, fill=rectangle_color)
     #     return np.array(img)
 
-    def create_rounded_rectangle(self, size, radius, upscale_factor=20):
+    def create_rounded_rectangle(self, size, radius,bg_color= '#ffffff',upscale_factor=20,):
         """Create an ultra-smooth RGBA rounded rectangle."""
         
 
         # High-resolution canvas
         upscale_size = (size[0] * upscale_factor, size[1] * upscale_factor)
-        rectangle_color = ImageColor.getrgb('#ffffff') + (255,)
+        rectangle_color = ImageColor.getrgb(bg_color) + (255,)
         
         img = Image.new("RGBA", upscale_size, (0, 0, 0, 0))
         draw = ImageDraw.Draw(img)
