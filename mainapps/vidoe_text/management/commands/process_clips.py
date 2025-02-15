@@ -1940,7 +1940,7 @@ class Command(BaseCommand):
                     color='black', 
                     method="caption",
                     align="center",
-                    size=(estimated_text_width, None)
+                    size=(estimated_text_width-5, None)
                 )
 
             if text_clip.size:
