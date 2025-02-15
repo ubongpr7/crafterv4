@@ -23,7 +23,7 @@
                 <th class="slide-last" style="font-size: 1.4rem; text-wrap: nowrap; width: 5%;">Delete</th>
             </tr>
         </thead>
-        
+
         <tbody>
             {% if video_clips %}
             {% for clip in video_clips %}
@@ -32,7 +32,7 @@
                     Subtitle {{forloop.counter }}</td>
                 <td id="highlightable_{{forloop.counter}}" style="width: 100%">
                     <div>
-                        <textarea
+                        <textarea {%if textfile.resolutin == '9:16' %}maxlength="50"{%endif%}
                             style="display: none; width: 96%; padding: .375rem .75rem; font-size: 1rem; font-weight: 400; line-height: 1.5; color: #212529; background-color: #fff; background-clip: padding-box; border: 1px solid #ced4da; padding-left:10px; resize:none; border-radius:14px; transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out; placeholder-color: black;"
                             class="textarea-class" name="slide_text" class="form-control tab-textarea"
                             aria-describedby="textarea" id="slide_text_{{forloop.counter}}">{{clip.slide}}</textarea>
@@ -128,20 +128,6 @@
         </svg>
     </button>
 </div>
-<!-- 
-    <div class="button"
-     style="margin-top: 60px; position: absolute; right: 20px; bottom: 16px; height: 24px; width: 555px; display: flex; justify-content: flex-end;">
-    <div style="display: flex; align-items: center; justify-content: center; border-radius: 8px; background: #864AF9; cursor: pointer; width: 555px;">
-        <button type="button" onclick="highlightNoSubclipIcons(this)" id="proceed-button"
-            style="text-decoration: none; padding: 0 20px; color: white; font-family: Montserrat; font-size: 18px; font-weight: 500; line-height: 24px; text-align: left; background: none; border: none; cursor: pointer; height: 24px; display: flex; align-items: center; justify-content: space-between; width: 100%;">
-            <span id="button-text">Proceed To Background Music Selection</span>
-            <svg id="proceed-svg" width="24" height="24" type="button" viewBox="0 0 24 24" fill="none"
-                xmlns="http://www.w3.org/2000/svg">
-                <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="white" stroke-width="2" stroke-linecap="round"
-                    stroke-linejoin="round" />
-            </svg>
-        </button>
-    </div> -->
 </div>
 
 <!-- Scripts start -->
@@ -304,7 +290,96 @@
         }
     });
 }
+    
+function addSlide() {
 
+let currentNumber = document.getElementById('no_of_slides').value;
+
+edit = true
+
+var table = document.getElementById('leadsTable').getElementsByTagName('tbody')[0];
+if (checkRowCount(table)) {
+    var newRow = table.insertRow(-1);
+    var slideCell = newRow.insertCell(0);
+    currentNumber++;
+
+    document.getElementById('no_of_slides').value = currentNumber;
+    slideCell.innerText = `Subtitle ${currentNumber}`;
+    slideCell.dataset.tooltip="Drag To Move"
+    slideCell.style.fontSize = '1.4rem'
+    newRow.style.height = '5rem';
+    newRow.innerHTML += `
+    <td id="highlightable_${currentNumber}" style="padding: 12 12px;">
+        <div style="display: flex; height: 100%;width: 100%;flex-direction: column;">
+        <textarea {%if textfile.resolutin == '9:16' %}maxlength="50"{%endif%} class="textarea-class"
+style="display: block;  padding: .375rem .75rem; font-size: 1rem; font-weight: 400; line-height: 1.5; color: #212529; background-color: #fff; background-clip: padding-box; border: 1px solid #ced4da; padding-left:10px; resize:none; border-radius:14px; transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out; placeholder-color: black;"
+id="slide_text_${currentNumber}" 
+type="text" 
+name="slide_text" 
+placeholder="Type Your Script Here" 
+class="form-control tab-textarea" 
+aria-describedby="textarea"></textarea>
+
+        <div class="wrapper" id="wrapper_${currentNumber}" style="display:none; flex-direction-column">
+            <div style="width: 100%;" class="tag-box">
+                <ul style="margin: 0;" id="list-of-tags_${currentNumber}" class="list-of-tags">
+                    <span id="slide_span_${currentNumber}" style="margin-left: 10px;"></span>
+                </ul>
+                <input id="remaining_${currentNumber}" name="remaining_" hidden type="text">
+            </div>
+            
+            </div>
+            <div id="error-message_${currentNumber}" style="text-transform: capitalize;"  class="error-message"></div>
+        </div>
+    </td>
+    
+        <td>
+        <div style="display: flex; place-items: center; justify-content: center;">
+            
+        <a href="#!" style="display: flex; align-items: center; justify-content: center; text-decoration: none; position: relative;" 
+            class="delete-row-btn" 
+            id="edit_${currentNumber}" 
+            style="display:none;" 
+            onclick="EditeSlide(${currentNumber})">
+            <i id="icon_{{clip.id}}" class="ri-edit-box-line fa-sync-alt"
+                style="margin: 0 auto;font-size: 20px; font-weight: 600; cursor: pointer;">
+            </i>
+        </a>
+        </div>
+        </td>
+        <td>
+        <div style="display: flex; place-items: center; justify-content: center;">
+
+        <a href="#!" style = "display:flex;align-items:center;justify-content:center;text-decoration:none;position:relative;"
+            style="display:none; " 
+            class="delete-row-btn" 
+            id="reset_${currentNumber}" 
+            >
+            
+        <i id="icon_{{clip.id}}" class="ri-loop-right-line fa-sync-alt"
+        style="margin: 0 auto;font-size: 20px; font-weight: 600; cursor: pointer;"></i>
+        </a>
+        </div>
+    </td>
+        <td id="action_${currentNumber}">
+        <div style="display: flex; place-items: center; justify-content: center;">
+
+        <a href="#!" class="delete-row-btn" id="delete_${currentNumber}" onclick="deleteSlide(this)">
+            <img id="icon_{{clip.id}}" src="https://leadeditor.s3.amazonaws.com/lead-maker/images/delete-icn.svg" alt="delete" style="width: 1.5rem; height: 3rem; cursor: pointer;">
+        </a>
+
+        </div>
+        </td>
+        `;
+    document.getElementById(`slide_text_${currentNumber}`).focus()
+    setTimeout(() => {
+        handleEnterToHide(currentNumber,);
+        handleSelection(currentNumber);
+        updateSubtitleNumbers(table)
+    }, 0);
+    toggleColumns(document.getElementById(`slide_text_${currentNumber}`), true)
+}
+}
 
 </script>
 <!-- by force html scripts -->
