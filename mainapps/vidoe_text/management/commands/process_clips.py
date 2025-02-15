@@ -1939,9 +1939,9 @@ class Command(BaseCommand):
                     font='tiktokfont', 
                     fontsize=30, 
                     color='black', 
-                    method="caption",
+                    # method="caption",
                     align="center",
-                    size=(estimated_text_width, None)
+                    # size=(estimated_text_width, None)
                 )
 
             if text_clip.size:
