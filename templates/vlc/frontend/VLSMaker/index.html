@@ -795,7 +795,7 @@ padding: 5px;
             style="font-size: 48px; font-weight: 700; line-height: 1.2; letter-spacing: -0.8px; text-align: center; color: #00000080;">
             Your Selected Video <br /> Scene Will Go Here
           </span>
-          <div id="previewBackground" style="display: none;" class="previewBackground2"
+          <div id="previewBackground" class="previewBackground2"
             style="width: fit-content; height: fit-content; background: #000000; position: absolute; bottom: 20px; border-radius: 8px; padding: 12px; display: flex; align-items: center;  justify-content: center;">
             <span id="previewText"
               style="font-size: 20px; font-weight: 600; line-height: 24.38px; text-align: center; color: white; opacity: 1;width:350px;">
@@ -805,7 +805,7 @@ padding: 5px;
             
           </div>
           
-          <div id='tiktokPreview' class="container2">
+          <div id='tiktokPreview' style="display: none;" class="container2">
             <p class="text-wrapper2" style="font-family: 'tiktokfont';">
               <span>This Is How Your Original</span>
               <span>Subtitle Text Will Show.</span>
@@ -1117,6 +1117,12 @@ padding: 5px;
     
 
     document.addEventListener('DOMContentLoaded', function () {
+      const previewBackground= document.getElementById('previewBackground')
+      
+      const previewBox = document.getElementById('preview-box');
+      const previewText = document.getElementById('previewText');
+      const tiktokPreview = document.getElementById('tiktokPreview');
+
         // Function to hide/show specific labels and their associated input elements
         function updateResolutionSettings(resolution) {
             // Get the containers for the elements to hide/show
@@ -1128,8 +1134,6 @@ padding: 5px;
             const borderRadiusSlider = document.querySelector('.slider-container'); 
 
             // Get the preview box and its content
-            const previewBox = document.getElementById('preview-box');
-            const previewText = document.getElementById('previewText');
 
             if (resolution === '9:16') { // TikTok/Reels
                 // Hide the labels and their associated input elements
@@ -1139,21 +1143,13 @@ padding: 5px;
                 fontSizeSlider.style.display = 'none';
                 borderRadiusLabel.style.display = 'none';
                 borderRadiusSlider.style.display = 'none';
-                // videoText.style.display='none'
+                previewBackground.style.display='none'
+                tiktokPreview.style.display='flex'
                 // Set the font to "tiktokfont" by default
                 const fontSelect = document.getElementById('font_select');
                 fontSelect.value = 'tiktokfont';
+                
 
-                // Replace the subtitle box with the new design and apply the TikTok font
-                previewBox.innerHTML = `
-               
-         <div class="container2">
-           <p class="text-wrapper2" style="font-family: 'tiktokfont';">
-             <span>This Is How Your Original</span>
-             <span>Subtitle Text Will Show.</span>
-           </p>
-         </div>
-       `;
             } else {
                 // Show the labels and their associated input elements
                 fontSelectLabel.style.display = 'flex'; 
@@ -1162,16 +1158,12 @@ padding: 5px;
                 fontSizeSlider.style.display = 'block';
                 borderRadiusLabel.style.display = 'block';
                 borderRadiusSlider.style.display = 'block';
+                previewBackground.style.display='flex'
+                tiktokPreview.style.display='none'
 
-                // Restore the original subtitle box
-                previewBox.innerHTML = `
+
+
          
-         <div id="previewBackground" class="previewBackground2" style="width: fit-content; height: fit-content; background: #000000; position: absolute; bottom: 20px; border-radius: 8px; padding: 12px; display: flex; align-items: center; justify-content: center;">
-           <span id="previewText" style="font-size: 20px; font-weight: 600; line-height: 24.38px; text-align: center; color: white; opacity: 1; width: 350px;">
-             This Is How Your Original Subtitle Text Will Be Displayed
-           </span>
-         </div>
-       `;
             }
         }
 
@@ -1180,10 +1172,7 @@ padding: 5px;
             box.addEventListener('click', () => {
                 const resolution = box.getAttribute('data-resolution');
                 updateResolutionSettings(resolution);
-                const previewBox = document.getElementById('preview-box');
-                const videoText = document.getElementById('videoText');
 
-                // Adjust box size and text size based on aspect ratio
                 if (resolution === '1:1') {
                     previewBox.style.width = '600px';
                     previewBox.style.height = '600px';
@@ -1205,10 +1194,7 @@ padding: 5px;
                 } else if (resolution === '9:16') {
                     previewBox.style.width = '382px';
                     previewBox.style.height = '680px';
-                    // videoText.style.fontSize = '34px';
-                    // document.getElementById('previewText').style.width = '300px';
                     updateFontFunc("16");
-                    // document.getElementById('previewText').style.fontSize = '18px';
                 }
 
                 // Center the preview box
@@ -1221,8 +1207,8 @@ padding: 5px;
             const slider = document.getElementById("mySlider");
             const sliderValue = document.getElementById("SliderValue");
             const previewText = document.getElementById("previewText");
-            const previewBox = document.getElementById('preview-box');
-            const videoText = document.getElementById('videoText');
+            // const previewBox = document.getElementById('preview-box');
+            // const videoText = document.getElementById('videoText');
 
             slider.value = updateValue;
             sliderValue.textContent = slider.value;
