@@ -2005,13 +2005,13 @@ class Command(BaseCommand):
 
             text_clip = text_clip.set_position((
                 "center", 
-                y_offset + (box_height / 2) - (text_clip.size[1] / 2) + box_padding / 2 + apparent_padding / 2
+                y_offset + (box_height / 2) - (text_clip.size[1] / 2) + box_padding / 2 + apparent_padding 
             )).set_duration(clip.duration)
 
             text_clips.append(text_clip)
             box_clips.append(box_clip)
 
-            y_offset += box_height  -apparent_padding
+            y_offset += box_height  -apparent_padding*2
 
         return CompositeVideoClip([clip] + box_clips + text_clips)
 
