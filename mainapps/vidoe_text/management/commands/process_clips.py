@@ -1911,7 +1911,7 @@ class Command(BaseCommand):
         max_allowed_width = int(video_width * 0.85)  
         total_text_height = 0
         text_clip_sizes = []
-        box_padding = 10  
+        box_padding = 13  
         apparent_padding = 0  
         x_padding = 20  
         box_radius = 10
