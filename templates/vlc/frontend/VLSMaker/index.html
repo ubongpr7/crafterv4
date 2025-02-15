@@ -1214,8 +1214,11 @@ padding: 5px;
             const previewText = document.getElementById("previewText");
             slider.value = updateValue;
             sliderValue.textContent = slider.value;
+            if (previewText){
+              previewText.style.fontSize = `${slider.value * 0.8}px`;
 
-            previewText.style.fontSize = `${slider.value * 0.8}px`;
+            }
+
             document.getElementById('font_size').value = slider.value * 2;
             document.getElementById('recommended-font-size').textContent = `(Recommended Font Size: ${updateValue})`;
 
