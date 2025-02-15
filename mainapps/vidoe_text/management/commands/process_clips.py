@@ -1797,7 +1797,7 @@ class Command(BaseCommand):
 
                 return "\n".join(lines)
             def split_text_two_lines(text: str) -> str:
-                if len(text) <= 35:
+                if len(text) <= 37:
                     return text  # Return as a single line if ≤ 30 chars
 
                 words = text.split()
@@ -1805,7 +1805,7 @@ class Command(BaseCommand):
                 char_count = 0
 
                 for word in words:
-                    if char_count + len(word) + (1 if first_line else 0) <= 35:  # Ensure first line gets at least 30 chars
+                    if char_count + len(word) + (1 if first_line else 0) <= 37:  # Ensure first line gets at least 30 chars
                         first_line.append(word)
                         char_count += len(word) + (1 if first_line else 0)  # Account for spaces
                     else:
