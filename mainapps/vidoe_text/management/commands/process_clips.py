@@ -1902,6 +1902,33 @@ class Command(BaseCommand):
         draw.rounded_rectangle((0, 0, size[0], size[1]), radius=radius, fill=rectangle_color)
         return np.array(img)
 
+    def create_rounded_rectangle(self, size, radius, upscale_factor=10):
+        """Create an ultra-smooth RGBA rounded rectangle."""
+        
+        rectangle_color = ImageColor.getrgb(self.text_file_instance.subtitle_box_color) + (255,)
+
+        # High-resolution canvas
+        upscale_size = (size[0] * upscale_factor, size[1] * upscale_factor)
+        
+        img = Image.new("RGBA", upscale_size, (0, 0, 0, 0))
+        draw = ImageDraw.Draw(img)
+
+        # Draw at higher resolution
+        draw.rounded_rectangle((0, 0, upscale_size[0], upscale_size[1]), 
+                            radius=radius * upscale_factor, 
+                            fill=rectangle_color)
+
+        # Apply Gaussian Blur for extra smoothness
+        from PIL import   ImageFilter
+
+        img = img.filter(ImageFilter.GaussianBlur(radius=upscale_factor / 2))
+
+        # Downscale using high-quality Lanczos filter
+        img = img.resize(size, Image.LANCZOS)
+
+        return np.array(img)
+
+
     def create_text_clips_for_tiktok(self, text, font_size, clip):
         lines = text.split("\n") 
         text_clips = []
