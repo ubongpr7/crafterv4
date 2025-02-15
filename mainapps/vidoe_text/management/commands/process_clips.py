@@ -1907,7 +1907,7 @@ class Command(BaseCommand):
         text_clips = []
         box_clips = []
         video_width, video_height = clip.size
-        base_char_width = video_width * 0.024
+        base_char_width = video_width * 0.0245
         max_allowed_width = int(video_width * 0.85)  
         total_text_height = 0
         text_clip_sizes = []
