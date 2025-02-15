@@ -78,14 +78,9 @@
   }
 </style>
 <style>
-  @font-face {
-font-family: 'tiktokfont';
-src: url('{% static "fonts/tiktokfont.otf" %}') format('opentype');
-font-style: normal;
-font-display: swap;
-}
+ 
 .container2 {
-margin-top: 70vh;
+margin-top: 34vh;
 }
 
 .text-wrapper2 {
@@ -1194,6 +1189,8 @@ padding: 5px;
                 } else if (resolution === '9:16') {
                     previewBox.style.width = '382px';
                     previewBox.style.height = '680px';
+                    videoText.style.marginTop='10rem';
+                    
                     updateFontFunc("16");
                 }
 
@@ -1207,8 +1204,7 @@ padding: 5px;
             const slider = document.getElementById("mySlider");
             const sliderValue = document.getElementById("SliderValue");
             const previewText = document.getElementById("previewText");
-            // const previewBox = document.getElementById('preview-box');
-            // const videoText = document.getElementById('videoText');
+            
 
             slider.value = updateValue;
             sliderValue.textContent = slider.value;
