@@ -1901,42 +1901,19 @@ class Command(BaseCommand):
         draw = ImageDraw.Draw(img)        
         draw.rounded_rectangle((0, 0, size[0], size[1]), radius=radius, fill=rectangle_color)
         return np.array(img)
+
     def create_text_clips_for_tiktok(self, text, font_size, clip):
         lines = text.split("\n") 
         text_clips = []
         box_clips = []
-
         video_width, video_height = clip.size
         base_char_width = video_width * 0.024
         max_allowed_width = int(video_width * 0.85)  
-
         total_text_height = 0
         text_clip_sizes = []
-        
-        first_font_size = 26  # Default starting font size
+        box_padding = 20  # Extra padding for the box
+        box_radius = 10  # Border radius of the rounded box
         first_line = next((line for line in lines if line.strip()), None)  # Get the first non-empty line
-
-        # if first_line:
-        #     while True:
-        #         estimated_text_width = min(len(first_line) * base_char_width, max_allowed_width)
-
-        #         text_clip = TextClip(
-        #             first_line, 
-        #             font='tiktokfont', 
-        #             fontsize=first_font_size, 
-        #             color='black', 
-        #             method="label",
-        #             align="center",
-        #             size=(estimated_text_width, None)
-        #         )
-
-        #         if text_clip.size and text_clip.size[0] <= max_allowed_width:
-        #             break  
-
-        #         # Reduce font size if needed
-        #         first_font_size -= 2
-        #         if first_font_size < 16:  # Prevents text from being too small
-        #             break  
 
         for line in lines:
             if not line.strip():
@@ -1961,27 +1938,88 @@ class Command(BaseCommand):
 
         bottom_margin = int(video_height * 0.15)
         y_offset = video_height - bottom_margin - total_text_height  
-        text_offset = 25
 
         for text_clip, box_width, box_height in text_clip_sizes:
-            box_radius = 10
-
+            # Create a rounded box with padding
             rounded_box_array = self.create_bottom_rounded_rectangle(
-                (int(box_width) + 20, int(box_height + 20)), int(box_radius)
+                (int(box_width) + box_padding, int(box_height + box_padding)), int(box_radius)
             )
             box_clip = ImageClip(rounded_box_array, ismask=False).set_duration(clip.duration)
 
-            box_clip = box_clip.set_position(("center", y_offset ))
-            text_clip = text_clip.set_position(("center", y_offset + text_offset)).set_duration(clip.duration)
+            # Position the box
+            box_clip = box_clip.set_position(("center", y_offset))
+
+            # Center the text inside the box
+            text_clip = text_clip.set_position((
+                "center", 
+                y_offset + (box_height / 2) - (text_clip.size[1] / 2)
+            )).set_duration(clip.duration)
 
             text_clips.append(text_clip)
             box_clips.append(box_clip)
 
-            if box_height:
-                y_offset += box_height  
-                text_offset += text_offset  
+            # Move the offset down for the next line
+            y_offset += box_height + 10  # Adding some spacing between lines
 
         return CompositeVideoClip([clip] + box_clips + text_clips)
+
+    # def create_text_clips_for_tiktok(self, text, font_size, clip):
+    #     lines = text.split("\n") 
+    #     text_clips = []
+    #     box_clips = []
+    #     video_width, video_height = clip.size
+    #     base_char_width = video_width * 0.024
+    #     max_allowed_width = int(video_width * 0.85)  
+    #     total_text_height = 0
+    #     text_clip_sizes = []
+    #     first_font_size = 26  # Default starting font size
+    #     first_line = next((line for line in lines if line.strip()), None)  # Get the first non-empty line
+
+
+    #     for line in lines:
+    #         if not line.strip():
+    #             continue 
+
+    #         estimated_text_width = min(len(line) * base_char_width, max_allowed_width)
+
+    #         text_clip = TextClip(       
+    #             line, 
+    #             font='tiktokfont', 
+    #             fontsize=30, 
+    #             color='black', 
+    #             method="caption",
+    #             align="center",
+    #             size=(estimated_text_width, None)
+    #         )
+
+    #         if text_clip.size:
+    #             box_width, box_height = text_clip.size
+    #             total_text_height += box_height
+    #             text_clip_sizes.append((text_clip, box_width, box_height))
+
+    #     bottom_margin = int(video_height * 0.15)
+    #     y_offset = video_height - bottom_margin - total_text_height  
+    #     text_offset = 25
+
+    #     for text_clip, box_width, box_height in text_clip_sizes:
+    #         box_radius = 10
+
+    #         rounded_box_array = self.create_bottom_rounded_rectangle(
+    #             (int(box_width) + 20, int(box_height + 20)), int(box_radius)
+    #         )
+    #         box_clip = ImageClip(rounded_box_array, ismask=False).set_duration(clip.duration)
+
+    #         box_clip = box_clip.set_position(("center", y_offset ))
+    #         text_clip = text_clip.set_position(("center", y_offset + text_offset)).set_duration(clip.duration)
+
+    #         text_clips.append(text_clip)
+    #         box_clips.append(box_clip)
+
+    #         if box_height:
+    #             y_offset += box_height  
+    #             text_offset += text_offset  
+
+    #     return CompositeVideoClip([clip] + box_clips + text_clips)
 
     def add_static_watermark_to_instance(
         self,
