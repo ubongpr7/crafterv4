@@ -388,10 +388,10 @@ document.addEventListener("DOMContentLoaded", () => {
     if (textFileResolution === '9:16') {
         document.addEventListener("input", (event) => {
             if (event.target.tagName === "TEXTAREA") {
-                const maxLength = 55;
+                const maxLength = 50;
 
                 if (event.target.value.length > maxLength) {
-                    alert("Tiktok Size Videos Are Only Limited To 55 Characters Per Subtitle");
+                    alert("Tiktok Size Videos Are Only Limited To 50 Characters Per Subtitle");
                     event.target.value = event.target.value.substring(0, maxLength);
                 }
             }
@@ -414,8 +414,8 @@ const validateTextFile = async (file) => {
             
             const lines = text.split(/\r?\n/); 
             for (let i = 0; i < lines.length; i++) {
-                if (lines[i].length > 55) {
-                    alert(`Line ${i + 1} Exceeds 55 Characters! Tiktok Size Videos Are Only Limited To 55 Characters Per Subtitle`);
+                if (lines[i].length > 50) {
+                    alert(`Line ${i + 1} Exceeds 50 Characters! Tiktok Size Videos Are Only Limited To 50 Characters Per Subtitle`);
                     return false;
                 }
             }
