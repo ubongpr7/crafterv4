@@ -1994,10 +1994,10 @@ class Command(BaseCommand):
 
         for idx, (text_clip, box_width, box_height) in enumerate(text_clip_sizes):
             if idx > 0:
-                apparent_padding = 10  # Set apparent padding after the first text clip
+                apparent_padding = 15  # Set apparent padding after the first text clip
 
             rounded_box_array = self.create_bottom_rounded_rectangle(
-                (int(box_width) + x_padding, int(box_height + box_padding + apparent_padding)), int(box_radius)
+                (int(box_width) + x_padding, int(box_height + box_padding + apparent_padding-5)), int(box_radius)
             )
             box_clip = ImageClip(rounded_box_array, ismask=False).set_duration(clip.duration)
 
