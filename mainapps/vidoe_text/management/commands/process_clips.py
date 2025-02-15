@@ -1911,7 +1911,7 @@ class Command(BaseCommand):
         max_allowed_width = int(video_width * 0.85)  
         total_text_height = 0
         text_clip_sizes = []
-        box_padding = 10  # Extra padding for the box
+        box_padding = 15  # Extra padding for the box
         box_radius = 10  # Border radius of the rounded box
         first_line = next((line for line in lines if line.strip()), None)  # Get the first non-empty line
         def is_single_word(text):
