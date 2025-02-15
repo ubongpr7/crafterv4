@@ -77,7 +77,41 @@
     font-display: swap;
   }
 </style>
+<style>
+  @font-face {
+font-family: 'tiktokfont';
+src: url('{% static "fonts/tiktokfont.otf" %}') format('opentype');
+font-style: normal;
+font-display: swap;
+}
+.container2 {
+margin-top: 70vh;
+}
 
+.text-wrapper2 {
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+font-size: 22px;
+}
+
+.text-wrapper2 span {
+display: inline-block;
+border-radius: 5px;
+background-color: #ffffff;
+color: black;
+padding: 5px;
+text-align: center;
+}
+
+.text-wrapper2 span:nth-child(2) {
+position: relative;
+border-radius: 0px 0px 5px 5px;
+padding: 5px;
+}
+
+</style>
   {% include 'partials/head_c.html' %}
 
   <link rel="stylesheet" href="{% static 'css/style.css' %}" />
@@ -1032,48 +1066,166 @@
 
     });
   </script>
-  <script>
+  
+  <!-- <script>
     document.addEventListener('DOMContentLoaded', function () {
-  // Function to update the subtitle background color with the selected transparency
   function updateSubtitleBackgroundColor(color) {
     const previewBackground = document.getElementById('previewBackground');
     
-    // Check if the color has an alpha value (rgba format)
     if (color.includes('rgba')) {
-      // If the color is in RGBA format, extract only the RGB part (remove the alpha value)
-      const rgbColor = color.replace(/,.*\)$/, ')');  // Remove the alpha part
-      previewBackground.style.backgroundColor = rgbColor;  // Apply RGB color without transparency
+      const rgbColor = color.replace(/,.*\)$/, ')');  
+      previewBackground.style.backgroundColor = rgbColor;  
     } else {
-      // If the color is in hex or other format, just apply it directly
       previewBackground.style.backgroundColor = color;
     }
   }
 
-  // Select the subtitle background color picker and text input
   const colorPicker2 = document.getElementById('colorPicker2');
   const colorText2 = document.getElementById('colortext2');
 
-  // Update the subtitle background color when the color picker changes
   colorPicker2.addEventListener('input', function () {
     const selectedColor = colorPicker2.value;
-    colorText2.value = selectedColor; // Sync the text input with the color picker
-    updateSubtitleBackgroundColor(selectedColor); // Update the preview box
+    colorText2.value = selectedColor;
+    updateSubtitleBackgroundColor(selectedColor); 
   });
 
-  // Update the subtitle background color when the text input changes
   colorText2.addEventListener('input', function () {
     const selectedColor = colorText2.value;
-    if (/^#[0-9A-F]{6}$/i.test(selectedColor)) { // Validate hex color
-      colorPicker2.value = selectedColor; // Sync the color picker with the text input
-      updateSubtitleBackgroundColor(selectedColor); // Update the preview box
+    if (/^#[0-9A-F]{6}$/i.test(selectedColor)) { 
+      colorPicker2.value = selectedColor; 
+      updateSubtitleBackgroundColor(selectedColor);
     }
   });
 
-  // Initialize the subtitle background color with the default value
   updateSubtitleBackgroundColor(colorPicker2.value);
 });
 
   </script>
-</body>
+   -->
+
+
+   <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Function to hide/show specific labels and their associated input elements
+        function updateResolutionSettings(resolution) {
+            // Get the containers for the elements to hide/show
+            const fontSelectLabel = document.querySelector('.Upload-Font-File-text'); 
+            const fontSelectDropdown = document.querySelector('.Upload-Font-File-Upload'); 
+            const fontSizeLabel = document.querySelector('.Font-Size-text'); 
+            const fontSizeSlider = document.querySelector('.Font-Size-Slider'); 
+            const borderRadiusLabel = document.querySelector('.slider-container label'); 
+            const borderRadiusSlider = document.querySelector('.slider-container'); 
+
+            // Get the preview box and its content
+            const previewBox = document.getElementById('preview-box');
+            const previewText = document.getElementById('previewText');
+
+            if (resolution === '9:16') { // TikTok/Reels
+                // Hide the labels and their associated input elements
+                fontSelectLabel.style.display = 'none';
+                fontSelectDropdown.style.display = 'none';
+                fontSizeLabel.style.display = 'none';
+                fontSizeSlider.style.display = 'none';
+                borderRadiusLabel.style.display = 'none';
+                borderRadiusSlider.style.display = 'none';
+
+                // Set the font to "tiktokfont" by default
+                const fontSelect = document.getElementById('font_select');
+                fontSelect.value = 'tiktokfont';
+
+                // Replace the subtitle box with the new design and apply the TikTok font
+                previewBox.innerHTML = `
+         <div class="container2">
+           <p class="text-wrapper2" style="font-family: 'tiktokfont';">
+             <span>This Is How Your Original</span>
+             <span>Subtitle Text Will Show.</span>
+           </p>
+         </div>
+       `;
+            } else {
+                // Show the labels and their associated input elements
+                fontSelectLabel.style.display = 'flex'; 
+                fontSelectDropdown.style.display = 'flex'; 
+                fontSizeLabel.style.display = 'flex'; 
+                fontSizeSlider.style.display = 'block';
+                borderRadiusLabel.style.display = 'block';
+                borderRadiusSlider.style.display = 'block';
+
+                // Restore the original subtitle box
+                previewBox.innerHTML = `
+         <span id="videoText" style="font-size: 48px; font-weight: 700; line-height: 1.2; letter-spacing: -0.8px; text-align: center; color: #00000080;">
+           Your Selected Video <br /> Scene Will Go Here
+         </span>
+         <div id="previewBackground" class="previewBackground2" style="width: fit-content; height: fit-content; background: #000000; position: absolute; bottom: 20px; border-radius: 8px; padding: 12px; display: flex; align-items: center; justify-content: center;">
+           <span id="previewText" style="font-size: 20px; font-weight: 600; line-height: 24.38px; text-align: center; color: white; opacity: 1; width: 350px;">
+             This Is How Your Original Subtitle Text Will Be Displayed
+           </span>
+         </div>
+       `;
+            }
+        }
+
+        // Add event listeners to the resolution options
+        document.querySelectorAll('.box').forEach((box) => {
+            box.addEventListener('click', () => {
+                const resolution = box.getAttribute('data-resolution');
+                updateResolutionSettings(resolution);
+
+                const previewBox = document.getElementById('preview-box');
+                const videoText = document.getElementById('videoText');
+
+                // Adjust box size and text size based on aspect ratio
+                if (resolution === '1:1') {
+                    previewBox.style.width = '600px';
+                    previewBox.style.height = '600px';
+                    videoText.style.fontSize = '48px';
+                    document.getElementById('previewText').style.width = '350px';
+                    updateFontFunc("22");
+                } else if (resolution === '4:5') {
+                    previewBox.style.width = '480px';
+                    previewBox.style.height = '600px';
+                    videoText.style.fontSize = '42px';
+                    document.getElementById('previewText').style.width = '350px';
+                    updateFontFunc("22");
+                } else if (resolution === '16:9') {
+                    previewBox.style.width = '680px';
+                    previewBox.style.height = '382px';
+                    videoText.style.fontSize = '38px';
+                    document.getElementById('previewText').style.width = '350px';
+                    updateFontFunc("22");
+                } else if (resolution === '9:16') {
+                    previewBox.style.width = '382px';
+                    previewBox.style.height = '680px';
+                    videoText.style.fontSize = '34px';
+                    document.getElementById('previewText').style.width = '300px';
+                    updateFontFunc("16");
+                    document.getElementById('previewText').style.fontSize = '18px';
+                }
+
+                // Center the preview box
+                previewBox.style.margin = '0 auto';
+            });
+        });
+
+        // Function to update the font size and slider background
+        function updateFontFunc(updateValue) {
+            const slider = document.getElementById("mySlider");
+            const sliderValue = document.getElementById("SliderValue");
+            const previewText = document.getElementById("previewText");
+            slider.value = updateValue;
+            sliderValue.textContent = slider.value;
+
+            previewText.style.fontSize = `${slider.value * 0.8}px`;
+            document.getElementById('font_size').value = slider.value * 2;
+            document.getElementById('recommended-font-size').textContent = `(Recommended Font Size: ${updateValue})`;
+
+            const value = (slider.value - slider.min) / (slider.max - slider.min) * 100;
+            slider.style.background = `linear-gradient(to right, #864AF9 0%, #864AF9 ${value}%, #D9D9D9 ${value}%, #D9D9D9 100%)`;
+        }
+    });
+</script>
+
+
+  </body>
 
 </html>
