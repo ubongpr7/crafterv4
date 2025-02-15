@@ -1952,7 +1952,7 @@ class Command(BaseCommand):
             # Center the text inside the box
             text_clip = text_clip.set_position((
                 "center", 
-                y_offset + (box_height / 2) - (text_clip.size[1] / 2+5)
+                y_offset + (box_height / 2) - (text_clip.size[1] / 2)+box_padding/2
             )).set_duration(clip.duration)
 
             text_clips.append(text_clip)
