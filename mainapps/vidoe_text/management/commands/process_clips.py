@@ -1947,7 +1947,7 @@ class Command(BaseCommand):
             text_clip = TextClip(
                 line, 
                 font='tiktokfont', 
-                fontsize=32, 
+                fontsize=30, 
                 color='black', 
                 method="caption",
                 align="center",
