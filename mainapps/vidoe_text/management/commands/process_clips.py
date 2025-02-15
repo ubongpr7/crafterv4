@@ -1940,7 +1940,7 @@ class Command(BaseCommand):
                     color='black', 
                     method="caption",
                     align="center",
-                    size=(estimated_text_width-5, None)
+                    size=(estimated_text_width, None)
                 )
 
             if text_clip.size:
@@ -1948,25 +1948,18 @@ class Command(BaseCommand):
                 total_text_height += box_height
                 text_clip_sizes.append((text_clip, box_width, box_height))
 
-        # bottom_margin = int(video_height * 0.20)
-        # y_offset = video_height - bottom_margin - total_text_height  
-        # Start the first text box at 80% from the top
         first_text_top = int(video_height * 0.80)
 
-        # Initialize the y_offset at the first text box position
         y_offset = first_text_top
 
         for idx, (text_clip, box_width, box_height) in enumerate(text_clip_sizes):
-            # Create a rounded box with padding
             rounded_box_array = self.create_bottom_rounded_rectangle(
                 (int(box_width) + box_padding, int(box_height + box_padding)), int(box_radius)
             )
             box_clip = ImageClip(rounded_box_array, ismask=False).set_duration(clip.duration)
 
-            # Position the box
             box_clip = box_clip.set_position(("center", y_offset))
 
-            # Center the text inside the box
             text_clip = text_clip.set_position((
                 "center", 
                 y_offset + (box_height / 2) - (text_clip.size[1] / 2) + box_padding / 2
@@ -1975,8 +1968,7 @@ class Command(BaseCommand):
             text_clips.append(text_clip)
             box_clips.append(box_clip)
 
-            # Move the offset down for the next line
-            y_offset += box_height + 10  # Adding some spacing between lines
+            y_offset += box_height + 10  
 
         return CompositeVideoClip([clip] + box_clips + text_clips)
 
