@@ -1106,8 +1106,6 @@ padding: 5px;
 
    <script>
     
-    const previewBox = document.getElementById('preview-box');
-    const videoText = document.getElementById('videoText');
 
     document.addEventListener('DOMContentLoaded', function () {
         // Function to hide/show specific labels and their associated input elements
@@ -1176,6 +1174,8 @@ padding: 5px;
             box.addEventListener('click', () => {
                 const resolution = box.getAttribute('data-resolution');
                 updateResolutionSettings(resolution);
+                const previewBox = document.getElementById('preview-box');
+                const videoText = document.getElementById('videoText');
 
                 // Adjust box size and text size based on aspect ratio
                 if (resolution === '1:1') {
