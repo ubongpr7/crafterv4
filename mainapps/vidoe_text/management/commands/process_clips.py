@@ -2001,11 +2001,11 @@ class Command(BaseCommand):
             )
             box_clip = ImageClip(rounded_box_array, ismask=False).set_duration(clip.duration)
 
-            box_clip = box_clip.set_position(("center", y_offset))
+            box_clip = box_clip.set_position(("center", y_offset-apparent_padding))
 
             text_clip = text_clip.set_position((
                 "center", 
-                y_offset + (box_height / 2) - (text_clip.size[1] / 2) + box_padding / 2 + apparent_padding 
+                y_offset + (box_height / 2) - (text_clip.size[1] / 2) + box_padding / 2 + apparent_padding-5
             )).set_duration(clip.duration)
 
             text_clips.append(text_clip)
