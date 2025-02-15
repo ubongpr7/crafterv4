@@ -2011,7 +2011,7 @@ class Command(BaseCommand):
             text_clips.append(text_clip)
             box_clips.append(box_clip)
 
-            y_offset += box_height + 10 -apparent_padding
+            y_offset += box_height  -apparent_padding
 
         return CompositeVideoClip([clip] + box_clips + text_clips)
 
