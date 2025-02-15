@@ -383,36 +383,7 @@
 
     <script>
         textFileResolution='{{textfile.resolution}}' 
-//         const validateTextFile = async (file) => {
-//     if (!file) return;
 
-//     try {
-//         const text = await file.text(); // Read file content
-//         if (text.length > 5000) {
-//             alert("The text file exceeds the 5000-character limit!");
-//             return false;
-//         }
-//         return true;
-//     } catch (error) {
-//         console.error("Error reading file:", error);
-//         alert("An error occurred while reading the file.");
-//         return false;
-//     }
-// };
-// document.addEventListener("DOMContentLoaded", () => {
-//     const textareas = document.querySelectorAll("textarea");
-//     if (textFileResolution==='9:16'){
-
-//         textareas.forEach((textarea) => {
-//             textarea.addEventListener("input", () => {
-//                 if (textarea.value.length > 50) {
-//                     alert("Tiktok Size Videos Are Only Limited To 50 Characters Per Subtitle");
-//                 }
-//             });
-//         });
-//     }
-
-// });
 document.addEventListener("DOMContentLoaded", () => {
     if (textFileResolution === '9:16') {
         document.addEventListener("input", (event) => {
@@ -421,7 +392,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 if (event.target.value.length > maxLength) {
                     alert("Tiktok Size Videos Are Only Limited To 50 Characters Per Subtitle");
-                    event.target.value = event.target.value.substring(0, maxLength); // Trim extra characters
+                    event.target.value = event.target.value.substring(0, maxLength);
                 }
             }
         });
@@ -444,7 +415,7 @@ const validateTextFile = async (file) => {
             const lines = text.split(/\r?\n/); 
             for (let i = 0; i < lines.length; i++) {
                 if (lines[i].length > 50) {
-                    alert(`Line ${i + 1} exceeds 50 characters! Tiktok Size Videos Are Only Limited To 50 Characters Per Subtitle`);
+                    alert(`Line ${i + 1} Exceeds 50 Characters! Tiktok Size Videos Are Only Limited To 50 Characters Per Subtitle`);
                     return false;
                 }
             }
@@ -458,24 +429,25 @@ const validateTextFile = async (file) => {
     }
 };
 
-        const fileName = document.getElementById('fileName')
-        const fileUpload = document.getElementById('fileUpload');
-        fileUpload.addEventListener('change', (event) => {
-            const file = event.target.files[0];
-            if (file) {
-                const checkfile=validateTextFile(file)
-                if (checkfile){
-                    fileName.textContent = `${file.name.slice(0, 15)}`;
+const fileName = document.getElementById('fileName');
+const fileUpload = document.getElementById('fileUpload');
 
+fileUpload.addEventListener('change', async (event) => { // Make the function async
+    const file = event.target.files[0];
 
-                }else{
-                    fileName.textContent = 'No file selected';
-                    event.target.value=''
-                }
-            } else {
-                fileName.textContent = 'No file selected';
-            }
-        });
+    if (file) {
+        const isValid = await validateTextFile(file); // Wait for validation result
+        
+        if (isValid) {
+            fileName.textContent = `${file.name.slice(0, 15)}`;
+        } else {
+            fileName.textContent = 'No file selected';
+            fileUpload.value = ''; // Reset file input
+        }
+    } else {
+        fileName.textContent = 'No file selected';
+    }
+});
 
     </script>
 
