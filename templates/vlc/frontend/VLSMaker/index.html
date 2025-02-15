@@ -1067,7 +1067,7 @@ padding: 5px;
     });
   </script>
   
-  <!-- <script>
+   <script>
     document.addEventListener('DOMContentLoaded', function () {
   function updateSubtitleBackgroundColor(color) {
     const previewBackground = document.getElementById('previewBackground');
@@ -1101,10 +1101,14 @@ padding: 5px;
 });
 
   </script>
-   -->
+   
 
 
    <script>
+    
+    const previewBox = document.getElementById('preview-box');
+    const videoText = document.getElementById('videoText');
+
     document.addEventListener('DOMContentLoaded', function () {
         // Function to hide/show specific labels and their associated input elements
         function updateResolutionSettings(resolution) {
@@ -1128,13 +1132,17 @@ padding: 5px;
                 fontSizeSlider.style.display = 'none';
                 borderRadiusLabel.style.display = 'none';
                 borderRadiusSlider.style.display = 'none';
-
+                // videoText.style.display='none'
                 // Set the font to "tiktokfont" by default
                 const fontSelect = document.getElementById('font_select');
                 fontSelect.value = 'tiktokfont';
 
                 // Replace the subtitle box with the new design and apply the TikTok font
                 previewBox.innerHTML = `
+                <span id="videoText"
+            style="font-size: 48px;display:none; font-weight: 700; line-height: 1.2; letter-spacing: -0.8px; text-align: center; color: #00000080;">
+            Your Selected Video <br /> Scene Will Go Here
+          </span>
          <div class="container2">
            <p class="text-wrapper2" style="font-family: 'tiktokfont';">
              <span>This Is How Your Original</span>
@@ -1153,9 +1161,7 @@ padding: 5px;
 
                 // Restore the original subtitle box
                 previewBox.innerHTML = `
-         <span id="videoText" style="font-size: 48px; font-weight: 700; line-height: 1.2; letter-spacing: -0.8px; text-align: center; color: #00000080;">
-           Your Selected Video <br /> Scene Will Go Here
-         </span>
+         
          <div id="previewBackground" class="previewBackground2" style="width: fit-content; height: fit-content; background: #000000; position: absolute; bottom: 20px; border-radius: 8px; padding: 12px; display: flex; align-items: center; justify-content: center;">
            <span id="previewText" style="font-size: 20px; font-weight: 600; line-height: 24.38px; text-align: center; color: white; opacity: 1; width: 350px;">
              This Is How Your Original Subtitle Text Will Be Displayed
@@ -1170,9 +1176,6 @@ padding: 5px;
             box.addEventListener('click', () => {
                 const resolution = box.getAttribute('data-resolution');
                 updateResolutionSettings(resolution);
-
-                const previewBox = document.getElementById('preview-box');
-                const videoText = document.getElementById('videoText');
 
                 // Adjust box size and text size based on aspect ratio
                 if (resolution === '1:1') {
@@ -1196,7 +1199,7 @@ padding: 5px;
                 } else if (resolution === '9:16') {
                     previewBox.style.width = '382px';
                     previewBox.style.height = '680px';
-                    videoText.style.fontSize = '34px';
+                    // videoText.style.fontSize = '34px';
                     document.getElementById('previewText').style.width = '300px';
                     updateFontFunc("16");
                     document.getElementById('previewText').style.fontSize = '18px';
