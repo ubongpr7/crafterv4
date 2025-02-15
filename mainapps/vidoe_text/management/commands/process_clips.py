@@ -1948,7 +1948,7 @@ class Command(BaseCommand):
                 total_text_height += box_height
                 text_clip_sizes.append((text_clip, box_width, box_height))
 
-        first_text_top = int(video_height * 0.80)
+        first_text_top = int(video_height * 0.75)
 
         y_offset = first_text_top
 
