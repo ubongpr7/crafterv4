@@ -1211,20 +1211,24 @@ class Command(BaseCommand):
 
         return video_segments, subtitle_segments
 
-    def adjust_segment_duration(
-        self, segment: VideoFileClip, duration: float
-    ) -> VideoFileClip:
+
+    def adjust_segment_duration(self, segment: VideoFileClip, duration: float) -> VideoFileClip:
         current_duration = segment.duration
+
+        if duration < 0:
+            raise ValueError("Target duration must be non-negative.")
+        if current_duration == 0:
+            raise ValueError("Segment duration is zero; cannot adjust.")
+
+        if abs(current_duration - duration) < 1e-3:  
+            return segment
+
         if current_duration < duration:
             speed_factor = current_duration / duration
             return segment.fx(vfx.speedx, speed_factor)
-    
 
-            # return loop(segment, duration=duration)
-        elif current_duration > duration:
-            return segment.subclip(0, duration)
-        return segment
-    
+        return segment.subclip(0, duration)
+
     def get_video_paths_for_text_file(self):
         """
         Get a list of video paths for all TextLineVideoClip instances associated with the given text_file_instance.
@@ -1887,22 +1891,15 @@ class Command(BaseCommand):
 
             return CompositeVideoClip([clip, box_clip, subtitle_clip])
 
-    def create_rounded_rectangle(self, size, radius):
-        """ Create an RGBA image with a rounded rectangle """
-        rectangle_color = ImageColor.getrgb(self.text_file_instance.subtitle_box_color) + (255,)
-        img = Image.new("RGBA", size, (0, 0, 0, 0))  
-        draw = ImageDraw.Draw(img)        
-        draw.rounded_rectangle((0, 0, size[0], size[1]), radius=radius, fill=rectangle_color)
-        return np.array(img)
-    # def create_bottom_rounded_rectangle(self, size, radius):
+    # def create_rounded_rectangle(self, size, radius):
     #     """ Create an RGBA image with a rounded rectangle """
-        # rectangle_color = ImageColor.getrgb('#ffffff') + (255,)
+    #     rectangle_color = ImageColor.getrgb(self.text_file_instance.subtitle_box_color) + (255,)
     #     img = Image.new("RGBA", size, (0, 0, 0, 0))  
     #     draw = ImageDraw.Draw(img)        
     #     draw.rounded_rectangle((0, 0, size[0], size[1]), radius=radius, fill=rectangle_color)
     #     return np.array(img)
 
-    def create_bottom_rounded_rectangle(self, size, radius, upscale_factor=10):
+    def create_rounded_rectangle(self, size, radius, upscale_factor=20):
         """Create an ultra-smooth RGBA rounded rectangle."""
         
 
@@ -1967,7 +1964,7 @@ class Command(BaseCommand):
             if idx > 0:
                 apparent_padding = 15  # Set apparent padding after the first text clip
 
-            rounded_box_array = self.create_bottom_rounded_rectangle(
+            rounded_box_array = self.create_rounded_rectangle(
                 (int(box_width) + x_padding, int(box_height + box_padding + apparent_padding)), int(box_radius)
             )
             box_clip = ImageClip(rounded_box_array, ismask=False).set_duration(clip.duration)
