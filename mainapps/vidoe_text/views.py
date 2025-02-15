@@ -105,14 +105,13 @@ def edit_text_clip_line(request, id):
 
             if not slide_text:
                 return JsonResponse({"success": False, "error": "Slide text is required"}, status=400)
-            elif slide_text != clip.slide:
-                clip.slide=slide_text
-                clip.remaining=slide_text
-                clip.save()
-                for subclip in clip.subclips.all():
-                    subclip.delete()
-                return JsonResponse({"success": True, "id": clip.id,"changed":True})
-            return JsonResponse({"success": True, "id": clip.id,"changed":False})
+            # elif slide_text != clip.slide:
+            clip.slide=slide_text
+            clip.remaining=slide_text
+            clip.save()
+            for subclip in clip.subclips.all():
+                subclip.delete()
+            return JsonResponse({"success": True, "id": clip.id,"changed":True})
 
         except json.JSONDecodeError:
             return JsonResponse({"success": False, "error": "Invalid JSON payload"}, status=400)
