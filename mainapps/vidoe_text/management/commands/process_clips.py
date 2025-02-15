@@ -1896,7 +1896,7 @@ class Command(BaseCommand):
         return np.array(img)
     # def create_bottom_rounded_rectangle(self, size, radius):
     #     """ Create an RGBA image with a rounded rectangle """
-    #     rectangle_color = ImageColor.getrgb('#ffffff') + (255,)
+        # rectangle_color = ImageColor.getrgb('#ffffff') + (255,)
     #     img = Image.new("RGBA", size, (0, 0, 0, 0))  
     #     draw = ImageDraw.Draw(img)        
     #     draw.rounded_rectangle((0, 0, size[0], size[1]), radius=radius, fill=rectangle_color)
@@ -1905,10 +1905,10 @@ class Command(BaseCommand):
     def create_bottom_rounded_rectangle(self, size, radius, upscale_factor=10):
         """Create an ultra-smooth RGBA rounded rectangle."""
         
-        rectangle_color = ImageColor.getrgb(self.text_file_instance.subtitle_box_color) + (255,)
 
         # High-resolution canvas
         upscale_size = (size[0] * upscale_factor, size[1] * upscale_factor)
+        rectangle_color = ImageColor.getrgb('#ffffff') + (255,)
         
         img = Image.new("RGBA", upscale_size, (0, 0, 0, 0))
         draw = ImageDraw.Draw(img)
