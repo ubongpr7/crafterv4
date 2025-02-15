@@ -1944,7 +1944,7 @@ class Command(BaseCommand):
 
             estimated_text_width = min(len(line) * base_char_width, max_allowed_width)
 
-            text_clip = TextClip(
+            text_clip = TextClip(       
                 line, 
                 font='tiktokfont', 
                 fontsize=30, 
@@ -1964,14 +1964,14 @@ class Command(BaseCommand):
         text_offset = 25
 
         for text_clip, box_width, box_height in text_clip_sizes:
-            box_radius = 15
+            box_radius = 10
 
             rounded_box_array = self.create_bottom_rounded_rectangle(
-                (int(box_width) + 30, int(box_height + 50)), int(box_radius)
+                (int(box_width) + 20, int(box_height + 50)), int(box_radius)
             )
             box_clip = ImageClip(rounded_box_array, ismask=False).set_duration(clip.duration)
 
-            box_clip = box_clip.set_position(("center", y_offset + 3))
+            box_clip = box_clip.set_position(("center", y_offset ))
             text_clip = text_clip.set_position(("center", y_offset + text_offset)).set_duration(clip.duration)
 
             text_clips.append(text_clip)
