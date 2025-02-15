@@ -1934,13 +1934,13 @@ class Command(BaseCommand):
                 total_text_height += box_height
                 text_clip_sizes.append((text_clip, box_width, box_height))
 
-        first_text_top = int(video_height * 0.75-20)
+        first_text_top = int(video_height * 0.75-18)
 
         y_offset = first_text_top
 
         for idx, (text_clip, box_width, box_height) in enumerate(text_clip_sizes):
             rounded_box_array = self.create_bottom_rounded_rectangle(
-                (int(box_width) + box_padding, int(box_height + box_padding)), int(box_radius)
+                (int(box_width) + box_padding, int(box_height + box_padding-10)), int(box_radius)
             )
             box_clip = ImageClip(rounded_box_array, ismask=False).set_duration(clip.duration)
 
