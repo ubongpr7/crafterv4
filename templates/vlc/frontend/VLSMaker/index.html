@@ -1224,45 +1224,45 @@ padding: 5px;
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-    const colorPicker1 = document.getElementById('colorPicker1');
-    const colorPicker2 = document.getElementById('colorPicker2');
-    const fontSelect = document.getElementById('font_select');
-    const tiktokPreviewSpans = document.querySelectorAll('#tiktokPreview .text-wrapper2 span');
+  const colorPicker1 = document.getElementById('colorPicker1');
+  const colorPicker2 = document.getElementById('colorPicker2');
+  const fontSelect = document.getElementById('font_select');
+  const tiktokPreviewSpans = document.querySelectorAll('#tiktokPreview .text-wrapper2 span');
 
-    // Set default colors for TikTok preview
+  // Set default colors for TikTok preview
+  tiktokPreviewSpans.forEach(span => {
+    span.style.backgroundColor = '#ffffff'; // White background
+    span.style.color = '#000000'; // Black font color
+  });
+
+  // Function to update TikTok preview
+  function updateTikTokPreview() {
     tiktokPreviewSpans.forEach(span => {
-        span.style.backgroundColor = '#ffffff'; // White background
-        span.style.color = '#000000'; // Black font color
+      span.style.color = colorPicker1.value; // Update font color
+      span.style.backgroundColor = colorPicker2.value; // Update background color
+      span.style.fontFamily = fontSelect.value; // Update font family
     });
+  }
 
-    // Function to update TikTok preview
-    function updateTikTokPreview() {
-        tiktokPreviewSpans.forEach(span => {
-            span.style.color = colorPicker1.value; // Update font color
-            span.style.backgroundColor = colorPicker2.value; // Update background color
-            span.style.fontFamily = fontSelect.value; // Update font family
-        });
-    }
+  // Add event listeners for color pickers and font select
+  colorPicker1.addEventListener('input', updateTikTokPreview);
+  colorPicker2.addEventListener('input', updateTikTokPreview);
+  fontSelect.addEventListener('change', updateTikTokPreview);
 
-    // Add event listeners for color pickers and font select
-    colorPicker1.addEventListener('input', updateTikTokPreview);
-    colorPicker2.addEventListener('input', updateTikTokPreview);
-    fontSelect.addEventListener('change', updateTikTokPreview);
+  // Handle resolution changes
+  document.querySelectorAll('.box').forEach((box) => {
+    box.addEventListener('click', () => {
+      const resolution = box.getAttribute('data-resolution');
+      const tiktokPreview = document.getElementById('tiktokPreview');
 
-    // Handle resolution changes
-    document.querySelectorAll('.box').forEach((box) => {
-        box.addEventListener('click', () => {
-            const resolution = box.getAttribute('data-resolution');
-            const tiktokPreview = document.getElementById('tiktokPreview');
-
-            if (resolution === '9:16') {
-                tiktokPreview.style.display = 'flex';
-                updateTikTokPreview(); // Update TikTok preview with current settings
-            } else {
-                tiktokPreview.style.display = 'none';
-            }
-        });
+      if (resolution === '9:16') {
+        tiktokPreview.style.display = 'flex';
+        updateTikTokPreview(); // Update TikTok preview with current settings
+      } else {
+        tiktokPreview.style.display = 'none';
+      }
     });
+  });
 });
 </script>
   </body>
