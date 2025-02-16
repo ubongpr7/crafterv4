@@ -1229,13 +1229,20 @@ padding: 5px;
     const fontSelect = document.getElementById('font_select');
     const tiktokPreviewSpans = document.querySelectorAll('#tiktokPreview .text-wrapper2 span');
 
-    // Set default colors for TikTok preview
+    // Set default colors for TikTok preview (Without calling updateTikTokPreview initially)
     tiktokPreviewSpans.forEach(span => {
-        span.style.backgroundColor = '#ffffff'; // White background
-        span.style.color = '#000000'; // Black font color
+        span.style.backgroundColor = '#ffffff'; // Default white background
+        span.style.color = '#000000'; // Default black text color
     });
 
-    
+    // Function to update TikTok preview (only when user interacts)
+    function updateTikTokPreview() {
+        tiktokPreviewSpans.forEach(span => {
+            span.style.color = colorPicker1.value; // Update font color
+            span.style.backgroundColor = colorPicker2.value; // Update background color
+            span.style.fontFamily = fontSelect.value; // Update font family
+        });
+    }
 
     // Add event listeners for color pickers and font select
     colorPicker1.addEventListener('input', updateTikTokPreview);
@@ -1250,13 +1257,14 @@ padding: 5px;
 
             if (resolution === '9:16') {
                 tiktokPreview.style.display = 'flex';
-                updateTikTokPreview(); // Update TikTok preview with current settings
+                // updateTikTokPreview() is now only triggered when user selects a color or font
             } else {
                 tiktokPreview.style.display = 'none';
             }
         });
     });
 });
+
 </script>
   </body>
 
