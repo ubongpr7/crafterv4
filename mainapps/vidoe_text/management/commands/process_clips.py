@@ -1752,7 +1752,7 @@ class Command(BaseCommand):
             text_clip = TextClip(       
                 line, 
                 font='tiktokfont', 
-                fontsize=30, 
+                fontsize=35, 
                 color=color, 
                 align="center",
             )
