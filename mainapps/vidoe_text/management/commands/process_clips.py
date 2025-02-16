@@ -410,13 +410,31 @@ class Command(BaseCommand):
                 self.write_clip_file(concatenated_clip, clip.video_file,clip)
         return True 
 
-    def crop_video_ffmpeg(self,video_url):
+    # def crop_video_ffmpeg(self,video_url):
+    #     with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_output:
+    #         output_path = temp_output.name
+
+    #         cmd = [
+    #             "ffmpeg","-y", "-i", video_url,  
+    #             "-vf", "crop=in_h*720/1280:in_h",  
+    #             "-c:v", "libx264", "-preset", "fast", "-crf", "23", 
+    #             "-c:a", "copy", 
+    #             output_path
+    #         ]
+
+    #         subprocess.run(cmd, check=True)
+
+    #         clip = VideoFileClip(output_path)
+
+    #         return clip 
+
+    def crop_video_ffmpeg(self, video_url):
         with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_output:
             output_path = temp_output.name
 
             cmd = [
-                "ffmpeg","-y", "-i", video_url,  
-                "-vf", "crop=in_h*720/1280:in_h",  
+                "ffmpeg", "-y", "-i", video_url,  
+                "-vf", "scale=-2:1280,crop=720:1280",  # Scale height to 1280, then crop width to 720
                 "-c:v", "libx264", "-preset", "fast", "-crf", "23", 
                 "-c:a", "copy", 
                 output_path
@@ -426,9 +444,7 @@ class Command(BaseCommand):
 
             clip = VideoFileClip(output_path)
 
-            return clip 
-
-             
+            return clip             
 
 
     def extract_start_end(self,generated_srt):
