@@ -1477,7 +1477,7 @@ class Command(BaseCommand):
             clips[i] = clips[i].set_start(clips[i-1].end)
 
         # Concatenate clips safely
-        final_clip = concatenate_videoclips(clips, method="compose") 
+        final_clip = concatenate_videoclips(clips, method="chain") 
 
         logging.info("Clips have been concatenated successfully.")
         return final_clip
