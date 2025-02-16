@@ -1,0 +1,165 @@
+@media (max-width: 1180px) {
+  .content {
+    width: 90%;
+  }
+
+  .second-main {
+    width: 90%;
+  }
+
+  .main-head {
+    width: 90%;
+    padding: 20px;
+  }
+
+  .plans {
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 16px;
+    width: 90%;
+  }
+}
+
+@media (max-width: 960px) {
+  .content {
+    padding: 10px;
+  }
+
+  .sub-p {
+    font-size: 18px;
+    font-weight: 400;
+  }
+
+  .bill {
+    font-size: 12px;
+    font-weight: 400;
+  }
+
+  .plan p {
+    font-size: 18px;
+    font-weight: 400;
+  }
+
+  .cr-usage {
+    font-size: 18px;
+    font-weight: 400;
+  }
+
+  .credit-text {
+    font-size: 13px;
+  }
+
+  .heading {
+    font-size: 28px;
+    font-weight: 600;
+    padding: 0.8rem;
+    line-height: 37.8px;
+  }
+
+  .second-main p {
+    font-size: 13px;
+    font-weight: 400;
+  }
+
+  .cr {
+    color: #864af9;
+    font-weight: bold;
+    line-height: 1.8;
+    font-size: 19px;
+    font-weight: 500;
+  }
+
+  .box-cont input {
+    padding: 10px 22px;
+  }
+
+  .credit-box button {
+    font-size: 1rem;
+  }
+
+  .main-head h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+
+  .box {
+    padding: 15px 17px;
+    line-height: 2;
+  }
+
+  .box-head {
+    font-size: 20px;
+    font-weight: 500;
+  }
+
+  .box-head p,
+  #p {
+    font-size: 14px;
+    font-weight: 400;
+  }
+
+  .price h1 {
+    font-size: 30px;
+    font-weight: 600;
+  }
+
+  .box button {
+    padding: 6px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 650px) {
+  .admin-header .profile-icn {
+    flex-direction: column;
+  }
+
+  .admin-header .profile-icn {
+    margin-top: 1rem;
+    flex-direction: column;
+  }
+
+  /* Flexbox Layout for Header: Aligns profile and credit score section */
+  .header-profile,
+  .header-two {
+    flex-direction: column;
+  }
+
+  .content {
+    padding: 8px;
+  }
+
+  .plans {
+    grid-template-columns: auto;
+    gap: 16px;
+    width: 90%;
+  }
+
+  .sub-p {
+    font-size: 17px;
+    font-weight: 400;
+  }
+
+  .plan p {
+    font-size: 17px;
+    font-weight: 400;
+  }
+
+  .cr-usage {
+    font-size: 17px;
+    font-weight: 400;
+  }
+
+  .heading {
+    font-size: 26px;
+  }
+
+  .cr {
+    font-size: 17px;
+  }
+
+  .main-head h1 {
+    font-size: 1.34rem;
+    font-weight: 600;
+  }
+}
