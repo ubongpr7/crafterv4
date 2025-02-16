@@ -1632,7 +1632,7 @@ class Command(BaseCommand):
                     subtitle.text 
                 )
                 print('wrapped_text, ',wrapped_text)
-                tiktok= self.create_text_clips_for_tiktok(wrapped_text,30,clip)
+                tiktok= self.create_text_clips_for_tiktok(wrapped_text,color,clip)
                 logging.info(f'Done with tiktok')
                 return tiktok
             temp_subtitle_clip = TextClip(
@@ -1687,13 +1687,6 @@ class Command(BaseCommand):
 
             return CompositeVideoClip([clip, box_clip, subtitle_clip])
 
-    # def create_rounded_rectangle(self, size, radius):
-    #     """ Create an RGBA image with a rounded rectangle """
-    #     rectangle_color = ImageColor.getrgb(self.text_file_instance.subtitle_box_color) + (255,)
-    #     img = Image.new("RGBA", size, (0, 0, 0, 0))  
-    #     draw = ImageDraw.Draw(img)        
-    #     draw.rounded_rectangle((0, 0, size[0], size[1]), radius=radius, fill=rectangle_color)
-    #     return np.array(img)
 
     def create_rounded_rectangle(self, size, radius,bg_color= '#ffffff',upscale_factor=20,):
         """Create an ultra-smooth RGBA rounded rectangle."""
@@ -1701,7 +1694,7 @@ class Command(BaseCommand):
 
         # High-resolution canvas
         upscale_size = (size[0] * upscale_factor, size[1] * upscale_factor)
-        rectangle_color = ImageColor.getrgb(bg_color) + (255,)
+        rectangle_color = ImageColor.getrgb(self.text_file_instance.subtitle_box_color) + (255,)
         
         img = Image.new("RGBA", upscale_size, (0, 0, 0, 0))
         draw = ImageDraw.Draw(img)
@@ -1722,7 +1715,7 @@ class Command(BaseCommand):
         return np.array(img)
 
 
-    def create_text_clips_for_tiktok(self, text, font_size, clip):
+    def create_text_clips_for_tiktok(self, text, color, clip):
         lines = text.split("\n") 
         text_clips = []
         box_clips = []
@@ -1744,7 +1737,7 @@ class Command(BaseCommand):
                 line, 
                 font='tiktokfont', 
                 fontsize=30, 
-                color='black', 
+                color=color, 
                 align="center",
             )
 
