@@ -81,7 +81,7 @@
  
 .container2 {
   margin-bottom: -22vh;
-  margin-top: 11vh;
+  /* margin-top: 11vh; */
 }
 
 .text-wrapper2 {
@@ -96,7 +96,7 @@ font-size: 22px;
 display: inline-block;
 border-radius: 5px;
 background-color: #ffffff;
-color: black;
+color: #000000;
 padding: 5px;
 text-align: center;
 }
@@ -801,8 +801,8 @@ padding: 5px;
           
           <div id='tiktokPreview' style="display: none;" class="container2">
             <p class="text-wrapper2" style="font-family: 'tiktokfont';">
-              <span>This Is How Your Original</span>
-              <span>Subtitle Text Will Show.</span>
+              <span style="background: #ffffff; color: #000000;">This Is How Your Original</span>
+              <span style="background: #ffffff; color: #000000;">Subtitle Text Will Show.</span>
             </p>
           </div>
         </div>
@@ -1116,6 +1116,7 @@ padding: 5px;
       const previewBox = document.getElementById('preview-box');
       const previewText = document.getElementById('previewText');
       const tiktokPreview = document.getElementById('tiktokPreview');
+      const videoText = document.getElementById('videoText');
 
         // Function to hide/show specific labels and their associated input elements
         function updateResolutionSettings(resolution) {
@@ -1138,10 +1139,12 @@ padding: 5px;
                 borderRadiusLabel.style.display = 'none';
                 borderRadiusSlider.style.display = 'none';
                 previewBackground.style.display='none'
+                videoText.style.display='none'
                 tiktokPreview.style.display='flex'
                 // Set the font to "tiktokfont" by default
                 const fontSelect = document.getElementById('font_select');
                 fontSelect.value = 'tiktokfont';
+                previewBox.style.background = "url('/tiktok.png') center/cover no-repeat";
                 
 
             } else {
@@ -1154,6 +1157,8 @@ padding: 5px;
                 borderRadiusSlider.style.display = 'block';
                 previewBackground.style.display='flex'
                 tiktokPreview.style.display='none'
+                videoText.style.display='flex'
+                previewBox.style.background = "#EEEEEE";
                 }
         }
 
