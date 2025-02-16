@@ -1235,14 +1235,7 @@ padding: 5px;
         span.style.color = '#000000'; // Black font color
     });
 
-    // Function to update TikTok preview
-    function updateTikTokPreview() {
-        tiktokPreviewSpans.forEach(span => {
-            span.style.color = colorPicker1.value; // Update font color
-            span.style.backgroundColor = colorPicker2.value; // Update background color
-            span.style.fontFamily = fontSelect.value; // Update font family
-        });
-    }
+    
 
     // Add event listeners for color pickers and font select
     colorPicker1.addEventListener('input', updateTikTokPreview);
