@@ -1460,17 +1460,6 @@ class Command(BaseCommand):
         return isinstance(clip, VideoFileClip)
     
 
-    # def concatenate_clips(self, clips, target_resolution=None, target_fps=None):
-    #     for  i in range(1, len(clips)):
-    #         clips[i] = clips[i].set_start(clips[i-1].end)
-    
-    #     for clip in clips:
-    #         clip = clip.subclip(0, clip.duration)
-    #         clip.set_fps(30) 
-    
-    #     final_clip = concatenate_videoclips(clips, method="chain")
-    #     logging.info("Clip has been concatenated: ")
-    #     return final_clip
     def concatenate_clips(self, clips, target_resolution=None, target_fps=30):
         """Concatenates video clips safely, ensuring smooth transitions without glitches."""
 
@@ -1487,7 +1476,7 @@ class Command(BaseCommand):
             clips[i] = clips[i].set_start(clips[i-1].end)
 
         # Concatenate clips safely
-        final_clip = concatenate_videoclips(clips, method="chain") 
+        final_clip = concatenate_videoclips(clips, method="compose") 
 
         logging.info("Clips have been concatenated successfully.")
         return final_clip
