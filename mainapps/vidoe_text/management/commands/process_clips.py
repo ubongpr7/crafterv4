@@ -341,8 +341,9 @@ class Command(BaseCommand):
             output_video_segments, replacement_video_clips, subtitles, blank_vide_clip
         )
         logging.info("Done  replace_video_segments")
+        final_resized_clips=self.resize_clips_to_max_size(final_video_segments)
         concatenated_video = self.concatenate_clips(
-            final_video_segments,
+            final_resized_clips,
         )
         original_audio = blank_vide_clip.audio.subclip(
             0, min(concatenated_video.duration, blank_vide_clip.audio.duration)
@@ -1484,8 +1485,11 @@ class Command(BaseCommand):
     def resize_clips_to_max_size(self, clips):
         max_width = max(clip.w for clip in clips)
         max_height = max(clip.h for clip in clips)
+        if self.text_file_instance.resolution=='9:16':
+            resized_clips = [clip.resize(newsize=(720, 1280)) for clip in clips]
 
-        resized_clips = [clip.resize(newsize=(max_width, max_height)) for clip in clips]
+        else:
+            resized_clips = [clip.resize(newsize=(max_width, max_height)) for clip in clips]
 
         return resized_clips
     
