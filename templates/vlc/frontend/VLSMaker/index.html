@@ -544,7 +544,7 @@ padding: 5px;
                 <option class="text3" style="font-family:Roboto-Medium" value="Roboto-Medium">
                   Roboto Medium
                 </option>
-                <option class="text3" style="font-family:tiktokfont" value="tiktokfont">
+                <option class="text3" style="font-family:tiktokfont" value="tiktokfont" style="display: none;" >
                   Proxima Nova Semibold ( Recommended For TikTok)
                 </option>
                 <!-- <option class="text3" style="font-family:Montserrat; " value="Montserrat">Montserrat</option> -->
@@ -1224,7 +1224,7 @@ padding: 5px;
 </script>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
+ document.addEventListener('DOMContentLoaded', function () {
     const colorPicker1 = document.getElementById('colorPicker1'); // Font color picker
     const colorPicker2 = document.getElementById('colorPicker2'); // Subtitle background color picker
     const colortext1 = document.getElementById('colortext1'); // Font color text input
@@ -1234,6 +1234,8 @@ padding: 5px;
     const subtitleSpans = document.querySelectorAll('#tiktokPreview span'); // All spans inside TikTok preview
     const previewBackground = document.getElementById('previewBackground'); // Subtitle background preview
     const previewText = document.getElementById('previewText'); // Subtitle text preview
+    const fontSelect = document.getElementById('font_select'); // Font dropdown
+    const tiktokFontOption = document.querySelector('option[value="tiktokfont"]'); // TikTok font option
 
     // Default colors for TikTok/Reels (9:16)
     const tiktokDefaultFontColor = '#000000'; // Black font
@@ -1259,6 +1261,9 @@ padding: 5px;
             span.style.color = tiktokDefaultFontColor;
             span.style.backgroundColor = tiktokDefaultBgColor;
         });
+
+        // Hide the TikTok font option in the dropdown
+        tiktokFontOption.style.display = 'none';
     }
 
     // Function to set default colors for other dimensions
@@ -1277,6 +1282,12 @@ padding: 5px;
             previewBackground.style.backgroundColor = defaultBgColor;
             previewText.style.color = defaultFontColor;
         }
+
+        // Show the TikTok font option in the dropdown
+        tiktokFontOption.style.display = 'block';
+
+        // Reset the font dropdown to the default option
+        fontSelect.value = '';
     }
 
     // Handle resolution changes
