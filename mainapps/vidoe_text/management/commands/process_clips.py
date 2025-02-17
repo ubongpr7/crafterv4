@@ -1646,6 +1646,7 @@ class Command(BaseCommand):
                 """
                 Wraps text dynamically to fit within a specified maximum width and number of lines.
                 If the text exceeds the maximum width, it reduces the font size and tries again.
+                Ensures all text is included within the specified number of lines.
 
                 Args:
                     text (str): The input text to wrap.
@@ -1674,23 +1675,23 @@ class Command(BaseCommand):
                                 lines.append(" ".join(current_line))
                             current_line = [word]
 
+                            # If adding a new line exceeds max_lines, reduce font size and retry
                             if len(lines) >= max_lines:
                                 break
 
-                    if current_line and len(lines) < max_lines:
+                    # Add the last line if it exists
+                    if current_line:
                         lines.append(" ".join(current_line))
 
-                    # Check if the text fits within the max_lines
-                    if len(lines) <= max_lines:
+                    # Check if all words are included and the number of lines is within the limit
+                    if len(lines) <= max_lines and len(" ".join(lines).split()) == len(words):
                         return "\n".join(lines),font_size
 
                     # Reduce font size and try again
                     font_size -= 2  # Decrease font size by 2 (adjust as needed)
 
-                # If the font size reaches the minimum, return the text as is (even if it exceeds max_lines)
+                # If the font size reaches the minimum and the text still doesn't fit, return the best effort
                 return "\n".join(lines),font_size
-           
-            
             def split_text_two_lines(text: str) -> str:
                 if len(text) <= 30:
                     return text  # Return as a single line if ≤ 30 chars
