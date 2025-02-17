@@ -518,7 +518,7 @@ class Command(BaseCommand):
             clip.write_videofile(
                 temp_output_video.name,
                 codec="libx264",
-                preset="ultrafast",
+                # preset="ultrafast",
                 audio_codec="aac",
                 fps=30,
                 
@@ -556,7 +556,7 @@ class Command(BaseCommand):
             clip.write_videofile(
                 temp_output_video.name,
                 codec="libx264",
-                preset="ultrafast",
+                # preset="ultrafast",
                 audio_codec="aac",
                 fps=30,
                 # temp_audiofile='temp-audio.m4a', 
@@ -1845,7 +1845,7 @@ class Command(BaseCommand):
                 watermarked.write_videofile(
                     temp_output_video.name,
                     codec='libx264',
-                    preset="ultrafast",
+                    # preset="ultrafast",
                     audio_codec="aac",
                     fps=30,
                     # temp_audiofile='temp-audio.m4a', 
