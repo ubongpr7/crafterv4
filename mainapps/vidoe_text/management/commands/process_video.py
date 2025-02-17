@@ -361,24 +361,83 @@ class Command(BaseCommand):
     
 
 
-    def crop_and_setduratio_ffmpeg(self,video_path, target_duration, desired_aspect_ratio,clip_model):
+    # def crop_and_setduratio_ffmpeg(self,video_path, target_duration, desired_aspect_ratio,clip_model):
+    #     with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_output:
+    #         output_path = temp_output.name
+
+    #         ffmpeg_cmd = ["ffmpeg", "-y", "-i", video_path]
+
+    #         clip = VideoFileClip(video_path)
+    #         original_width, original_height = clip.size
+    #         original_duration = clip.duration
+
+    #         if target_duration and abs(original_duration - target_duration) > 1e-3:
+    #             if original_duration < target_duration:
+    #                 speed_factor = original_duration / target_duration
+    #             else:
+    #                 speed_factor = target_duration / original_duration
+
+    #             ffmpeg_cmd += ["-filter:v", f"setpts={1/speed_factor}*PTS"]
+
+    #         if desired_aspect_ratio:
+    #             original_aspect_ratio = original_width / original_height
+
+    #             if abs(original_aspect_ratio - desired_aspect_ratio) > 0.01:
+    #                 if original_aspect_ratio > desired_aspect_ratio:
+    #                     new_width = int(original_height * desired_aspect_ratio)
+    #                     new_height = original_height
+    #                     x_offset = (original_width - new_width) // 2
+    #                     y_offset = 0
+    #                 else:
+    #                     new_width = original_width
+    #                     new_height = int(original_width / desired_aspect_ratio)
+    #                     x_offset = 0
+    #                     y_offset = (original_height - new_height) // 2
+
+    #                 crop_filter = f"crop={new_width}:{new_height}:{x_offset}:{y_offset}"
+    #                 ffmpeg_cmd += ["-vf", crop_filter]
+
+    #         # Encoding settings
+    #         ffmpeg_cmd += [
+    #             "-c:v", "libx264", "-preset", "fast", "-crf", "23",
+    #             "-c:a", "aac", "-b:a", "128k",
+    #             output_path
+    #         ]
+
+    #         # Run FFmpeg command
+    #         subprocess.run(ffmpeg_cmd, check=True)
+    #         with open(output_path, "rb") as output_video_file:
+    #             video_content = output_video_file.read()
+    #             if clip_model.processed_video:
+    #                 clip_model.processed_video.delete(save=False)
+    #             clip_model.processed_video.save(
+    #                 f"video_{clip_model.id}_{self.generate_random_string()}_{timestamp}.mp4",
+    #                 ContentFile(video_content),
+    #             )
+    #         return True
+
+    def crop_and_setduration_ffmpeg(self, video_path, target_duration, desired_aspect_ratio, clip_model):
         with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_output:
             output_path = temp_output.name
-
-            ffmpeg_cmd = ["ffmpeg", "-y", "-i", video_path]
 
             clip = VideoFileClip(video_path)
             original_width, original_height = clip.size
             original_duration = clip.duration
 
-            if target_duration and abs(original_duration - target_duration) > 1e-3:
-                if original_duration < target_duration:
-                    speed_factor = original_duration / target_duration
-                else:
-                    speed_factor = target_duration / original_duration
+            ffmpeg_cmd = ["ffmpeg", "-y", "-i", video_path]
 
-                ffmpeg_cmd += ["-filter:v", f"setpts={1/speed_factor}*PTS"]
+            filter_complex = []
 
+            # Adjust speed if video is shorter
+            if original_duration < target_duration:
+                speed_factor = original_duration / target_duration
+                filter_complex.append(f"setpts={1/speed_factor}*PTS")
+
+            # Trim if video is longer
+            elif original_duration > target_duration:
+                filter_complex.append(f"trim=start=0:end={target_duration},setpts=PTS-STARTPTS")
+
+            # Adjust aspect ratio if needed
             if desired_aspect_ratio:
                 original_aspect_ratio = original_width / original_height
 
@@ -394,8 +453,10 @@ class Command(BaseCommand):
                         x_offset = 0
                         y_offset = (original_height - new_height) // 2
 
-                    crop_filter = f"crop={new_width}:{new_height}:{x_offset}:{y_offset}"
-                    ffmpeg_cmd += ["-vf", crop_filter]
+                    filter_complex.append(f"crop={new_width}:{new_height}:{x_offset}:{y_offset}")
+
+            if filter_complex:
+                ffmpeg_cmd += ["-vf", ",".join(filter_complex)]
 
             # Encoding settings
             ffmpeg_cmd += [
@@ -406,6 +467,7 @@ class Command(BaseCommand):
 
             # Run FFmpeg command
             subprocess.run(ffmpeg_cmd, check=True)
+
             with open(output_path, "rb") as output_video_file:
                 video_content = output_video_file.read()
                 if clip_model.processed_video:
