@@ -1617,29 +1617,69 @@ class Command(BaseCommand):
             
             font_size = int(base_font_size * scaling_factor)
 
-            def wrap_text_dynamically(text: str, max_text_width: int, font_size: int, font: str, max_lines: int = 4) -> str:
-                words = text.split()
-                lines = []
-                current_line = []
+            # def wrap_text_dynamically(text: str, max_text_width: int, font_size: int, font: str, max_lines: int = 4) -> str:
+            #     words = text.split()
+            #     lines = []
+            #     current_line = []
                 
-                for word in words:
-                    test_line = " ".join(current_line + [word])
-                    test_clip = TextClip(test_line, fontsize=font_size, font=font)
+            #     for word in words:
+            #         test_line = " ".join(current_line + [word])
+            #         test_clip = TextClip(test_line, fontsize=font_size, font=font)
                     
-                    if test_clip.w <= max_text_width:
-                        current_line.append(word)
-                    else:
-                        if current_line:
+            #         if test_clip.w <= max_text_width:
+            #             current_line.append(word)
+            #         else:
+            #             if current_line:
+            #                 lines.append(" ".join(current_line))
+            #             current_line = [word]
+                    
+            #         if len(lines) >= max_lines:
+            #             break
+
+            #     if current_line and len(lines) < max_lines:
+            #         lines.append(" ".join(current_line))
+
+            #     return "\n".join(lines)
+            def wrap_text_dynamically(text: str, max_text_width: int, initial_font_size: int, font: str, max_lines: int = 4) -> (str, int):
+                """
+                Wraps the given text into at most max_lines such that each line fits within max_text_width.
+                If the text doesn't fit, the function reduces the font size until it fits.
+                
+                Returns:
+                    A tuple (wrapped_text, final_font_size)
+                """
+                font_size = initial_font_size
+                
+                # Try reducing the font size until the wrapped text fits within max_lines.
+                while font_size >= 10:  # Set a lower limit for readability
+                    words = text.split()
+                    lines = []
+                    current_line = []
+                    
+                    for word in words:
+                        test_line = " ".join(current_line + [word])
+                        test_clip = TextClip(test_line, fontsize=font_size, font=font)
+                        if test_clip.w <= max_text_width:
+                            current_line.append(word)
+                        else:
+                            # If current_line is empty (i.e. a single word doesn't fit), force add it.
+                            if not current_line:
+                                current_line.append(word)
                             lines.append(" ".join(current_line))
-                        current_line = [word]
-                    
-                    if len(lines) >= max_lines:
-                        break
+                            current_line = [word]
+                    if current_line:
+                        lines.append(" ".join(current_line))
+                        
+                    if len(lines) <= max_lines:
+                        # Text fits within max_lines: return it
+                        return "\n".join(lines), font_size
+                    else:
+                        # Reduce font size and try again
+                        font_size -= 2
 
-                if current_line and len(lines) < max_lines:
-                    lines.append(" ".join(current_line))
+                # If we get here, text is very long; return with the smallest font size
+                return "\n".join(lines), font_size
 
-                return "\n".join(lines)
             def split_text_two_lines(text: str) -> str:
                 if len(text) <= 30:
                     return text  # Return as a single line if ≤ 30 chars
@@ -1684,7 +1724,7 @@ class Command(BaseCommand):
 
             max_line_width = max_text_width // (font_size // 2)
             
-            wrapped_text = wrap_text_dynamically(
+            wrapped_text,fontsize = wrap_text_dynamically(
                     subtitle.text, 
                     max_text_width=max_text_width, 
                     font_size=font_size, 
@@ -1692,7 +1732,7 @@ class Command(BaseCommand):
                     max_lines=3
                 )
             if self.text_file_instance.resolution=='4:5':
-                wrapped_text = wrap_text_dynamically(
+                wrapped_text,fontsize = wrap_text_dynamically(
                         subtitle.text, 
                         max_text_width=max_text_width, 
                         font_size=font_size, 
@@ -1702,7 +1742,7 @@ class Command(BaseCommand):
             
             temp_subtitle_clip = TextClip(
                 wrapped_text,
-                fontsize=font_size,
+                fontsize=fontsize,
                 font=self.text_file_instance.font
             )
             longest_line_width, text_height = temp_subtitle_clip.size
