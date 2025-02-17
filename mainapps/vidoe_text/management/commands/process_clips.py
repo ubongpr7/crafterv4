@@ -1649,7 +1649,7 @@ class Command(BaseCommand):
                 return tiktok  
             max_text_width = clip.w*0.8 
             if self.text_file_instance.resolution=='16:9':
-                max_text_width = clip.w*0.5
+                max_text_width = clip.w*0.65
             elif self.text_file_instance.resolution=='4:5':
                 max_text_width = clip.w*0.75
             elif self.text_file_instance.resolution=='1:1':
