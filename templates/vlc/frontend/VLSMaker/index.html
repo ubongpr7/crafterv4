@@ -1232,73 +1232,98 @@ padding: 5px;
     const colorBox1 = document.getElementById('color1'); // Font color box
     const colorBox2 = document.getElementById('color2'); // Subtitle background color box
     const subtitleSpans = document.querySelectorAll('#tiktokPreview span'); // All spans inside TikTok preview
+    const previewBackground = document.getElementById('previewBackground'); // Subtitle background preview
+    const previewText = document.getElementById('previewText'); // Subtitle text preview
 
-    let currentFontColor = '#000000'; // Default font color
-    let currentBgColor = '#ffffff'; // Default background color
-    let defaultFontColor = '#000000'; // Default font color for TikTok
-    let defaultBgColor = '#ffffff'; // Default background color for TikTok
+    // Default colors for TikTok/Reels (9:16)
+    const tiktokDefaultFontColor = '#000000'; // Black font
+    const tiktokDefaultBgColor = '#ffffff'; // White background
 
-    // Function to set default colors for TikTok/Reels in the color pickers and boxes
+    // Default colors for other dimensions (e.g., 1:1, 4:5, 16:9)
+    const defaultFontColor = '#ffffff'; // White font
+    const defaultBgColor = '#000000'; // Black background
+
+    // Function to set default colors for TikTok/Reels
     function setTikTokDefaultColors() {
-        // Set font color picker to black (default)
-        colorPicker1.value = defaultFontColor;
-        colortext1.value = defaultFontColor;
-        colorBox1.style.backgroundColor = defaultFontColor; // Update font color box
+        // Update color pickers and text inputs
+        colorPicker1.value = tiktokDefaultFontColor;
+        colortext1.value = tiktokDefaultFontColor;
+        colorBox1.style.backgroundColor = tiktokDefaultFontColor;
 
-        // Set subtitle background color picker to white (default)
-        colorPicker2.value = defaultBgColor;
-        colortext2.value = defaultBgColor;
-        colorBox2.style.backgroundColor = defaultBgColor; // Update background color box
+        colorPicker2.value = tiktokDefaultBgColor;
+        colortext2.value = tiktokDefaultBgColor;
+        colorBox2.style.backgroundColor = tiktokDefaultBgColor;
 
-        // Set default background color and font color for all spans inside the subtitle container
+        // Update TikTok preview spans
         subtitleSpans.forEach(span => {
-            span.style.backgroundColor = defaultBgColor; // Default background
-            span.style.color = defaultFontColor; // Default font color
+            span.style.color = tiktokDefaultFontColor;
+            span.style.backgroundColor = tiktokDefaultBgColor;
         });
     }
 
-    // Handle resolution changes (assuming the box elements exist)
+    // Function to set default colors for other dimensions
+    function setOtherDimensionDefaults() {
+        // Update color pickers and text inputs
+        colorPicker1.value = defaultFontColor;
+        colortext1.value = defaultFontColor;
+        colorBox1.style.backgroundColor = defaultFontColor;
+
+        colorPicker2.value = defaultBgColor;
+        colortext2.value = defaultBgColor;
+        colorBox2.style.backgroundColor = defaultBgColor;
+
+        // Update preview background and text
+        if (previewBackground && previewText) {
+            previewBackground.style.backgroundColor = defaultBgColor;
+            previewText.style.color = defaultFontColor;
+        }
+    }
+
+    // Handle resolution changes
     document.querySelectorAll('.box').forEach((box) => {
         box.addEventListener('click', () => {
             const resolution = box.getAttribute('data-resolution');
 
             if (resolution === '9:16') { // TikTok/Reels
-                setTikTokDefaultColors(); // Reset to default colors for TikTok
-                // Apply default font and background color
-                currentFontColor = defaultFontColor;
-                currentBgColor = defaultBgColor;
-            } else {
-                // When switching to other resolutions, apply previously selected colors
-                subtitleSpans.forEach(span => {
-                    span.style.color = currentFontColor; // Apply saved font color
-                    span.style.backgroundColor = currentBgColor; // Apply saved background color
-                });
+                setTikTokDefaultColors(); // Apply TikTok defaults
+            } else { // Other dimensions (1:1, 4:5, 16:9)
+                setOtherDimensionDefaults(); // Apply other dimension defaults
             }
         });
     });
 
     // Update color boxes when font color picker changes
     colorPicker1.addEventListener('input', function () {
-        currentFontColor = colorPicker1.value; // Store the selected font color
-        colorBox1.style.backgroundColor = currentFontColor; // Update color box
-        colortext1.value = currentFontColor; // Sync text input
+        const selectedColor = colorPicker1.value;
+        colortext1.value = selectedColor;
+        colorBox1.style.backgroundColor = selectedColor;
 
-        // Update font color for each span inside tiktokPreview
+        // Update font color for TikTok preview spans
         subtitleSpans.forEach(span => {
-            span.style.color = currentFontColor; // Change font color of each span
+            span.style.color = selectedColor;
         });
+
+        // Update font color for other dimensions
+        if (previewText) {
+            previewText.style.color = selectedColor;
+        }
     });
 
     // Update color boxes when subtitle background color picker changes
     colorPicker2.addEventListener('input', function () {
-        currentBgColor = colorPicker2.value; // Store the selected background color
-        colorBox2.style.backgroundColor = currentBgColor; // Update color box
-        colortext2.value = currentBgColor; // Sync text input
+        const selectedColor = colorPicker2.value;
+        colortext2.value = selectedColor;
+        colorBox2.style.backgroundColor = selectedColor;
 
-        // Update background color for each span inside tiktokPreview
+        // Update background color for TikTok preview spans
         subtitleSpans.forEach(span => {
-            span.style.backgroundColor = currentBgColor; // Change background color of each span
+            span.style.backgroundColor = selectedColor;
         });
+
+        // Update background color for other dimensions
+        if (previewBackground) {
+            previewBackground.style.backgroundColor = selectedColor;
+        }
     });
 });
 </script>
