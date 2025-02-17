@@ -544,7 +544,7 @@ padding: 5px;
                 <option class="text3" style="font-family:Roboto-Medium" value="Roboto-Medium">
                   Roboto Medium
                 </option>
-                <option class="text3" style="font-family:tiktokfont; display: none;" value="tiktokfont" >
+                <option class="text3" style="font-family:tiktokfont; display: none;" value="tiktokfont" disabled>
                   Proxima Nova Semibold ( Recommended For TikTok)
                 </option>
                 <!-- <option class="text3" style="font-family:Montserrat; " value="Montserrat">Montserrat</option> -->
@@ -1225,25 +1225,25 @@ padding: 5px;
 
 <script>
  document.addEventListener('DOMContentLoaded', function () {
-    const colorPicker1 = document.getElementById('colorPicker1'); // Font color picker
-    const colorPicker2 = document.getElementById('colorPicker2'); // Subtitle background color picker
-    const colortext1 = document.getElementById('colortext1'); // Font color text input
-    const colortext2 = document.getElementById('colortext2'); // Subtitle background color text input
-    const colorBox1 = document.getElementById('color1'); // Font color box
-    const colorBox2 = document.getElementById('color2'); // Subtitle background color box
-    const subtitleSpans = document.querySelectorAll('#tiktokPreview span'); // All spans inside TikTok preview
-    const previewBackground = document.getElementById('previewBackground'); // Subtitle background preview
-    const previewText = document.getElementById('previewText'); // Subtitle text preview
-    const fontSelect = document.getElementById('font_select'); // Font dropdown
+    const colorPicker1 = document.getElementById('colorPicker1'); 
+    const colorPicker2 = document.getElementById('colorPicker2');
+    const colortext1 = document.getElementById('colortext1');
+    const colortext2 = document.getElementById('colortext2'); 
+    const colorBox1 = document.getElementById('color1'); 
+    const colorBox2 = document.getElementById('color2'); 
+    const subtitleSpans = document.querySelectorAll('#tiktokPreview span'); 
+    const previewBackground = document.getElementById('previewBackground'); 
+    const previewText = document.getElementById('previewText'); 
+    const fontSelect = document.getElementById('font_select'); 
     const tiktokFontOption = document.querySelector('option[value="tiktokfont"]'); // TikTok font option
 
     // Default colors for TikTok/Reels (9:16)
-    const tiktokDefaultFontColor = '#000000'; // Black font
-    const tiktokDefaultBgColor = '#ffffff'; // White background
+    const tiktokDefaultFontColor = '#000000'; 
+    const tiktokDefaultBgColor = '#ffffff'; 
 
     // Default colors for other dimensions (e.g., 1:1, 4:5, 16:9)
-    const defaultFontColor = '#ffffff'; // White font
-    const defaultBgColor = '#000000'; // Black background
+    const defaultFontColor = '#ffffff'; 
+    const defaultBgColor = '#000000'; 
 
     // Function to set default colors for TikTok/Reels
     function setTikTokDefaultColors() {
