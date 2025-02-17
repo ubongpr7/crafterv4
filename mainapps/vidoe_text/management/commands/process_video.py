@@ -507,7 +507,7 @@ class Command(BaseCommand):
                 logging.debug(f"Processing subclip with ID: {subclip.id}")
                 file_ = self.load_video_file_from_file_field(subclip.to_dict().get('video_path'))
                 logging.debug(f"Loaded video clip from path: {subclip.to_dict().get('video_path')}")
-                cropped_file = self.crop_and_setduratio_ffmpeg(
+                cropped_file = self.crop_and_setduration_ffmpeg(
                     file_,
                     float(subclip.end - subclip.start), 
                     MAINRESOLUTIONS[self.text_file_instance.resolution],
