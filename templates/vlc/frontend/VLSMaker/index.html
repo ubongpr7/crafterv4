@@ -778,7 +778,7 @@ padding: 5px;
       </div>
       <br>
       <br>
-      <div class="Preview" style="width: 100%; margin-bottom: 28px;">
+      <div class="Preview" style="width: 100%; margin-bottom: 28px;" id="Preview">
         <div class="Preview-text"
           style="display: flex; align-items: center; margin-bottom: 24px; justify-content: space-between;">
           <div
@@ -1112,7 +1112,7 @@ padding: 5px;
 
     document.addEventListener('DOMContentLoaded', function () {
       const previewBackground= document.getElementById('previewBackground')
-      
+      const Preview = document.getElementById('Preview');
       const previewBox = document.getElementById('preview-box');
       const previewText = document.getElementById('previewText');
       const tiktokPreview = document.getElementById('tiktokPreview');
@@ -1141,7 +1141,7 @@ padding: 5px;
                 previewBackground.style.display='none'
                 videoText.style.display='none'
                 tiktokPreview.style.display='flex'
-                // Set the font to "tiktokfont" by default
+                Preview.style.marginTop = '-2rem';
                 const fontSelect = document.getElementById('font_select');
                 fontSelect.value = 'tiktokfont';
                 previewBox.style.background = `url("{% static 'assets/background/tiktok.png' %}") center/cover no-repeat`;
@@ -1149,6 +1149,7 @@ padding: 5px;
 
             } else {
                 // Show the labels and their associated input elements
+                Preview.style.marginTop = '0';
                 fontSelectLabel.style.display = 'flex'; 
                 fontSelectDropdown.style.display = 'flex'; 
                 fontSizeLabel.style.display = 'flex'; 
