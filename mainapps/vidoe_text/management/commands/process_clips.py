@@ -1682,7 +1682,7 @@ class Command(BaseCommand):
 
                     # Check if the text fits within the max_lines
                     if len(lines) <= max_lines:
-                        return "\n".join(lines)
+                        return "\n".join(lines),font_size
 
                     # Reduce font size and try again
                     font_size -= 2  # Decrease font size by 2 (adjust as needed)
