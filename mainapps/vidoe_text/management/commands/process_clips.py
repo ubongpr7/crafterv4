@@ -405,13 +405,13 @@ class Command(BaseCommand):
                     cropped_clip = self.crop_to_aspect_ratio_(clip_with_duration, MAINRESOLUTIONS[self.text_file_instance.resolution])
                     logging.debug(f"Cropped clip to resolution: {MAINRESOLUTIONS[self.text_file_instance.resolution]}")
                     clip_subclips.append(cropped_clip)
-            # if len(clip_subclips) == 1:
-                # self.write_clip_file(clip_subclips[0], clip.video_file,clip)
-            # else:
+            if len(clip_subclips) == 1:
+                self.write_clip_file(clip_subclips[0], clip.video_file,clip)
+            else:
 
-            resized_subclips = self.resize_clips_to_max_size(clip_subclips)
-            concatenated_clip = self.concatenate_clips(resized_subclips)
-            self.write_clip_file(concatenated_clip, clip.video_file,clip)
+                resized_subclips = self.resize_clips_to_max_size(clip_subclips)
+                concatenated_clip = self.concatenate_clips(resized_subclips)
+                self.write_clip_file(concatenated_clip, clip.video_file,clip)
         return True 
 
     # def crop_video_ffmpeg(self,video_url):
@@ -1466,12 +1466,40 @@ class Command(BaseCommand):
         return isinstance(clip, VideoFileClip)
     
 
+    # def concatenate_clips(self, clips, target_resolution=None, target_fps=30):
+    #     """Concatenates video clips safely, ensuring smooth transitions without glitches."""
+
+    #     for i,clip in enumerate(clips):
+    #         clips[i]=clip.subclip(0,clip.duration).set_fps(30)
+    #     final_clip = concatenate_videoclips(clips,transition=None, method="compose",bg_color=None, padding=0) 
+
+    #     logging.info("Clips have been concatenated successfully.")
+    #     return final_clip
+
     def concatenate_clips(self, clips, target_resolution=None, target_fps=30):
         """Concatenates video clips safely, ensuring smooth transitions without glitches."""
+        
+        processed_clips = []
+        
+        for i, clip in enumerate(clips):
+            if clip.duration < 0.1:  # Avoid very short clips causing glitches
+                logging.warning(f"Clip {i} is too short ({clip.duration}s), skipping.")
+                continue
 
-        for i,clip in enumerate(clips):
-            clips[i]=clip.subclip(0,clip.duration).set_fps(30)
-        final_clip = concatenate_videoclips(clips,transition=None, method="compose",bg_color=None, padding=0) 
+            clip = clip.set_fps(target_fps)  # Ensure FPS consistency
+            clip = clip.subclip(0, clip.duration)  # Ensures the clip is well-defined
+
+            if clip.audio is None:  
+                clip = clip.set_audio(None)  # Ensure consistency in audio settings
+
+            processed_clips.append(clip)
+
+        if not processed_clips:
+            logging.error("No valid clips to concatenate.")
+            return None
+
+        # Use "compose" method to handle different resolutions, padding ensures no glitches
+        final_clip = concatenate_videoclips(processed_clips, method="compose", padding=-1)
 
         logging.info("Clips have been concatenated successfully.")
         return final_clip
