@@ -1323,7 +1323,34 @@ class Command(BaseCommand):
             video_segments.append(video_segment)
 
         return video_segments, subtitle_segments
+    
+    def get_segments_using_ffmpeg(self,subtitles) -> List[str]:
+        segment_paths = []
+        
+        for idx, subtitle in enumerate(subtitles):
+            start = self.subriptime_to_seconds(subtitle.start)
+            end = self.subriptime_to_seconds(subtitle.end)
 
+            with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_output:
+                output_path = temp_output.name
+
+            ffmpeg_cmd = [
+                "ffmpeg", "-y", 
+                "-i", self.text_file_instance.generated_blank_video.url, 
+                "-ss", str(start), 
+                "-to", str(end), 
+                "-c", "copy", 
+                output_path
+            ]
+
+            try:
+                subprocess.run(ffmpeg_cmd, check=True)
+                segment_paths.append(output_path)
+            except subprocess.CalledProcessError as e:
+                logging.error(f"FFmpeg failed for subtitle {idx}: {e}")
+                continue
+        
+        return segment_paths
 
     def adjust_segment_duration(self, segment: VideoFileClip, duration: float) -> VideoFileClip:
         current_duration = segment.duration

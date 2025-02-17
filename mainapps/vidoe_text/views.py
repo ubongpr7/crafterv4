@@ -798,7 +798,7 @@ def process_textfile(request, textfile_id):
 
     def run_process_command(textfile_id):
         try:
-            call_command("process_video", textfile_id)
+            call_command("process_clips", textfile_id)
         except Exception as e:
             # Handle the exception as needed (e.g., log it)
             print(f"Error processing video: {e}")

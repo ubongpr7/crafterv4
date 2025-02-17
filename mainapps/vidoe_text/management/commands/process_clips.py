@@ -1472,11 +1472,6 @@ class Command(BaseCommand):
 
         clips = [prepare_clip(clip, target_fps) for clip in clips]
 
-        # Set start times explicitly (redundant if using 'chain' method)
-        for i in range(1, len(clips)):
-            clips[i] = clips[i].set_start(clips[i-1].end)
-
-        # Concatenate clips safely
         final_clip = concatenate_videoclips(clips, method="compose") 
 
         logging.info("Clips have been concatenated successfully.")
