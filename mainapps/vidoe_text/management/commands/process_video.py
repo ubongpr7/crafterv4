@@ -1328,7 +1328,7 @@ class Command(BaseCommand):
                 elif file_extension in IMAGE_EXTENSIONS:
                     clip = ImageClip(os.path.normpath(temp_file.name))
 
-                return clip,
+                return clip
 
         except Exception as e:
             logging.error(f"Error loading video from file field: {e}")
