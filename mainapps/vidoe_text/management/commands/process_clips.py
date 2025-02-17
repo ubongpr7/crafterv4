@@ -1637,7 +1637,7 @@ class Command(BaseCommand):
 
                 return " ".join(first_line) + ("\n" + " ".join(second_line) if second_line else "")
 
-            max_text_width = int(clip.w * 0.9) 
+            max_text_width = 35 
 
             max_line_width = max_text_width // (font_size // 2)  
             wrapped_text = wrap_text_dynamically(
@@ -1649,7 +1649,6 @@ class Command(BaseCommand):
                 )
             
             if self.text_file_instance.resolution=='9:16':
-                max_text_width = int(clip.w * 0.8) 
 
                 wrapped_text = split_text_two_lines(
                     subtitle.text 
