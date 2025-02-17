@@ -23,7 +23,7 @@ from moviepy.editor import (
     TextClip,
     VideoFileClip,
 )
-import moviepy 
+import moviepy
 
 from moviepy.video.fx.all import crop as fix_all_crop
 import moviepy.video.fx.resize as rz
@@ -1471,7 +1471,7 @@ class Command(BaseCommand):
 
         for i,clip in enumerate(clips):
             clips[i]=clip.subclip(0,clip.duration).set_fps(30)
-        final_clip = moviepy.video.compositing.CompositeVideoClip.concatenate_videoclips(clips,transition=None, method="compose",bg_color=None, padding=0) 
+        final_clip = concatenate_videoclips(clips,transition=None, method="compose",bg_color=None, padding=0) 
 
         logging.info("Clips have been concatenated successfully.")
         return final_clip
