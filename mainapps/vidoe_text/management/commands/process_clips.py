@@ -1727,7 +1727,7 @@ class Command(BaseCommand):
 
             max_line_width = max_text_width // (font_size // 2)
             
-            wrapped_text,fontsize = wrap_text_dynamically(
+            wrapped_text = wrap_text_dynamically(
                     subtitle.text, 
                     max_text_width=max_text_width, 
                     font_size=font_size, 
