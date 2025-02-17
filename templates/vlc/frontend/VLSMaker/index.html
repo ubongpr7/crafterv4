@@ -1241,24 +1241,20 @@ padding: 5px;
     // Function to set default colors for TikTok/Reels in the color pickers and boxes
     function setTikTokDefaultColors() {
         // Set font color picker to black (default)
-        colorPicker1.value = '#000000';
-        colortext1.value = '#000000';
-        colorBox1.style.backgroundColor = '#000000'; // Update font color box
+        colorPicker1.value = defaultFontColor;
+        colortext1.value = defaultFontColor;
+        colorBox1.style.backgroundColor = defaultFontColor; // Update font color box
 
         // Set subtitle background color picker to white (default)
-        colorPicker2.value = '#ffffff';
-        colortext2.value = '#ffffff';
-        colorBox2.style.backgroundColor = '#ffffff'; // Update background color box
+        colorPicker2.value = defaultBgColor;
+        colortext2.value = defaultBgColor;
+        colorBox2.style.backgroundColor = defaultBgColor; // Update background color box
 
         // Set default background color and font color for all spans inside the subtitle container
         subtitleSpans.forEach(span => {
-            span.style.backgroundColor = '#ffffff'; // Default background
-            span.style.color = '#000000'; // Default font color
+            span.style.backgroundColor = defaultBgColor; // Default background
+            span.style.color = defaultFontColor; // Default font color
         });
-
-        // Store default colors in variables
-        defaultFontColor = '#000000';
-        defaultBgColor = '#ffffff';
     }
 
     // Handle resolution changes (assuming the box elements exist)
@@ -1305,7 +1301,6 @@ padding: 5px;
         });
     });
 });
-
 </script>
   </body>
 
