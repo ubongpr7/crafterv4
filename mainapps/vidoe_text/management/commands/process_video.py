@@ -453,7 +453,7 @@ class Command(BaseCommand):
                 )
                 logging.debug(f"Cropped clip to resolution: {MAINRESOLUTIONS[self.text_file_instance.resolution]}")
                 clip_subclips.append(cropped_file)
-            subclip_urls=[subclip.processed_video.url for subclip in clip.ssubclips if subclip.processed_video ]
+            subclip_urls=[subclip.processed_video.url for subclip in clip.subclips.all() if subclip.processed_video ]
             cropped_video=self.concatenate_clips_ffmpeg(
                 subclip_urls,
                 clip,
