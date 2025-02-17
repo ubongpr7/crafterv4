@@ -1637,16 +1637,6 @@ class Command(BaseCommand):
 
                 return " ".join(first_line) + ("\n" + " ".join(second_line) if second_line else "")
 
-            max_text_width = 35 
-
-            max_line_width = max_text_width // (font_size // 2)  
-            wrapped_text = wrap_text_dynamically(
-                    subtitle.text, 
-                    max_text_width=max_text_width, 
-                    font_size=font_size, 
-                    font=self.text_file_instance.font,
-                    max_lines=3
-                )
             
             if self.text_file_instance.resolution=='9:16':
 
@@ -1656,7 +1646,28 @@ class Command(BaseCommand):
                 print('wrapped_text, ',wrapped_text)
                 tiktok= self.create_text_clips_for_tiktok(wrapped_text,color,clip)
                 logging.info(f'Done with tiktok')
-                return tiktok
+                return tiktok  
+            max_text_width = clip.w*0.8 
+            if self.text_file_instance.resolution=='16:9':
+                max_text_width = clip.w*0.5
+            elif self.text_file_instance.resolution=='4:5':
+                max_text_width = clip.w*0.75
+            elif self.text_file_instance.resolution=='1:1':
+                max_text_width = clip.w*0.75
+            elif self.text_file_instance.resolution=='1:1':
+                max_text_width = clip.w*0.75
+            
+
+            max_line_width = max_text_width // (font_size // 2)
+            
+            wrapped_text = wrap_text_dynamically(
+                    subtitle.text, 
+                    max_text_width=max_text_width, 
+                    font_size=font_size, 
+                    font=self.text_file_instance.font,
+                    max_lines=3
+                )
+            
             temp_subtitle_clip = TextClip(
                 wrapped_text,
                 fontsize=font_size,
