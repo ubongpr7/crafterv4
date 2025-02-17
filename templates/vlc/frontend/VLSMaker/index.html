@@ -544,8 +544,8 @@ padding: 5px;
                 <option class="text3" style="font-family:Roboto-Medium" value="Roboto-Medium">
                   Roboto Medium
                 </option>
-                <option class="text3" style="font-family:tiktokfont" value="tiktokfont">
-                  Proxima Nova Semibold ( Recommended For TikTok)
+                <option class="text3" style="font-family:tiktokfont; display: none;" value="tiktokfont" disabled>
+                  Proxima Nova Semibold ( Only For TikTok)
                 </option>
                 <!-- <option class="text3" style="font-family:Montserrat; " value="Montserrat">Montserrat</option> -->
                 <option class="text3" style="font-family:Montserrat;"
@@ -1224,48 +1224,119 @@ padding: 5px;
 </script>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const colorPicker1 = document.getElementById('colorPicker1');
+ document.addEventListener('DOMContentLoaded', function () {
+    const colorPicker1 = document.getElementById('colorPicker1'); 
     const colorPicker2 = document.getElementById('colorPicker2');
-    const fontSelect = document.getElementById('font_select');
-    const tiktokPreviewSpans = document.querySelectorAll('#tiktokPreview .text-wrapper2 span');
+    const colortext1 = document.getElementById('colortext1');
+    const colortext2 = document.getElementById('colortext2'); 
+    const colorBox1 = document.getElementById('color1'); 
+    const colorBox2 = document.getElementById('color2'); 
+    const subtitleSpans = document.querySelectorAll('#tiktokPreview span'); 
+    const previewBackground = document.getElementById('previewBackground'); 
+    const previewText = document.getElementById('previewText'); 
+    const fontSelect = document.getElementById('font_select'); 
+    const tiktokFontOption = document.querySelector('option[value="tiktokfont"]'); // TikTok font option
 
-    // Set default colors for TikTok preview (Without calling updateTikTokPreview initially)
-    tiktokPreviewSpans.forEach(span => {
-        span.style.backgroundColor = '#ffffff'; // Default white background
-        span.style.color = '#000000'; // Default black text color
-    });
+    // Default colors for TikTok/Reels (9:16)
+    const tiktokDefaultFontColor = '#000000'; 
+    const tiktokDefaultBgColor = '#ffffff'; 
 
-    // Function to update TikTok preview (only when user interacts)
-    function updateTikTokPreview() {
-        tiktokPreviewSpans.forEach(span => {
-            span.style.color = colorPicker1.value; // Update font color
-            span.style.backgroundColor = colorPicker2.value; // Update background color
-            span.style.fontFamily = fontSelect.value; // Update font family
+    // Default colors for other dimensions (e.g., 1:1, 4:5, 16:9)
+    const defaultFontColor = '#ffffff'; 
+    const defaultBgColor = '#000000'; 
+
+    // Function to set default colors for TikTok/Reels
+    function setTikTokDefaultColors() {
+        // Update color pickers and text inputs
+        colorPicker1.value = tiktokDefaultFontColor;
+        colortext1.value = tiktokDefaultFontColor;
+        colorBox1.style.backgroundColor = tiktokDefaultFontColor;
+
+        colorPicker2.value = tiktokDefaultBgColor;
+        colortext2.value = tiktokDefaultBgColor;
+        colorBox2.style.backgroundColor = tiktokDefaultBgColor;
+
+        // Update TikTok preview spans
+        subtitleSpans.forEach(span => {
+            span.style.color = tiktokDefaultFontColor;
+            span.style.backgroundColor = tiktokDefaultBgColor;
         });
+
+        // Hide the TikTok font option in the dropdown
+        tiktokFontOption.style.display = 'none';
     }
 
-    // Add event listeners for color pickers and font select
-    colorPicker1.addEventListener('input', updateTikTokPreview);
-    colorPicker2.addEventListener('input', updateTikTokPreview);
-    fontSelect.addEventListener('change', updateTikTokPreview);
+    // Function to set default colors for other dimensions
+    function setOtherDimensionDefaults() {
+        // Update color pickers and text inputs
+        colorPicker1.value = defaultFontColor;
+        colortext1.value = defaultFontColor;
+        colorBox1.style.backgroundColor = defaultFontColor;
+
+        colorPicker2.value = defaultBgColor;
+        colortext2.value = defaultBgColor;
+        colorBox2.style.backgroundColor = defaultBgColor;
+
+        // Update preview background and text
+        if (previewBackground && previewText) {
+            previewBackground.style.backgroundColor = defaultBgColor;
+            previewText.style.color = defaultFontColor;
+        }
+
+        // Show the TikTok font option in the dropdown
+        tiktokFontOption.style.display = 'block';
+
+        // Reset the font dropdown to the default option
+        fontSelect.value = '';
+    }
 
     // Handle resolution changes
     document.querySelectorAll('.box').forEach((box) => {
         box.addEventListener('click', () => {
             const resolution = box.getAttribute('data-resolution');
-            const tiktokPreview = document.getElementById('tiktokPreview');
 
-            if (resolution === '9:16') {
-                tiktokPreview.style.display = 'flex';
-                // updateTikTokPreview() is now only triggered when user selects a color or font
-            } else {
-                tiktokPreview.style.display = 'none';
+            if (resolution === '9:16') { // TikTok/Reels
+                setTikTokDefaultColors(); // Apply TikTok defaults
+            } else { // Other dimensions (1:1, 4:5, 16:9)
+                setOtherDimensionDefaults(); // Apply other dimension defaults
             }
         });
     });
-});
 
+    // Update color boxes when font color picker changes
+    colorPicker1.addEventListener('input', function () {
+        const selectedColor = colorPicker1.value;
+        colortext1.value = selectedColor;
+        colorBox1.style.backgroundColor = selectedColor;
+
+        // Update font color for TikTok preview spans
+        subtitleSpans.forEach(span => {
+            span.style.color = selectedColor;
+        });
+
+        // Update font color for other dimensions
+        if (previewText) {
+            previewText.style.color = selectedColor;
+        }
+    });
+
+    // Update color boxes when subtitle background color picker changes
+    colorPicker2.addEventListener('input', function () {
+        const selectedColor = colorPicker2.value;
+        colortext2.value = selectedColor;
+        colorBox2.style.backgroundColor = selectedColor;
+
+        // Update background color for TikTok preview spans
+        subtitleSpans.forEach(span => {
+            span.style.backgroundColor = selectedColor;
+        });
+
+        // Update background color for other dimensions
+        if (previewBackground) {
+            previewBackground.style.backgroundColor = selectedColor;
+        }
+    });
+});
 </script>
   </body>
 
