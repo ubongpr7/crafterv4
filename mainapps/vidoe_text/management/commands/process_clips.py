@@ -514,15 +514,25 @@ class Command(BaseCommand):
         with tempfile.NamedTemporaryFile(
             suffix=".mp4", delete=False
         ) as temp_output_video:
+            if self.text_file_instance.resolution=='9:16':
 
-            clip.write_videofile(
-                temp_output_video.name,
-                codec="libx264",
-                # preset="ultrafast",
-                audio_codec="aac",
-                fps=30,
-                
-            )
+                clip.write_videofile(
+                    temp_output_video.name,
+                    codec="libx264",
+                    # preset="ultrafast",
+                    audio_codec="aac",
+                    fps=30,
+                    
+                )
+            else:
+                clip.write_videofile(
+                    temp_output_video.name,
+                    codec="libx264",
+                    preset="ultrafast",
+                    audio_codec="aac",
+                    fps=30,
+                    
+                )
 
             if file_to_write:
                 file_to_write.delete(save=False)
@@ -552,17 +562,29 @@ class Command(BaseCommand):
             suffix=".mp4", delete=False
         ) as temp_output_video:
             self.text_file_instance.track_progress(60)
+            if self.text_file_instance.resolution=='9:16':
 
-            clip.write_videofile(
-                temp_output_video.name,
-                codec="libx264",
-                # preset="ultrafast",
-                audio_codec="aac",
-                fps=30,
-                # temp_audiofile='temp-audio.m4a', 
-                # remove_temp=True
-                # ffmpeg_params=["-movflags", "+faststart"],
-            )
+                clip.write_videofile(
+                    temp_output_video.name,
+                    codec="libx264",
+                    # preset="ultrafast",
+                    audio_codec="aac",
+                    fps=30,
+                    # temp_audiofile='temp-audio.m4a', 
+                    # remove_temp=True
+                    # ffmpeg_params=["-movflags", "+faststart"],
+                )
+            else:
+                clip.write_videofile(
+                    temp_output_video.name,
+                    codec="libx264",
+                    preset="ultrafast",
+                    audio_codec="aac",
+                    fps=30,
+                    # temp_audiofile='temp-audio.m4a', 
+                    # remove_temp=True
+                    # ffmpeg_params=["-movflags", "+faststart"],
+                )
             self.text_file_instance.track_progress(70)
 
             # Save the watermarked video to the generated_watermarked_video field
@@ -1852,15 +1874,27 @@ class Command(BaseCommand):
             with tempfile.NamedTemporaryFile(
                 suffix=".mp4", delete=False
             ) as temp_output_video:
-                watermarked.write_videofile(
-                    temp_output_video.name,
-                    codec='libx264',
-                    # preset="ultrafast",
-                    audio_codec="aac",
-                    fps=30,
-                    # temp_audiofile='temp-audio.m4a', 
-                    # remove_temp=True
-                )
+                if self.text_file_instance.resolution=='9:16':
+                
+                    watermarked.write_videofile(
+                        temp_output_video.name,
+                        codec='libx264',
+                        # preset="ultrafast",
+                        audio_codec="aac",
+                        fps=30,
+                        # temp_audiofile='temp-audio.m4a', 
+                        # remove_temp=True
+                    )
+                else:
+                    watermarked.write_videofile(
+                        temp_output_video.name,
+                        codec='libx264',
+                        preset="ultrafast",
+                        audio_codec="aac",
+                        fps=30,
+                        # temp_audiofile='temp-audio.m4a', 
+                        # remove_temp=True
+                    )
                 self.text_file_instance.track_progress(95)
 
                 # Save the watermarked video to the model field
