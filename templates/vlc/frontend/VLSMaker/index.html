@@ -1232,8 +1232,11 @@ padding: 5px;
     const colorBox1 = document.getElementById('color1'); // Font color box
     const colorBox2 = document.getElementById('color2'); // Subtitle background color box
     const subtitleSpans = document.querySelectorAll('#tiktokPreview span'); // All spans inside TikTok preview
+
     let currentFontColor = '#000000'; // Default font color
     let currentBgColor = '#ffffff'; // Default background color
+    let defaultFontColor = '#000000'; // Default font color for TikTok
+    let defaultBgColor = '#ffffff'; // Default background color for TikTok
 
     // Function to set default colors for TikTok/Reels in the color pickers and boxes
     function setTikTokDefaultColors() {
@@ -1254,8 +1257,8 @@ padding: 5px;
         });
 
         // Store default colors in variables
-        currentFontColor = '#000000';
-        currentBgColor = '#ffffff';
+        defaultFontColor = '#000000';
+        defaultBgColor = '#ffffff';
     }
 
     // Handle resolution changes (assuming the box elements exist)
@@ -1265,6 +1268,9 @@ padding: 5px;
 
             if (resolution === '9:16') { // TikTok/Reels
                 setTikTokDefaultColors(); // Reset to default colors for TikTok
+                // Apply default font and background color
+                currentFontColor = defaultFontColor;
+                currentBgColor = defaultBgColor;
             } else {
                 // When switching to other resolutions, apply previously selected colors
                 subtitleSpans.forEach(span => {
