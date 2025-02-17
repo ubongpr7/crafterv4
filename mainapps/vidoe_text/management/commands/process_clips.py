@@ -1672,12 +1672,12 @@ class Command(BaseCommand):
             max_text_width = clip.w*0.8 
             if self.text_file_instance.resolution=='16:9':
                 max_text_width = clip.w*0.65
+            elif self.text_file_instance.resolution=='1:1':
+                max_text_width = clip.w*0.75
+            elif self.text_file_instance.resolution=='1:1':
+                max_text_width = clip.w*0.75
             elif self.text_file_instance.resolution=='4:5':
-                max_text_width = clip.w*0.75
-            elif self.text_file_instance.resolution=='1:1':
-                max_text_width = clip.w*0.75
-            elif self.text_file_instance.resolution=='1:1':
-                max_text_width = clip.w*0.75
+                max_text_width = clip.w*0.70
             
 
             max_line_width = max_text_width // (font_size // 2)
@@ -1689,6 +1689,14 @@ class Command(BaseCommand):
                     font=self.text_file_instance.font,
                     max_lines=3
                 )
+            if self.text_file_instance.resolution=='4:5':
+                wrapped_text = wrap_text_dynamically(
+                        subtitle.text, 
+                        max_text_width=max_text_width, 
+                        font_size=font_size, 
+                        font=self.text_file_instance.font,
+                        max_lines=2
+                    )
             
             temp_subtitle_clip = TextClip(
                 wrapped_text,
