@@ -249,7 +249,8 @@ class SubClip(models.Model):
     )
     created_at = models.DateTimeField(default=timezone.now)
     position_in_slide = models.IntegerField(null=True, blank=True)
-    video_file = models.FileField(upload_to=text_clip_upload_path)
+    video_file = models.FileField(upload_to=text_clip_upload_path,null=True,blank=True)
+    processed_video = models.FileField(upload_to='subclips/processed_videos',null=True,blank=True)
     main_line=models.ForeignKey(TextLineVideoClip,on_delete=models.CASCADE,related_name='subclips')
     def get_file_status(self):
         if self.video_file:

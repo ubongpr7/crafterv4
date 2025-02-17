@@ -515,12 +515,12 @@ class Command(BaseCommand):
             clip.write_videofile(
                 temp_output_video.name,
                 codec="libx264",
+                preset="ultrafast",
                 audio_codec="aac",
                 fps=30,
-                temp_audiofile="temp-audio.m4a", 
-                remove_temp=True,  
-                ffmpeg_params=["-crf", "18", "-preset", "slow", "-strict", "experimental"]
+                
             )
+
             if file_to_write:
                 file_to_write.delete(save=False)
 
@@ -550,15 +550,15 @@ class Command(BaseCommand):
         ) as temp_output_video:
             self.text_file_instance.track_progress(60)
 
-            
             clip.write_videofile(
                 temp_output_video.name,
                 codec="libx264",
+                preset="ultrafast",
                 audio_codec="aac",
                 fps=30,
-                temp_audiofile="temp-audio.m4a", 
-                remove_temp=True,  
-                ffmpeg_params=["-crf", "18", "-preset", "slow", "-strict", "experimental"]
+                # temp_audiofile='temp-audio.m4a', 
+                # remove_temp=True
+                # ffmpeg_params=["-movflags", "+faststart"],
             )
             self.text_file_instance.track_progress(70)
 
@@ -1477,7 +1477,7 @@ class Command(BaseCommand):
             clips[i] = clips[i].set_start(clips[i-1].end)
 
         # Concatenate clips safely
-        final_clip = concatenate_videoclips(clips, method="chain") 
+        final_clip = concatenate_videoclips(clips, method="compose") 
 
         logging.info("Clips have been concatenated successfully.")
         return final_clip
@@ -1828,27 +1828,14 @@ class Command(BaseCommand):
             with tempfile.NamedTemporaryFile(
                 suffix=".mp4", delete=False
             ) as temp_output_video:
-                # watermarked.write_videofile(
-                #     temp_output_video.name,
-                #     codec='libx264',
-                #     # preset="ultrafast",
-                #     audio_codec="aac",
-                #     fps=30,
-                #     temp_audiofile="temp-audio.m4a", 
-                #     temp_videofile="temp-video.mp4",
-                #     remove_temp=True,
-                #     ffmpeg_params=["-crf", "18", "-preset","slow"]
-
-                # )
-                
                 watermarked.write_videofile(
                     temp_output_video.name,
-                    codec="libx264",
+                    codec='libx264',
+                    preset="ultrafast",
                     audio_codec="aac",
                     fps=30,
-                    temp_audiofile="temp-audio.m4a", 
-                    remove_temp=True,  
-                    ffmpeg_params=["-crf", "18", "-preset", "slow", "-strict", "experimental"]
+                    # temp_audiofile='temp-audio.m4a', 
+                    # remove_temp=True
                 )
                 self.text_file_instance.track_progress(95)
 

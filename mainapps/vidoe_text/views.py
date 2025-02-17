@@ -198,44 +198,6 @@ def add_subclip(request, id):
 
     return JsonResponse({"success": False, "error": "Invalid request method."}, status=400)
 
-def repair_video_with_untrunc(reference_file, corrupted_file):
-    """
-    Repair a corrupted video using untrunc and return the path to the repaired file.
-    """
-    repaired_file = corrupted_file.replace(".mov", "_fixed.mov")  # Save repaired videos in /media/repaired
-    repaired_dir = os.path.dirname(repaired_file)
-    os.makedirs(repaired_dir, exist_ok=True)
-
-    # Run untrunc command
-    try:
-        subprocess.run(
-            ["untrunc", reference_file, corrupted_file],
-            check=True
-        )
-    except subprocess.CalledProcessError as e:
-        raise Exception(f"Failed to repair the video: {e}")
-
-    # Check if the repaired file exists
-    if not os.path.exists(repaired_file):
-        raise FileNotFoundError(f"Repaired video file not created: {repaired_file}")
-
-    return repaired_file
-
-
-def save_file_locally(file, subfolder="bad"):
-    """
-    Save the uploaded file to a local folder under the media directory.
-    """
-    media_root = settings.MEDIA_ROOT  # /media directory
-    local_dir = os.path.join(media_root, subfolder)
-    os.makedirs(local_dir, exist_ok=True)
-
-    file_path = os.path.join(local_dir, file.name)
-    with open(file_path, "wb+") as destination:
-        for chunk in file.chunks():
-            destination.write(chunk)
-
-    return file_path
 
 
 def add_subcliphtmx(request, id):
@@ -836,7 +798,7 @@ def process_textfile(request, textfile_id):
 
     def run_process_command(textfile_id):
         try:
-            call_command("process_clips", textfile_id)
+            call_command("process_video", textfile_id)
         except Exception as e:
             # Handle the exception as needed (e.g., log it)
             print(f"Error processing video: {e}")
