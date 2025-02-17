@@ -18,11 +18,12 @@ from moviepy.editor import (
     AudioFileClip,
     ColorClip,
     CompositeVideoClip,
-    concatenate_videoclips,
+    # concatenate_videoclips,
     CompositeAudioClip,
     TextClip,
     VideoFileClip,
 )
+from moviepy.video.compositing.CompositeVideoClip import concatenate_videoclips
 from moviepy.video.fx.all import crop as fix_all_crop
 import moviepy.video.fx.resize as rz
 from moviepy.video.fx.crop import crop
