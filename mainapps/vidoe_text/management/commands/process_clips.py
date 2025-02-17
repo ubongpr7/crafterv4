@@ -1727,19 +1727,18 @@ class Command(BaseCommand):
 
             max_line_width = max_text_width // (font_size // 2)
             
-            wrapped_text,fontsize = ensure_two_lines(
+            wrapped_text,fontsize = wrap_text_dynamically(
                     subtitle.text, 
-                    max_text_width, 
-                    font_size, 
+                    max_text_width=max_text_width, 
+                    font_size=font_size, 
                     font=self.text_file_instance.font,
+                    max_lines=3
                 )
             if self.text_file_instance.resolution=='4:5':
-                wrapped_text,fontsize = wrap_text_dynamically(
+                wrapped_text,fontsize = ensure_two_lines(
                         subtitle.text, 
-                        max_text_width=max_text_width, 
-                        font_size=font_size, 
-                        font=self.text_file_instance.font,
-                        max_lines=2
+                        max_text_width, 
+                        font_size, 
                     )
             
             temp_subtitle_clip = TextClip(
