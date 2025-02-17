@@ -1466,12 +1466,36 @@ class Command(BaseCommand):
         return isinstance(clip, VideoFileClip)
     
 
+    # def concatenate_clips(self, clips, target_resolution=None, target_fps=30):
+    #     """Concatenates video clips safely, ensuring smooth transitions without glitches."""
+
+    #     for i,clip in enumerate(clips):
+    #         clips[i]=clip.subclip(0,clip.duration).set_fps(30)
+            
+    #     final_clip = concatenate_videoclips(clips,transition=None, method="chain",bg_color=None, padding=0) 
+
+    #     logging.info("Clips have been concatenated successfully.")
+    #     return final_clip
+
+
     def concatenate_clips(self, clips, target_resolution=None, target_fps=30):
         """Concatenates video clips safely, ensuring smooth transitions without glitches."""
 
-        for i,clip in enumerate(clips):
-            clips[i]=clip.subclip(0,clip.duration).set_fps(30)
-        final_clip = concatenate_videoclips(clips,transition=None, method="chain",bg_color=None, padding=0) 
+        processed_clips = []
+
+        for i, clip in enumerate(clips):
+            # Set the frame rate
+            clip = clip.set_fps(target_fps)
+            
+            # Ensure the audio matches the duration of the video
+            if clip.audio:
+                clip = clip.set_audio(clip.audio.set_duration(clip.duration))
+            
+            # Append the processed clip to the list
+            processed_clips.append(clip)
+
+        # Concatenate the processed clips
+        final_clip = concatenate_videoclips(processed_clips, method="compose")
 
         logging.info("Clips have been concatenated successfully.")
         return final_clip
