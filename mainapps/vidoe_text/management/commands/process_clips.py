@@ -1465,13 +1465,15 @@ class Command(BaseCommand):
     def concatenate_clips(self, clips, target_resolution=None, target_fps=30):
         """Concatenates video clips safely, ensuring smooth transitions without glitches."""
 
-        def prepare_clip(clip, fps=30):
-            """Standardizes FPS and trims exact duration to avoid glitches."""
-            clip = clip.set_fps(fps)  # Ensure uniform frame rate
-            exact_duration = int(clip.fps * clip.duration) / clip.fps  # Align duration with frames
-            return clip.subclip(0, exact_duration).copy()  # Trim last frame and prevent caching issues
+        # def prepare_clip(clip, fps=30):
+        #     """Standardizes FPS and trims exact duration to avoid glitches."""
+        #     clip = clip.set_fps(fps) 
+        #     exact_duration = int(clip.fps * clip.duration) / clip.fps 
+        #     return clip.subclip(0, exact_duration).copy()  
+        for i,clip in enumerate(clips):
+            clips[i]=clip.subclip(0,clip.duration).set_fps(30)
 
-        clips = [prepare_clip(clip, target_fps) for clip in clips]
+        # clips = [prepare_clip(clip, target_fps) for clip in clips]
 
         final_clip = concatenate_videoclips(clips, method="compose") 
 
