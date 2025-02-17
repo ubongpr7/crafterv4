@@ -1640,7 +1640,7 @@ class Command(BaseCommand):
             #         lines.append(" ".join(current_line))
 
             #     return "\n".join(lines)
-            def wrap_text_dynamically(text: str, max_text_width: int, initial_font_size: int, font: str, max_lines: int = 4) -> (str, int):
+            def wrap_text_dynamically(text: str, max_text_width: int, font_size: int, font: str, max_lines: int = 4) -> (str, int):
                 """
                 Wraps the given text into at most max_lines such that each line fits within max_text_width.
                 If the text doesn't fit, the function reduces the font size until it fits.
@@ -1648,7 +1648,7 @@ class Command(BaseCommand):
                 Returns:
                     A tuple (wrapped_text, final_font_size)
                 """
-                font_size = initial_font_size
+                
                 
                 # Try reducing the font size until the wrapped text fits within max_lines.
                 while font_size >= 10:  # Set a lower limit for readability
