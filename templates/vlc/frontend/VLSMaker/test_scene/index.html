@@ -420,6 +420,7 @@ const validateTextFile = async (file) => {
 
     try {
         const text = await file.text();
+        const lines = text.split(/\r?\n/); 
 
         if (text.length > 5000) {
             alert("The text file exceeds the 5000-character limit!");
@@ -427,7 +428,6 @@ const validateTextFile = async (file) => {
         }
         if (textFileResolution==='9:16'){
             
-            const lines = text.split(/\r?\n/); 
             for (let i = 0; i < lines.length; i++) {
                 if (lines[i].length > 50) {
                     alert(`Line ${i + 1} Exceeds 50 Characters! 9:16 Size Videos Are Only Limited To 50 Characters Per Subtitle`);
@@ -435,7 +435,6 @@ const validateTextFile = async (file) => {
                 }
             }
         }else if (userPlan=== 'free'){
-            const lines = text.split(/\r?\n/); 
             if (lines.length > 10){
                 alert("Your Current Package Only Allows You To Add 10 Slide Please Upgrade To Unlock Unlimited Slides");
                 return false
@@ -444,7 +443,6 @@ const validateTextFile = async (file) => {
         }
         else  {
             
-            const lines = text.split(/\r?\n/); 
             for (let i = 0; i < lines.length; i++) {
                 if (lines[i].length > 100) {
                     alert(`Line ${i + 1} Exceeds 100 Characters! Maximum Character Per Subtitle Is 100 Characters`);
