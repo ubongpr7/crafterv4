@@ -32,7 +32,7 @@
                     Subtitle {{forloop.counter }}</td>
                 <td id="highlightable_{{forloop.counter}}" style="width: 100%">
                     <div>
-                        <textarea {%if textfile.resolutin == '9:16' %}maxlength="50"{%endif%}
+                        <textarea 
                             style="display: none; width: 96%; padding: .375rem .75rem; font-size: 1rem; font-weight: 400; line-height: 1.5; color: #212529; background-color: #fff; background-clip: padding-box; border: 1px solid #ced4da; padding-left:10px; resize:none; border-radius:14px; transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out; placeholder-color: black;"
                             class="textarea-class" name="slide_text" class="form-control tab-textarea"
                             aria-describedby="textarea" id="slide_text_{{forloop.counter}}">{{clip.slide}}</textarea>
@@ -230,31 +230,61 @@
         return document.querySelector("[name=csrfmiddlewaretoken]").value;
     }
 
+    // function checkSubtitlesLength() {
+    //     let tableBody = document.querySelector("#leadsTable tbody");
+    //     let rows = tableBody.getElementsByTagName("tr");
+    //     if (rows.length > 40) {
+    //         console.log(rows.length);
+    //         $.ajax({
+    //             url: `/text/check-subtitles/{{textfile.id}}/`,
+    //             method: "GET",
+    //             success: function (response) {
+    //                 if (response.status === "error") {
+    //                     alert(response.message);
+    //                     return false;
+    //                 } else {
+    //                     console.log(response.message);
+    //                     return true;
+    //                 }
+    //             },
+    //             error: function (xhr, status, error) {
+    //                 console.error("Error checking subtitles:", error);
+    //             }
+    //         });
+    //     } else {
+    //         return true;
+    //     }
+    // }
     function checkSubtitlesLength() {
-        let tableBody = document.querySelector("#leadsTable tbody");
-        let rows = tableBody.getElementsByTagName("tr");
-        if (rows.length > 40) {
-            console.log(rows.length);
-            $.ajax({
-                url: `/text/check-subtitles/{{textfile.id}}/`,
-                method: "GET",
-                success: function (response) {
-                    if (response.status === "error") {
-                        alert(response.message);
-                        return false;
-                    } else {
-                        console.log(response.message);
-                        return true;
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.error("Error checking subtitles:", error);
-                }
-            });
-        } else {
-            return true;
-        }
+    let tableBody = document.querySelector("#leadsTable tbody");
+    let rows = tableBody.getElementsByTagName("tr");
+
+    if (rows.length > 40) {
+        console.log("Rows count:", rows.length);
+
+        $.ajax({
+            url: `/text/check-subtitles/${textFileID}/`,  // Use a JS variable for ID
+            method: "GET",
+        })
+        .done(function (response) {
+            if (response.status === "error") {
+                alert(response.message);
+                return false;
+            } else {
+                console.log(response.message);
+                return true;
+            }
+        })
+        .fail(function (xhr, status, error) {
+            console.error("Error checking subtitles:", error);
+            return false;
+        });
+
+    } else {
+        return true;
     }
+}
+    
     function deleteSavedSlide(clipId, btn) {
     if (btn.disabled) return;
 
@@ -311,7 +341,7 @@ if (checkRowCount(table)) {
     newRow.innerHTML += `
     <td id="highlightable_${currentNumber}" style="padding: 12 12px;">
         <div style="display: flex; height: 100%;width: 100%;flex-direction: column;">
-        <textarea {%if textfile.resolutin == '9:16' %}maxlength="50"{%endif%} class="textarea-class"
+        <textarea  class="textarea-class"
 style="display: block;  padding: .375rem .75rem; font-size: 1rem; font-weight: 400; line-height: 1.5; color: #212529; background-color: #fff; background-clip: padding-box; border: 1px solid #ced4da; padding-left:10px; resize:none; border-radius:14px; transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out; placeholder-color: black;"
 id="slide_text_${currentNumber}" 
 type="text" 
