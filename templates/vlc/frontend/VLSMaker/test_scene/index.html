@@ -420,13 +420,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function getTotalCharCount() {
         return Array.from(textareas).reduce((sum, textarea) => sum + textarea.value.length, 0);
+
     }
 
     document.addEventListener("input", (event) => {
         if (event.target.tagName === "TEXTAREA") {
             const maxPerTextarea = textFileResolution === "9:16" ? 50 : 100;
             let currentTotalChars = getTotalCharCount();
-
+            console.log(currentTotalChars)
             // Check if total characters exceed the limit
             if (currentTotalChars > maxTotalChars) {
                 alert("Total character limit (5000) exceeded! Remove some text before adding more.");
