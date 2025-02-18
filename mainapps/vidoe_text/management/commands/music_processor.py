@@ -117,7 +117,7 @@ class Command(BaseCommand):
                 0, duration
             )
             background_clip = background_clip.set_start(start_time_seconds)
-            background_clip = background_clip.volumex(float(bg_level)*1.5)
+            background_clip = background_clip.volumex(float(bg_level)*2)
 
             # Append the processed background clip to the list
             background_clips.append(background_clip)
