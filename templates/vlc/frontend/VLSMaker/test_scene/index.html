@@ -414,24 +414,60 @@
     
 // });
 
+// document.addEventListener("DOMContentLoaded", () => {
+//     const maxTotalChars = 5000; // Maximum total characters across all textareas
+//     const textareas = document.querySelectorAll("textarea"); // Get all textareas
+
+//     function getTotalCharCount() {
+//         return Array.from(textareas).reduce((sum, textarea) => sum + textarea.value.length, 0);
+
+//     }
+
+//     document.addEventListener("input", (event) => {
+//         if (event.target.tagName === "TEXTAREA") {
+//             const maxPerTextarea = textFileResolution === "9:16" ? 50 : 100;
+//             let currentTotalChars = getTotalCharCount();
+//             // Check if total characters exceed the limit
+//             if (currentTotalChars > maxTotalChars) {
+//                 alert("Total character limit (5000) exceeded! Remove some text before adding more.");
+//                 console.log(currentTotalChars)
+
+//                 event.target.value = event.target.value.slice(0, event.target.value.length - (currentTotalChars - maxTotalChars));
+//                 return;
+//             }
+
+//             // Limit per textarea
+//             if (event.target.value.length > maxPerTextarea) {
+//                 alert(`Max characters per subtitle is ${maxPerTextarea}.`);
+//                 event.target.value = event.target.value.slice(0, maxPerTextarea);
+//             }
+//         }
+//     });
+// });
+
 document.addEventListener("DOMContentLoaded", () => {
-    const maxTotalChars = 5000; // Maximum total characters across all textareas
-    const textareas = document.querySelectorAll("textarea"); // Get all textareas
+    const maxTotalChars = 5000; // Define max total characters
 
     function getTotalCharCount() {
-        return Array.from(textareas).reduce((sum, textarea) => sum + textarea.value.length, 0);
-
+        let total = 0;
+        document.querySelectorAll("textarea").forEach(textarea => {
+            total += textarea.value.length;
+        });
+        return total;
     }
 
     document.addEventListener("input", (event) => {
         if (event.target.tagName === "TEXTAREA") {
             const maxPerTextarea = textFileResolution === "9:16" ? 50 : 100;
             let currentTotalChars = getTotalCharCount();
-            console.log(currentTotalChars)
-            // Check if total characters exceed the limit
+
+            // Prevent exceeding the total character limit
             if (currentTotalChars > maxTotalChars) {
                 alert("Total character limit (5000) exceeded! Remove some text before adding more.");
-                event.target.value = event.target.value.slice(0, event.target.value.length - (currentTotalChars - maxTotalChars));
+                
+                // Trim excess characters in real-time
+                let excessChars = currentTotalChars - maxTotalChars;
+                event.target.value = event.target.value.slice(0, event.target.value.length - excessChars);
                 return;
             }
 
