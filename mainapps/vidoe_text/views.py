@@ -548,20 +548,20 @@ def process_background_music(request, textfile_id):
         end_times_str = {}
 
         for i in range(1, no_of_mp3 + 1):
-            music_file = request.FILES.get(f"mp3-{i}")
+            music_file = request.FILES.get(f"bg_music_{i}")
             if music_file is not None:
                 music_files.append(music_file)
                 music_files_dict[f"bg_music_{i}"] = music_file
 
-            start_time = request.POST.get(f"starts-{i}")
+            start_time = request.POST.get(f"from_when_{i}")
             if start_time is not None:
                 start_times_str[f"bg_music_{i}"] = start_time
 
-            bg_level = request.POST.get(f"volume-{i}")
+            bg_level = request.POST.get(f"bg_level_{i}")
             if bg_level is not None:
                 bg_levels[f"bg_music_{i}"] = float(bg_level) / 1000.0
 
-            end_time = request.POST.get(f"ends-{i}")
+            end_time = request.POST.get(f"to_when_{i}")
             if end_time is not None:
                 end_times_str[f"bg_music_{i}"] = end_time
 
