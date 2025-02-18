@@ -469,10 +469,10 @@ function checkRowCount(tableBody) {
     const unlimitedPlans = ['premium', 'admin','pro']; 
     console.log(userPlan);
     // if (rowCount > 10 && !unlimitedPlans.includes(userPlan)) {
-    if (userPlan ==='free'){
+    if (userPlan ==='free' & rowCount>= 10){
         console.log("Row count exceeded 10!");
-        alert("Your Current Package Only Allows You To Add 15 Slide Please Upgrade To Unlock Unlimited Slides");
-        showPopup()
+        alert("Your Current Package Only Allows You To Add 10 Slide Please Upgrade To Unlock Unlimited Slides");
+        // showPopup()
         return false;
     } else {
         return true;

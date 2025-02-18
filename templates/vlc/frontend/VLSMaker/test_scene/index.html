@@ -384,7 +384,6 @@
     <script>
         textFileResolution='{{textfile.resolution}}' 
         const userPlan = "{{user.subscription.plan.name}}".toLowerCase(); 
-
 document.addEventListener("DOMContentLoaded", () => {
     if (textFileResolution === '9:16') {
         document.addEventListener("input", (event) => {
@@ -435,6 +434,13 @@ const validateTextFile = async (file) => {
                     return false;
                 }
             }
+        }else if (userPlan=== 'free'){
+            const lines = text.split(/\r?\n/); 
+            if (lines.length > 10){
+                alert("Your Current Package Only Allows You To Add 10 Slide Please Upgrade To Unlock Unlimited Slides");
+
+            }
+
         }
         else  {
             
