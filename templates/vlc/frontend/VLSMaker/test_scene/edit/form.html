@@ -230,43 +230,19 @@
         return document.querySelector("[name=csrfmiddlewaretoken]").value;
     }
 
-    // function checkSubtitlesLength() {
-    //     let tableBody = document.querySelector("#leadsTable tbody");
-    //     let rows = tableBody.getElementsByTagName("tr");
-    //     if (rows.length > 40) {
-    //         console.log(rows.length);
-    //         $.ajax({
-    //             url: `/text/check-subtitles/{{textfile.id}}/`,
-    //             method: "GET",
-    //             success: function (response) {
-    //                 if (response.status === "error") {
-    //                     alert(response.message);
-    //                     return false;
-    //                 } else {
-    //                     console.log(response.message);
-    //                     return true;
-    //                 }
-    //             },
-    //             error: function (xhr, status, error) {
-    //                 console.error("Error checking subtitles:", error);
-    //             }
-    //         });
-    //     } else {
-    //         return true;
-    //     }
-    // }
-    function checkSubtitlesLength() {
+async function checkSubtitlesLength(textfileId) {
     let tableBody = document.querySelector("#leadsTable tbody");
     let rows = tableBody.getElementsByTagName("tr");
 
     if (rows.length > 40) {
         console.log("Rows count:", rows.length);
 
-        $.ajax({
-            url: `/text/check-subtitles/${textFileID}/`,  // Use a JS variable for ID
-            method: "GET",
-        })
-        .done(function (response) {
+        try {
+            let response = await $.ajax({
+                url: `/text/check-subtitles/${textfileId}/`,
+                method: "GET",
+            });
+
             if (response.status === "error") {
                 alert(response.message);
                 return false;
@@ -274,17 +250,16 @@
                 console.log(response.message);
                 return true;
             }
-        })
-        .fail(function (xhr, status, error) {
+        } catch (error) {
             console.error("Error checking subtitles:", error);
             return false;
-        });
+        }
 
     } else {
         return true;
     }
 }
-    
+
     function deleteSavedSlide(clipId, btn) {
     if (btn.disabled) return;
 

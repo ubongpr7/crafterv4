@@ -30,7 +30,7 @@ function deleteAllLi(cNumber) {
 }
 //good
 
-function handleEnterToHide(currentNumber,) {
+ function handleEnterToHide(currentNumber,) {
     edit = false
     const textarea = document.getElementById(`slide_text_${currentNumber}`);
 
@@ -55,9 +55,9 @@ function handleEnterToHide(currentNumber,) {
             slide_span.textContent = textarea.value;
             // toggleColumns(textarea, true)
 
-            const check = checkSubtitlesLength();
+            // const check = await checkSubtitlesLength();
 
-            if (check) {
+            if (true) {
 
                 if (textarea.value) {
 
