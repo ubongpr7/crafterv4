@@ -23,7 +23,7 @@
                     <svg id="svg{{ forloop.counter }}" class="svgIcon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M17.5 12.5V15.8333C17.5 16.2754 17.3244 16.6993 17.0118 17.0118C16.6993 17.3244 16.2754 17.5 15.8333 17.5H4.16667C3.72464 17.5 3.30072 17.3244 2.98816 17.0118C2.67559 16.6993 2.5 16.2754 2.5 15.8333V12.5M14.1667 6.66667L10 2.5M10 2.5L5.83333 6.66667M10 2.5V12.5" stroke="#191919B2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
-                    <input class="fileInput"  name="bg_music_{{ forloop.counter }}" type="file" accept="audio/*" id="fileUpload_{{textfile_id}}_{{ forloop.counter }}" style="position: absolute; width: 100%; height: 100%; left: 0; opacity: 0;">                                
+                    <input class="fileInput"  name="saved-mp3-{{ music.id }}" type="file" accept="audio/*" id="fileUpload_{{textfile_id}}_{{ forloop.counter }}" style="position: absolute; width: 100%; height: 100%; left: 0; opacity: 0;">                                
                     <div class="output" id="uploadText{{ forloop.counter }}" style="font-size: 16px; font-weight: 400; line-height: 23.2px; letter-spacing: 0.02em; text-align: center;">
                         Change
                     </div>
@@ -35,11 +35,11 @@
                 <div style="display: flex; gap: 24px; width: 100%;">
                     <div style="display: flex; flex-direction: column; width: 100%; gap: 16px;">
                         <span class="text" style="width: 100%; text-align: left;">Start:</span>
-                        <input type="text" onchange="saveInput(this)" placeholder="00:00" required class="time startTime" id="from_when_{{textfile_id}}_{{ forloop.counter }}" name="from_when_{{ forloop.counter }}"  style="padding: 12px 24px; border: 1px solid #E3E3E3; border-radius: 4px;">
+                        <input type="text" onchange="saveInput(this)" placeholder="00:00" required class="time startTime" id="from_when_{{textfile_id}}_{{ forloop.counter }}" name="saved-starts{{ music.id }}"  style="padding: 12px 24px; border: 1px solid #E3E3E3; border-radius: 4px;">
                     </div>
                     <div style="display: flex; flex-direction: column; width: 100%; gap: 16px;">
                         <span class="text" style="width: 100%; text-align: left;">End:</span>
-                        <input type="text" onchange="saveInput(this)" placeholder="00:00" class="time endTime" required name="to_when_{{ forloop.counter }}"  id="to_when_{{textfile_id}}_{{ forloop.counter }}" style="padding: 12px 24px; border: 1px solid #E3E3E3; border-radius: 4px;">
+                        <input type="text" onchange="saveInput(this)" placeholder="00:00" class="time endTime" required name="saved-ends-{{ music.id }}"  id="to_when_{{textfile_id}}_{{ forloop.counter }}" style="padding: 12px 24px; border: 1px solid #E3E3E3; border-radius: 4px;">
                     </div>
                 </div>
             
@@ -51,7 +51,7 @@
                         <span id="SliderValue_{{ forloop.counter }}" style="font-size: 18px; font-weight: 600; line-height: 21.94px; letter-spacing: 0.02em; text-align: left; color: #000000B2;">50%</span>
                     </div>
                     <div class="Font-Size-Slider" style="width: 100%; display: flex; justify-content: center; align-items: center; margin-bottom: 36.89px;">
-                        <input type="range" onchange="saveInput(this)" name="bg_level_{{ forloop.counter }}" min="0" max="100" value="50" class="slider" id="mySlider_{{textfile_id}}_{{ forloop.counter }}" style="width: 100%;">
+                        <input type="range" onchange="saveInput(this)" name="saved-volume-{{ music.id }}" min="0" max="100" value="50" class="slider" id="mySlider_{{textfile_id}}_{{ forloop.counter }}" style="width: 100%;">
                     </div>
                 </div>
             </div>

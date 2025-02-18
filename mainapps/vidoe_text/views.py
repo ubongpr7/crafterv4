@@ -602,16 +602,12 @@ def process_background_music(request, textfile_id):
 
         content = "\n".join(lines)
 
-        # Save the content to a text file
         file_name = f"background_music_info_{textfile_id}_.txt"
 
         textfile.bg_music_text.save(file_name, ContentFile(content))
-        # textfile.bg_level=float(request.POST.get('bg_level'))/100.0
         textfile.save()
 
         try:
-            # call_command('music_processor', textfile_id)
-            # # Start the background process/
             thread = threading.Thread(target=run_process_command, args=(textfile_id,))
             thread.start()
             return redirect(f"/text/progress_page/bg_music/{textfile_id}")
@@ -625,6 +621,22 @@ def process_background_music(request, textfile_id):
         if not textfile.text_file:
             return JsonResponse({"error": "Text file is missing."}, status=400)
         # Check for text file and return error if missing
+        for music in textfile.background_musics.all():
+            music_file=request.POST.get(f'saved-mp3-{music.id}')
+            start=request.POST.get(f'saved-starts-{music.id}')
+            end=request.POST.get(f'saved-ends-{music.id}')
+            volume=request.POST.get(f'saved-volume-{music.id}')
+            if music_file:
+                music.music.delete(save=False)
+                music.music=music_file
+            if start:
+                music.start_time=convert_to_seconds(start)
+            if end:
+                music.end_time=convert_to_seconds(end)
+            if volume:
+                music.bg_level=float(volume)/1000.0
+            music.save()
+
         music_files = []
         music_files_dict = {}
         start_times_str = {}
