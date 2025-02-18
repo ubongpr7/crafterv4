@@ -616,7 +616,7 @@ def process_background_music(request, textfile_id):
 
     return render(
         request,
-        "lead-maker/music.html",
+        "vlc/add_music.html",
         {
             "textfile_id": textfile_id,
             "textfile": textfile,
