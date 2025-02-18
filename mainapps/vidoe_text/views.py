@@ -1081,9 +1081,9 @@ def validate_api_keyv(request):
                     error_message = f"Elevenlabs API Error (non-JSON): {response.text}"
                     status_code = response.status_code
 
-            return JsonResponse({"valid": False, "error": error_message}, status=status_code)
+            return JsonResponse({"valid": False, "error": error_message,'status':status_code}, status=status_code)
 
-    return JsonResponse({"valid": False, "error": "Invalid request method"}, status=405)  # Method Not Allowed
+    return JsonResponse({"valid": False, "error": "Invalid request method",'status':405}, status=405)  # Method Not Allowed
 
 
 
