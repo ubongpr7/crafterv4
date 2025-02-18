@@ -973,10 +973,57 @@ def validate_api_key(api_key, voice_id):
         return {"valid": False, "error": "Error connecting to Eleven Labs API"}
 
 
+# def validate_api_keyv(request):
+#     if request.method == "POST":
+#         api_key = request.POST.get("eleven_labs_api_key", "")
+#         voice_id = request.POST.get("voice_id")
+
+#         url = f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}"
+#         headers = {"xi-api-key": api_key}
+#         data = {
+#             "text": "Test voice synthesis",
+#             "model_id": "eleven_monolingual_v1",
+#             "voice_settings": {"stability": 0.5, "similarity_boost": 0.75},
+#         }
+
+#         try:
+#             response = requests.post(url, json=data, headers=headers)
+
+#             if response.status_code == 200:
+#                 return JsonResponse({"valid": True})
+#             elif response.status_code == 401:
+#                 error_detail = response.json().get("detail", {})
+#                 if (
+#                     "status" in error_detail
+#                     and error_detail["status"] == "quota_exceeded"
+#                 ):
+#                     return JsonResponse(
+#                         {
+#                             "valid": False,
+#                             "error": f"Quota exceeded: {error_detail.get('message', 'Insufficient credits')}",
+#                         }
+#                     )
+#                 else:
+#                     return JsonResponse({"valid": False, "error": "Invalid API key"})
+#             else:
+#                 return JsonResponse({"valid": False, "error": "Invalid Voice ID"})
+#         except requests.exceptions.RequestException:
+#             return JsonResponse(
+#                 {"valid": False, "error": "Error connecting to Eleven Labs API"}
+#             )
+
+#     return JsonResponse({"valid": False, "error": "Invalid request method"})
+
+
 def validate_api_keyv(request):
     if request.method == "POST":
         api_key = request.POST.get("eleven_labs_api_key", "")
         voice_id = request.POST.get("voice_id")
+
+        if not api_key:
+            return JsonResponse({"valid": False, "error": "API key is required"}, status=400)  # Bad Request
+        if not voice_id:
+            return JsonResponse({"valid": False, "error": "Voice ID is required"}, status=400) # Bad Request
 
         url = f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}"
         headers = {"xi-api-key": api_key}
@@ -988,31 +1035,56 @@ def validate_api_keyv(request):
 
         try:
             response = requests.post(url, json=data, headers=headers)
+            response.raise_for_status()  # Raise HTTPError for bad responses (4xx or 5xx)
 
             if response.status_code == 200:
                 return JsonResponse({"valid": True})
-            elif response.status_code == 401:
-                error_detail = response.json().get("detail", {})
-                if (
-                    "status" in error_detail
-                    and error_detail["status"] == "quota_exceeded"
-                ):
-                    return JsonResponse(
-                        {
-                            "valid": False,
-                            "error": f"Quota exceeded: {error_detail.get('message', 'Insufficient credits')}",
-                        }
-                    )
-                else:
-                    return JsonResponse({"valid": False, "error": "Invalid API key"})
-            else:
-                return JsonResponse({"valid": False, "error": "Invalid Voice ID"})
-        except requests.exceptions.RequestException:
-            return JsonResponse(
-                {"valid": False, "error": "Error connecting to Eleven Labs API"}
-            )
 
-    return JsonResponse({"valid": False, "error": "Invalid request method"})
+        except requests.exceptions.RequestException as e:
+            error_message = f"Error connecting to Eleven Labs API: {str(e)}"
+            status_code = 500  # Internal Server Error (default)
+
+            if isinstance(e, requests.exceptions.HTTPError):
+                try:  # Attempt to parse JSON error response
+                    error_data = response.json()
+                    detail = error_data.get("detail")
+
+                    if isinstance(detail, dict):  # Elevenlabs error structure
+                        status = detail.get("status")
+                        message = detail.get("message")
+
+                        if status == "quota_exceeded":
+                            error_message = f"Quota exceeded: {message or 'Insufficient credits'}"
+                            status_code = 402  # Payment Required
+
+                        elif status == "invalid_api_key":
+                            error_message = "Invalid API key"
+                            status_code = 401  # Unauthorized
+
+                        elif status == "voice_not_found":
+                            error_message = "Invalid Voice ID"
+                            status_code = 400  # Bad Request
+
+                        else:  # Other Elevenlabs error
+                            error_message = message or detail or "Elevenlabs API error"
+                            status_code = response.status_code
+
+                    elif isinstance(detail, str): # Handle string error message
+                        error_message = detail
+                        status_code = response.status_code
+
+                    else:
+                        error_message = error_data.get("message") or "Elevenlabs API error" # Generic error message
+                        status_code = response.status_code
+
+                except (ValueError, KeyError, AttributeError): # JSON decode error
+                    error_message = f"Elevenlabs API Error (non-JSON): {response.text}"
+                    status_code = response.status_code
+
+            return JsonResponse({"valid": False, "error": error_message}, status=status_code)
+
+    return JsonResponse({"valid": False, "error": "Invalid request method"}, status=405)  # Method Not Allowed
+
 
 
 @login_required
