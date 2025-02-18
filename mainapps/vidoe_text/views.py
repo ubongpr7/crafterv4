@@ -1014,78 +1014,64 @@ def validate_api_key(api_key, voice_id):
 
 #     return JsonResponse({"valid": False, "error": "Invalid request method"})
 
-
 def validate_api_keyv(request):
-    if request.method == "POST":
-        api_key = request.POST.get("eleven_labs_api_key", "")
-        voice_id = request.POST.get("voice_id")
+    if request.method != "POST":
+        return JsonResponse({"valid": False, "error": "Invalid request method", "status": 405}, status=405)
 
-        if not api_key:
-            return JsonResponse({"valid": False, "error": "API key is required"}, status=400)  # Bad Request
-        if not voice_id:
-            return JsonResponse({"valid": False, "error": "Voice ID is required"}, status=400) # Bad Request
+    api_key = request.POST.get("eleven_labs_api_key", "").strip()
+    voice_id = request.POST.get("voice_id", "").strip()
 
-        url = f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}"
-        headers = {"xi-api-key": api_key}
-        data = {
-            "text": "Test voice synthesis",
-            "model_id": "eleven_monolingual_v1",
-            "voice_settings": {"stability": 0.5, "similarity_boost": 0.75},
-        }
+    if not api_key:
+        return JsonResponse({"valid": False, "error": "API key is required", "status": 400}, status=400)
 
-        try:
-            response = requests.post(url, json=data, headers=headers)
-            response.raise_for_status()  # Raise HTTPError for bad responses (4xx or 5xx)
+    if not voice_id:
+        return JsonResponse({"valid": False, "error": "Voice ID is required", "status": 400}, status=400)
 
-            if response.status_code == 200:
-                return JsonResponse({"valid": True})
+    url = f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}"
+    headers = {"xi-api-key": api_key}
+    data = {
+        "text": "Test voice synthesis",
+        "model_id": "eleven_monolingual_v1",
+        "voice_settings": {"stability": 0.5, "similarity_boost": 0.75},
+    }
 
-        except requests.exceptions.RequestException as e:
-            error_message = f"Error connecting to Eleven Labs API: {str(e)}"
-            status_code = 500  # Internal Server Error (default)
+    try:
+        response = requests.post(url, json=data, headers=headers)
+        response.raise_for_status()  # Raise an error for HTTP 4xx or 5xx
 
-            if isinstance(e, requests.exceptions.HTTPError):
-                try:  # Attempt to parse JSON error response
-                    error_data = response.json()
-                    detail = error_data.get("detail")
+        if response.status_code == 200:
+            return JsonResponse({"valid": True})
 
-                    if isinstance(detail, dict):  # Elevenlabs error structure
-                        status = detail.get("status")
-                        message = detail.get("message")
+    except requests.exceptions.RequestException as e:
+        error_message = f"Error connecting to Eleven Labs API: {str(e)}"
+        status_code = 500  # Internal Server Error (default)
 
-                        if status == "quota_exceeded":
-                            error_message = f"Quota exceeded: {message or 'Insufficient credits'}"
-                            status_code = 402  # Payment Required
+        if isinstance(e, requests.exceptions.HTTPError):
+            try:
+                error_data = response.json()
+                detail = error_data.get("detail")
 
-                        elif status == "invalid_api_key":
-                            error_message = "Invalid API key"
-                            status_code = 401  # Unauthorized
+                if isinstance(detail, dict):  # Eleven Labs structured error
+                    status = detail.get("status")
+                    message = detail.get("message")
 
-                        elif status == "voice_not_found":
-                            error_message = "Invalid Voice ID"
-                            status_code = 400  # Bad Request
+                    if status == "quota_exceeded":
+                        return JsonResponse({"valid": False, "error": "Quota exceeded: " + (message or "Insufficient credits"), "status": 402}, status=402)
 
-                        else:  # Other Elevenlabs error
-                            error_message = message or detail or "Elevenlabs API error"
-                            status_code = response.status_code
+                    if status == "invalid_api_key":
+                        return JsonResponse({"valid": False, "error": "Invalid API key", "status": 401}, status=401)
 
-                    elif isinstance(detail, str): # Handle string error message
-                        error_message = detail
-                        status_code = response.status_code
+                    if status == "voice_not_found":
+                        return JsonResponse({"valid": False, "error": "Invalid Voice ID", "status": 400}, status=400)
 
-                    else:
-                        error_message = error_data.get("message") or "Elevenlabs API error" # Generic error message
-                        status_code = response.status_code
+                    return JsonResponse({"valid": False, "error": message or "API error", "status": response.status_code}, status=response.status_code)
 
-                except (ValueError, KeyError, AttributeError): # JSON decode error
-                    error_message = f"Elevenlabs API Error (non-JSON): {response.text}"
-                    status_code = response.status_code
+                return JsonResponse({"valid": False, "error": detail or "Unknown API error", "status": response.status_code}, status=response.status_code)
 
-            return JsonResponse({"valid": False, "error": error_message,'status':status_code}, status=status_code)
+            except ValueError:
+                return JsonResponse({"valid": False, "error": "Invalid API response", "status": response.status_code}, status=response.status_code)
 
-    return JsonResponse({"valid": False, "error": "Invalid request method",'status':405}, status=405)  # Method Not Allowed
-
-
+        return JsonResponse({"valid": False, "error": error_message, "status": status_code}, status=status_code)
 
 @login_required
 @check_user_credits(minimum_credits_required=1)

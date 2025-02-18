@@ -918,81 +918,170 @@ padding: 5px;
 
 
 
+      // function validateAPIKey(event) {
+      //   startProcessingAnimation('#button-text'); // Start the processing animation
+
+      //   event.preventDefault(); // Prevent the default form submission
+
+      //   const apiKey = apiKeyInput.val().trim();
+      //   const voiceId = voiceIdInput.val().trim();
+      //   const font_ = font_select.value;
+
+
+      //   // Remove any previous error messages
+      //   apiKeyError.text('');
+      //   voiceIdError.text('');
+      //   font_error.text('');
+      //   //text_form.style.height = '2290px';
+
+      //   if (apiKey && voiceId && font_) {
+      //     // Send AJAX request to validate the API key and voice ID
+      //     $.ajax({
+      //       url: '/text/validate_api_key/', // URL for the Django view
+      //       type: 'POST',
+      //       data: {
+      //         'eleven_labs_api_key': apiKey,
+      //         'voice_id': voiceId,
+      //         'csrfmiddlewaretoken': '{{ csrf_token }}' // Include CSRF token for security
+      //       },
+      //       success: function (response) {
+      //         console.log(response); // Log the entire response to the console
+
+      //         if (response.valid) {
+      //           text_form.submit();
+      //         } else {
+      //           stopProcessingAnimation('#button-text');
+
+
+      //           if (response.status == 402) {
+      //             apiKeyInput.focus();
+      //             apiKeyError.text(response.error);
+      //           } else if (response.status === 401) {
+      //             apiKeyInput.focus();
+      //             apiKeyError.text(response.error);
+      //           } else if (response.status === 400) {
+      //             voiceIdInput.focus();
+      //             voiceIdError.text(response.error);
+      //           } else {
+      //             apiKeyInput.focus();
+      //             apiKeyError.text(response.error);
+      //           }
+      //         }
+      //       },
+      //       error: function (xhr, status, error) {
+      //         console.log("Error Status: ", status);
+      //         console.log("Error: ", error);
+      //         stopProcessingAnimation('#button-text');
+      //         apiKeyError.text('Error validating the API key.');
+      //         apiKeyInput.focus();
+      //         button_text.text('Proceed To Scene Selection');
+      //         if (response.status == 402) {
+      //             apiKeyInput.focus();
+      //             apiKeyError.text(response.error);
+      //           } else if (response.status === 401) {
+      //             apiKeyInput.focus();
+      //             apiKeyError.text(response.error);
+      //           } else if (response.status === 400) {
+      //             voiceIdInput.focus();
+      //             voiceIdError.text(response.error);
+      //           } else {
+      //             apiKeyInput.focus();
+      //             apiKeyError.text(response.error);
+      //           }
+      //       }
+      //     });
+      //   } else {
+      //     stopProcessingAnimation('#button-text');
+
+      //     if (!apiKey) {
+      //       apiKeyInput.focus();
+      //       apiKeyError.text('API key is required.');
+      //     } else if (!voiceId) {
+      //       voiceIdInput.focus();
+      //       voiceIdError.text('Voice ID is required.');
+      //     } else if (!font_) {
+      //       font_select.required = true;
+      //       font_select.focus();
+      //       font_error.text('Please Select A Font From The Dropdown');
+      //     }
+      //   }
+      // }
       function validateAPIKey(event) {
-        startProcessingAnimation('#button-text'); // Start the processing animation
+    startProcessingAnimation('#button-text'); // Start animation
+    event.preventDefault(); // Prevent form submission
 
-        event.preventDefault(); // Prevent the default form submission
+    const apiKey = apiKeyInput.val().trim();
+    const voiceId = voiceIdInput.val().trim();
+    const font_ = font_select.value;
 
-        const apiKey = apiKeyInput.val().trim();
-        const voiceId = voiceIdInput.val().trim();
-        const font_ = font_select.value;
+    // Reset error messages
+    apiKeyError.text('');
+    voiceIdError.text('');
+    font_error.text('');
 
-
-        // Remove any previous error messages
-        apiKeyError.text('');
-        voiceIdError.text('');
-        font_error.text('');
-        //text_form.style.height = '2290px';
-
-        if (apiKey && voiceId && font_) {
-          // Send AJAX request to validate the API key and voice ID
-          $.ajax({
-            url: '/text/validate_api_key/', // URL for the Django view
+    if (apiKey && voiceId && font_) {
+        $.ajax({
+            url: '/text/validate_api_key/', 
             type: 'POST',
             data: {
-              'eleven_labs_api_key': apiKey,
-              'voice_id': voiceId,
-              'csrfmiddlewaretoken': '{{ csrf_token }}' // Include CSRF token for security
+                'eleven_labs_api_key': apiKey,
+                'voice_id': voiceId,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
             },
             success: function (response) {
-              console.log(response); // Log the entire response to the console
-
-              if (response.valid) {
-                text_form.submit();
-              } else {
+                console.log(response);
+                if (response.valid) {
+                    text_form.submit();
+                } else {
+                    stopProcessingAnimation('#button-text');
+                    handleAPIError(response);
+                }
+            },
+            error: function (xhr) {
+                console.log("Error Status: ", xhr.status);
+                console.log("Error: ", xhr.responseText);
                 stopProcessingAnimation('#button-text');
 
-
-                if (response.status == 402) {
-                  apiKeyInput.focus();
-                  apiKeyError.text(response.error);
-                } else if (response.status === 401) {
-                  apiKeyInput.focus();
-                  apiKeyError.text(response.error);
-                } else if (response.status === 400) {
-                  voiceIdInput.focus();
-                  voiceIdError.text(response.error);
-                } else {
-                  apiKeyInput.focus();
-                  apiKeyError.text(response.error);
+                try {
+                    const response = JSON.parse(xhr.responseText);
+                    handleAPIError(response);
+                } catch (e) {
+                    apiKeyError.text('Error validating the API key.');
                 }
-              }
-            },
-            error: function (xhr, status, error) {
-              console.log("Error Status: ", status);
-              console.log("Error: ", error);
-              stopProcessingAnimation('#button-text');
-              apiKeyError.text('Error validating the API key.');
-              apiKeyInput.focus();
-              button_text.text('Proceed To Scene Selection');
             }
-          });
-        } else {
-          stopProcessingAnimation('#button-text');
+        });
+    } else {
+        stopProcessingAnimation('#button-text');
 
-          if (!apiKey) {
+        if (!apiKey) {
             apiKeyInput.focus();
             apiKeyError.text('API key is required.');
-          } else if (!voiceId) {
+        } else if (!voiceId) {
             voiceIdInput.focus();
             voiceIdError.text('Voice ID is required.');
-          } else if (!font_) {
+        } else if (!font_) {
             font_select.required = true;
             font_select.focus();
-            font_error.text('Please Select A Font From The Dropdown');
-          }
+            font_error.text('Please select a font.');
         }
-      }
+    }
+}
+
+function handleAPIError(response) {
+    if (response.status === 402) {
+        apiKeyInput.focus();
+        apiKeyError.text(response.error);
+    } else if (response.status === 401) {
+        apiKeyInput.focus();
+        apiKeyError.text(response.error);
+    } else if (response.status === 400) {
+        voiceIdInput.focus();
+        voiceIdError.text(response.error);
+    } else {
+        apiKeyInput.focus();
+        apiKeyError.text(response.error || "Unknown error.");
+    }
+}
 
       submitButton.on('click', validateAPIKey);
 
