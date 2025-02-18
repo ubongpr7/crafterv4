@@ -972,6 +972,64 @@ def validate_api_key(api_key, voice_id):
 
 
 
+# def validate_api_keyv(request):
+#     if request.method != "POST":
+#         return JsonResponse({"valid": False, "error": "Invalid request method", "status": 405}, status=405)
+
+#     api_key = request.POST.get("eleven_labs_api_key", "").strip()
+#     voice_id = request.POST.get("voice_id", "").strip()
+
+#     if not api_key:
+#         return JsonResponse({"valid": False, "error": "API key is required", "status": 400}, status=400)
+
+#     if not voice_id:
+#         return JsonResponse({"valid": False, "error": "Voice ID is required", "status": 400}, status=400)
+
+#     url = f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}"
+#     headers = {"xi-api-key": api_key}
+#     data = {
+#         "text": "Test voice synthesis",
+#         "model_id": "eleven_monolingual_v1",
+#         "voice_settings": {"stability": 0.5, "similarity_boost": 0.75},
+#     }
+
+#     try:
+#         response = requests.post(url, json=data, headers=headers)
+#         response.raise_for_status()  # Raise an error for HTTP 4xx or 5xx
+
+#         if response.status_code == 200:
+#             return JsonResponse({"valid": True})
+
+#     except requests.exceptions.RequestException as e:
+#         error_message = f"Error connecting to Eleven Labs API: {str(e)}"
+#         status_code = 500  # Internal Server Error (default)
+
+#         if isinstance(e, requests.exceptions.HTTPError):
+#             try:
+#                 error_data = response.json()
+#                 detail = error_data.get("detail")
+
+#                 if isinstance(detail, dict):  # Eleven Labs structured error
+#                     status = detail.get("status")
+#                     message = detail.get("message")
+
+#                     if status == "quota_exceeded":
+#                         return JsonResponse({"valid": False, "error": "Quota exceeded: " + (message or "Insufficient credits"), "status": 402}, status=402)
+
+#                     if status == "invalid_api_key":
+#                         return JsonResponse({"valid": False, "error": "Invalid API key", "status": 401}, status=401)
+
+#                     if status == "voice_not_found":
+#                         return JsonResponse({"valid": False, "error": "Invalid Voice ID", "status": 400}, status=400)
+
+#                     return JsonResponse({"valid": False, "error": message or "API error", "status": response.status_code}, status=response.status_code)
+
+#                 return JsonResponse({"valid": False, "error": detail or "Unknown API error", "status": response.status_code}, status=response.status_code)
+
+#             except ValueError:
+#                 return JsonResponse({"valid": False, "error": "Invalid API response", "status": response.status_code}, status=response.status_code)
+
+#         return JsonResponse({"valid": False, "error": error_message, "status": status_code}, status=status_code)
 def validate_api_keyv(request):
     if request.method != "POST":
         return JsonResponse({"valid": False, "error": "Invalid request method", "status": 405}, status=405)
@@ -995,39 +1053,37 @@ def validate_api_keyv(request):
 
     try:
         response = requests.post(url, json=data, headers=headers)
-        response.raise_for_status()  # Raise an error for HTTP 4xx or 5xx
+        response.raise_for_status()  # Raises error for HTTP 4xx or 5xx
 
         if response.status_code == 200:
             return JsonResponse({"valid": True})
 
     except requests.exceptions.RequestException as e:
-        error_message = f"Error connecting to Eleven Labs API: {str(e)}"
-        status_code = 500  # Internal Server Error (default)
+        status_code = 500  # Default error status
+        error_message = "Failed to validate API key."
 
         if isinstance(e, requests.exceptions.HTTPError):
             try:
-                error_data = response.json()
+                error_data = response.json()  # Parse Eleven Labs error
                 detail = error_data.get("detail")
 
-                if isinstance(detail, dict):  # Eleven Labs structured error
+                if isinstance(detail, dict):
                     status = detail.get("status")
-                    message = detail.get("message")
 
                     if status == "quota_exceeded":
-                        return JsonResponse({"valid": False, "error": "Quota exceeded: " + (message or "Insufficient credits"), "status": 402}, status=402)
-
-                    if status == "invalid_api_key":
-                        return JsonResponse({"valid": False, "error": "Invalid API key", "status": 401}, status=401)
-
-                    if status == "voice_not_found":
-                        return JsonResponse({"valid": False, "error": "Invalid Voice ID", "status": 400}, status=400)
-
-                    return JsonResponse({"valid": False, "error": message or "API error", "status": response.status_code}, status=response.status_code)
-
-                return JsonResponse({"valid": False, "error": detail or "Unknown API error", "status": response.status_code}, status=response.status_code)
+                        error_message = "Quota exceeded: Insufficient credits"
+                        status_code = 402
+                    elif status == "invalid_api_key":
+                        error_message = "Invalid API key"
+                        status_code = 401
+                    elif status == "voice_not_found":
+                        error_message = "Invalid Voice ID"
+                        status_code = 400
+                    else:
+                        error_message = "API request failed"
 
             except ValueError:
-                return JsonResponse({"valid": False, "error": "Invalid API response", "status": response.status_code}, status=response.status_code)
+                pass  # Ignore invalid JSON response
 
         return JsonResponse({"valid": False, "error": error_message, "status": status_code}, status=status_code)
 
