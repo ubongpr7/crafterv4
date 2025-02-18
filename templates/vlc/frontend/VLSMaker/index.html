@@ -1006,7 +1006,7 @@ padding: 5px;
       //     }
       //   }
       // }
-      function validateAPIKey(event) {
+  function validateAPIKey(event) {
     startProcessingAnimation('#button-text'); // Start animation
     event.preventDefault(); // Prevent form submission
 
@@ -1068,18 +1068,27 @@ padding: 5px;
 }
 
 function handleAPIError(response) {
+    let errorMessage = "Unknown error occurred.";
+
+    if (response && typeof response === "object") {
+        if (response.error) {
+            errorMessage = response.error; // Use only the error message from Django
+        } 
+    }
+
+    // Apply error messages to the correct field
     if (response.status === 402) {
         apiKeyInput.focus();
-        apiKeyError.text(response.error);
+        apiKeyError.text(errorMessage);
     } else if (response.status === 401) {
         apiKeyInput.focus();
-        apiKeyError.text(response.error);
+        apiKeyError.text(errorMessage);
     } else if (response.status === 400) {
         voiceIdInput.focus();
-        voiceIdError.text(response.error);
+        voiceIdError.text(errorMessage);
     } else {
         apiKeyInput.focus();
-        apiKeyError.text(response.error || "Unknown error.");
+        apiKeyError.text(errorMessage);
     }
 }
 
