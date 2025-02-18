@@ -54,15 +54,13 @@ def check_subtitles_length(request, text_file_id):
 
     subtitles = text_file.video_clips.all()
 
-    if len(subtitles) > 40:
-        total_characters = sum(len(subtitle.slide) for subtitle in subtitles)
+    total_characters = sum(len(subtitle.slide) for subtitle in subtitles)
 
-        if total_characters > 5000:
-            return JsonResponse({'status': 'error', 'message': 'Character limit exceeded!'})
-        
-        return JsonResponse({'status': 'success', 'message': 'Character limit okay.'})
+    if total_characters > 5000:
+        return JsonResponse({'status': 'error', 'message': 'Character limit exceeded!'})
     
-    return JsonResponse({'status': 'success', 'message': 'Subtitle count is less than 50.'})
+    return JsonResponse({'status': 'success', 'message': 'Character limit okay.'})
+
 
 
 @csrf_exempt 
@@ -973,46 +971,6 @@ def validate_api_key(api_key, voice_id):
         return {"valid": False, "error": "Error connecting to Eleven Labs API"}
 
 
-# def validate_api_keyv(request):
-#     if request.method == "POST":
-#         api_key = request.POST.get("eleven_labs_api_key", "")
-#         voice_id = request.POST.get("voice_id")
-
-#         url = f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}"
-#         headers = {"xi-api-key": api_key}
-#         data = {
-#             "text": "Test voice synthesis",
-#             "model_id": "eleven_monolingual_v1",
-#             "voice_settings": {"stability": 0.5, "similarity_boost": 0.75},
-#         }
-
-#         try:
-#             response = requests.post(url, json=data, headers=headers)
-
-#             if response.status_code == 200:
-#                 return JsonResponse({"valid": True})
-#             elif response.status_code == 401:
-#                 error_detail = response.json().get("detail", {})
-#                 if (
-#                     "status" in error_detail
-#                     and error_detail["status"] == "quota_exceeded"
-#                 ):
-#                     return JsonResponse(
-#                         {
-#                             "valid": False,
-#                             "error": f"Quota exceeded: {error_detail.get('message', 'Insufficient credits')}",
-#                         }
-#                     )
-#                 else:
-#                     return JsonResponse({"valid": False, "error": "Invalid API key"})
-#             else:
-#                 return JsonResponse({"valid": False, "error": "Invalid Voice ID"})
-#         except requests.exceptions.RequestException:
-#             return JsonResponse(
-#                 {"valid": False, "error": "Error connecting to Eleven Labs API"}
-#             )
-
-#     return JsonResponse({"valid": False, "error": "Invalid request method"})
 
 def validate_api_keyv(request):
     if request.method != "POST":
