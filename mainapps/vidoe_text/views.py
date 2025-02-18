@@ -524,7 +524,7 @@ def process_background_music(request, textfile_id):
         
         no_of_mp3 = int(request.POST.get("no_of_mp3", 0))  # Number of MP3 files
         for music in textfile.background_musics.all():
-            music_file=request.POST.get(f'saved-mp3-{music.id}')
+            music_file=request.Files.get(f'saved-mp3-{music.id}')
             start=request.POST.get(f'saved-starts-{music.id}')
             end=request.POST.get(f'saved-ends-{music.id}')
             volume=request.POST.get(f'saved-volume-{music.id}')
