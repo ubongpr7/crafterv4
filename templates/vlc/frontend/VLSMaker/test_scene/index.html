@@ -438,7 +438,7 @@ const validateTextFile = async (file) => {
             const lines = text.split(/\r?\n/); 
             if (lines.length > 10){
                 alert("Your Current Package Only Allows You To Add 10 Slide Please Upgrade To Unlock Unlimited Slides");
-
+                return false
             }
 
         }
