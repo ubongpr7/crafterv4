@@ -191,6 +191,19 @@
         {% endif %}
 
        
-
+        <script>
+          document.addEventListener("DOMContentLoaded", function () {
+            const video = document.getElementById("my-video");
+        
+            video.onloadedmetadata = function () {
+              const aspectRatio = video.videoWidth / video.videoHeight;
+        
+              if (aspectRatio <= 9 / 16) {  // Check if aspect ratio is 9:16 or close
+                video.style.width = "50vw"; // Increase width, adjust as needed
+                video.style.maxWidth = "none"; // Allow the width to change
+              }
+            };
+          });
+        </script>
       </body>
     </html>

@@ -1162,43 +1162,6 @@ function handleAPIError(response) {
     });
   </script>
   
-   <!-- <script>
-    document.addEventListener('DOMContentLoaded', function () {
-  function updateSubtitleBackgroundColor(color) {
-    const previewBackground = document.getElementById('previewBackground');
-    
-    if (color.includes('rgba')) {
-      const rgbColor = color.replace(/,.*\)$/, ')');  
-      previewBackground.style.backgroundColor = rgbColor;  
-    } else {
-      previewBackground.style.backgroundColor = color;
-    }
-  }
-
-  const colorPicker2 = document.getElementById('colorPicker2');
-  const colorText2 = document.getElementById('colortext2');
-
-  colorPicker2.addEventListener('input', function () {
-    const selectedColor = colorPicker2.value;
-    colorText2.value = selectedColor;
-    updateSubtitleBackgroundColor(selectedColor); 
-  });
-
-  colorText2.addEventListener('input', function () {
-    const selectedColor = colorText2.value;
-    if (/^#[0-9A-F]{6}$/i.test(selectedColor)) { 
-      colorPicker2.value = selectedColor; 
-      updateSubtitleBackgroundColor(selectedColor);
-    }
-  });
-
-  updateSubtitleBackgroundColor(colorPicker2.value);
-});
-
-  </script>
-    -->
-
-
    <script>
     
 
