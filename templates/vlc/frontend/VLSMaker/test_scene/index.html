@@ -383,6 +383,7 @@
 
     <script>
         textFileResolution='{{textfile.resolution}}' 
+        const userPlan = "{{user.subscription.plan.name}}".toLowerCase(); 
 
 document.addEventListener("DOMContentLoaded", () => {
     if (textFileResolution === '9:16') {

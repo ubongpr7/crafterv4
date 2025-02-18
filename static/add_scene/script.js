@@ -463,15 +463,14 @@ function deleteSlide(btn) {
     updateSubtitleNumbers(document.getElementById('leadsTable').getElementsByTagName('tbody')[0])
 }
 
+
 function checkRowCount(tableBody) {
     var rowCount = tableBody.rows.length;
-    const userPlan = "{{user.subscription.plan.name}}".toLowerCase(); // Convert to lowercase
-    const unlimitedPlans = ['premium', 'admin']; // Plans should also be lowercase for comparison
+    const unlimitedPlans = ['premium', 'admin','pro']; 
     console.log(userPlan);
-
-    // Check if userPlan is not in unlimitedPlans
-    if (rowCount >= 15 && !unlimitedPlans.includes(userPlan)) {
-        console.log("Row count exceeded 15!");
+    // if (rowCount > 10 && !unlimitedPlans.includes(userPlan)) {
+    if (userPlan ==='free'){
+        console.log("Row count exceeded 10!");
         alert("Your Current Package Only Allows You To Add 15 Slide Please Upgrade To Unlock Unlimited Slides");
         showPopup()
         return false;
