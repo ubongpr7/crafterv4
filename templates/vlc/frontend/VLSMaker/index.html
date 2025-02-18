@@ -953,10 +953,13 @@ padding: 5px;
                 stopProcessingAnimation('#button-text');
 
 
-                if (response.error.toLowerCase().includes('api key')) {
+                if (response.status == 402) {
                   apiKeyInput.focus();
                   apiKeyError.text(response.error);
-                } else if (response.error.toLowerCase().includes('voice')) {
+                } else if (response.status === 401) {
+                  apiKeyInput.focus();
+                  apiKeyError.text(response.error);
+                } else if (response.status === 400) {
                   voiceIdInput.focus();
                   voiceIdError.text(response.error);
                 } else {
