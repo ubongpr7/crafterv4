@@ -1080,7 +1080,7 @@ def validate_api_keyv(request):
                         error_message = "Invalid Voice ID"
                         status_code = 400
                     else:
-                        error_message = "API request failed"
+                        error_message = "Invalid API key"
 
             except ValueError:
                 pass  # Ignore invalid JSON response
