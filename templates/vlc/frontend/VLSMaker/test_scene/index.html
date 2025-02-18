@@ -434,13 +434,8 @@ const validateTextFile = async (file) => {
                     return false;
                 }
             }
-        }else if (userPlan=== 'free'){
-            if (lines.length > 10){
-                alert("Your Current Package Only Allows You To Add 10 Slide Please Upgrade To Unlock Unlimited Slides");
-                return false
-            }
-
         }
+        
         else  {
             
             for (let i = 0; i < lines.length; i++) {
@@ -451,6 +446,13 @@ const validateTextFile = async (file) => {
             }
         }
 
+        if (userPlan=== 'free'){
+            if (lines.length > 10){
+                alert("Your Current Package Only Allows You To Add 10 Slide Please Upgrade To Unlock Unlimited Slides");
+                return false
+            }
+
+        }
         return true;
     } catch (error) {
         console.error("Error reading file:", error);
