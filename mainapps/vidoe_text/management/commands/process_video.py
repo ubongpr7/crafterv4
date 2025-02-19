@@ -1453,7 +1453,7 @@ class Command(BaseCommand):
     def final_concatenate_with_ffmpeg(self):
         """Resize and concatenate videos using FFmpeg, ensuring correct temporary handling."""
         width, height = RESOLUTIONS[self.text_file_instance.resolution]
-        video_urls = [clip.subtitled_clip for clip in self.text_file_instance.video_clips.all() if clip.subtitled_clip]
+        video_urls = [clip.subtitled_clip.name for clip in self.text_file_instance.video_clips.all() if clip.subtitled_clip]
 
         with tempfile.TemporaryDirectory() as temp_dir:
             video_paths = []
