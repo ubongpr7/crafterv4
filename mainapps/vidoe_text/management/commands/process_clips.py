@@ -1470,22 +1470,41 @@ class Command(BaseCommand):
         return isinstance(clip, VideoFileClip)
     
 
-    def concatenate_clips(self, clips, target_resolution=None, target_fps=30):
-        """Concatenates video clips safely, ensuring smooth transitions without glitches."""
+    # def concatenate_clips(self, clips, target_resolution=None, target_fps=30):
+    #     """Concatenates video clips safely, ensuring smooth transitions without glitches."""
 
-        processed_clips = []
+    #     processed_clips = []
 
-        for  clip in clips:
-            clip = clip.set_fps(target_fps)
+    #     for  clip in clips:
+    #         clip = clip.set_fps(target_fps)
             
+    #         if clip.audio:
+    #             clip = clip.set_audio(clip.audio.set_duration(clip.duration))
+            
+    #         processed_clips.append(clip)
+
+    #     final_clip = concatenate_videoclips(processed_clips, method="compose")
+
+    #     logging.info("Clips have been concatenated successfully.")
+        #     return final_clip
+    def concatenate_clips(self, clips, target_resolution=None, target_fps=30):
+        processed_clips = []
+        total_duration = 0
+        for clip in clips:
+            original_duration = clip.duration
+            clip = clip.set_fps(target_fps)
             if clip.audio:
                 clip = clip.set_audio(clip.audio.set_duration(clip.duration))
-            
+            if abs(original_duration - clip.duration) > 0.1:
+                logging.warning(f"Clip duration changed from {original_duration} to {clip.duration}")
+            total_duration += clip.duration
             processed_clips.append(clip)
-
         final_clip = concatenate_videoclips(processed_clips, method="compose")
-
-        logging.info("Clips have been concatenated successfully.")
+        expected_duration = sum(clip.duration for clip in processed_clips)
+        if abs(final_clip.duration - expected_duration) > 0.1:
+            logging.warning(f"Final duration {final_clip.duration} differs from expected {expected_duration}")
+        final_clip = final_clip.subclip(0,expected_duration)
+        logging.info(f"Clips concatenated successfully. Duration: {final_clip.duration}")
         return final_clip
 
     def resize_clips_to_max_size(self, clips):
@@ -1561,7 +1580,7 @@ class Command(BaseCommand):
         segment = segment.set_duration(segment.duration)
         return segment
 
-    
+ 
     def add_subtitles_to_clip(
             self, clip: VideoFileClip, subtitle: pysrt.SubRipItem
         ) -> VideoFileClip:
