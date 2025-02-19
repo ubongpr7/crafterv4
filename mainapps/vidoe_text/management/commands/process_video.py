@@ -598,14 +598,58 @@ class Command(BaseCommand):
             subprocess.run(cmd, check=True)
             return output_path  # Return the modified video file path
 
+    # def crop_video_ffmpeg(self, video_url):
+    #     width,height=RESOLUTIONS[self.text_file_instance.resolution]
+    #     with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_output:
+    #         output_path = temp_output.name
+
+    #         cmd = [
+    #             "ffmpeg", "-y", "-i", video_url,  
+    #             "-vf", f"scale=-2:{height},crop={width}:{height}", 
+    #             "-c:v", "libx264", "-preset", "fast", "-crf", "23", 
+    #             "-c:a", "copy", 
+    #             output_path
+    #         ]
+
+    #         subprocess.run(cmd, check=True)
+
+    #         # clip = VideoFileClip(output_path)
+
+    #         return output_path           
+
+
     def crop_video_ffmpeg(self, video_url):
-        width,height=RESOLUTIONS[self.text_file_instance.resolution]
+        width, height = RESOLUTIONS[self.text_file_instance.resolution]
+
+        # Get the input video's dimensions
+        probe_command = [
+            "ffprobe", "-v", "error", "-show_entries", "stream=width,height", 
+            "-of", "json", video_url
+        ]
+        probe_output = subprocess.run(probe_command, capture_output=True, text=True)
+        probe_data = json.loads(probe_output.stdout)
+
+        input_width = int(probe_data["streams"][0]["width"])
+        input_height = int(probe_data["streams"][0]["height"])
+
+        # Ensure the crop dimensions are not larger than the input dimensions
+        crop_width = min(width, input_width)
+        crop_height = min(height, input_height)
+
+        # If the input dimensions are smaller than the desired crop, adjust scaling
+        if input_width < width or input_height < height:
+            # Scale the video to match the desired height while maintaining aspect ratio
+            scale_filter = f"scale=-2:{height}"
+        else:
+            # No need to scale if the input is already large enough
+            scale_filter = "null"
+
         with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_output:
             output_path = temp_output.name
 
             cmd = [
                 "ffmpeg", "-y", "-i", video_url,  
-                "-vf", f"scale=-2:{height},crop={width}:{height}", 
+                "-vf", f"{scale_filter},crop={crop_width}:{crop_height}", 
                 "-c:v", "libx264", "-preset", "fast", "-crf", "23", 
                 "-c:a", "copy", 
                 output_path
@@ -613,11 +657,8 @@ class Command(BaseCommand):
 
             subprocess.run(cmd, check=True)
 
-            # clip = VideoFileClip(output_path)
-
-            return output_path           
-
-
+            return output_path
+        
     def extract_start_end(self,generated_srt):
         """
         Extracts the start and end times from each index in the aligned_output list.
