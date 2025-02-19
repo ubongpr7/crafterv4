@@ -455,31 +455,157 @@ class Command(BaseCommand):
                 logging.debug(f"Processing subclip with ID: {subclip.id}")
                 file_ = self.load_video_file_from_file_field(subclip.to_dict().get('video_path'))
                 logging.debug(f"Loaded video clip from path: {subclip.to_dict().get('video_path')}")
-                cropped_file = self.crop_and_setduration_ffmpeg(
+                cropped_file = self.crop_video_ffmpeg(
                     file_,
-                    float(subclip.end - subclip.start), 
-                    MAINRESOLUTIONS[self.text_file_instance.resolution],
-                    subclip,
                 )
-                logging.debug(f"Cropped clip to resolution: {MAINRESOLUTIONS[self.text_file_instance.resolution]}")
-                clip_subclips.append(cropped_file)
-            subclip_urls=[subclip.processed_video.url for subclip in clip.subclips.all() if subclip.processed_video ]
-            cropped_video=self.concatenate_clips_ffmpeg(
-                subclip_urls,
-                clip,
-                RESOLUTIONS[self.text_file_instance.resolution],
 
+                file_with_duration=self.set_video_duration_ffmpeg(cropped_file,float(subclip.end - subclip.start))
+
+
+                logging.debug(f"Cropped clip to resolution: {MAINRESOLUTIONS[self.text_file_instance.resolution]}")
+                clip_subclips.append(file_with_duration)
+            # subclip_urls=[subclip.processed_video.url for subclip in clip.subclips.all() if subclip.processed_video ]
+            cropped_video=self.concatenate_clips_ffmpeg(
+                clip_subclips,
+                clip,
             )
         return True 
 
+    def concatenate_clips_ffmpeg(self, video_urls, main_clip):
+        """
+        Concatenates video clips from URLs using FFmpeg, setting the FPS to 30.
+        If only one video is provided, it is saved directly without concatenation.
+        
+        Args:
+            video_urls (list): List of video URLs or local paths.
+            main_clip (object): The main clip instance where the final video should be saved.
+        
+        Returns:
+            str: Path to the final processed video.
+        """
+        temp_files = []
+        output_video = None
+        timestamp = int(time.time())
+
+        try:
+            if len(video_urls) == 1:
+                # Only one video: Save it directly
+                single_video = video_urls[0]
+
+                with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as temp_video:
+                    temp_video_path = temp_video.name
+
+                # Process video to set FPS to 30
+                cmd = [
+                    "ffmpeg", "-y", "-i", single_video,
+                    "-vf", "fps=30",
+                    "-c:v", "libx264", "-preset", "fast", "-crf", "23",
+                    "-c:a", "aac", "-b:a", "128k", "-strict", "experimental",
+                    temp_video_path
+                ]
+                subprocess.run(cmd, check=True)
+                output_video = temp_video_path
+
+                # Multiple videos: Process and concatenate
+                for video_url in video_urls:
+                    with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as temp_video:
+                        temp_files.append(temp_video.name)
+
+                        # Set FPS to 30 for each video
+                        cmd = [
+                            "ffmpeg", "-y", "-i", video_url,
+                            "-vf", "fps=30",
+                            "-c:v", "libx264", "-preset", "fast", "-crf", "23",
+                            "-c:a", "aac", "-b:a", "128k", "-strict", "experimental",
+                            temp_video.name
+                        ]
+                        subprocess.run(cmd, check=True)
+
+                # Create list file for FFmpeg concat demuxer
+                with tempfile.NamedTemporaryFile(delete=False, suffix=".txt") as list_file:
+                    list_file_path = list_file.name
+                    with open(list_file_path, "w") as f:
+                        for temp_video in temp_files:
+                            f.write(f"file '{temp_video}'\n")
+
+                # Output file for concatenation
+                with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as output_file:
+                    output_video = output_file.name
+
+                # FFmpeg concatenation
+                concat_cmd = [
+                    "ffmpeg", "-y", "-f", "concat", "-safe", "0", "-i", list_file_path,
+                    "-c:v", "libx264", "-preset", "fast", "-crf", "23",
+                    "-c:a", "aac", "-b:a", "128k",
+                    output_video
+                ]
+                subprocess.run(concat_cmd, check=True)
+
+            # Save the final video to the main_clip
+            if output_video and main_clip:
+                if main_clip.video_file:
+                    main_clip.video_file.delete(save=False)
+                main_clip.video_file.save(
+                    f"video_{main_clip.id}_{self.generate_random_string()}_{timestamp}.mp4",
+                    ContentFile(open(output_video, "rb").read())
+                )
+
+            return output_video  # Return the final processed video path
+
+        finally:
+            # Cleanup temporary files
+            for temp_file in temp_files:
+                if os.path.exists(temp_file):
+                    os.remove(temp_file)
+            if 'list_file_path' in locals() and os.path.exists(list_file_path):
+                os.remove(list_file_path)
+            if output_video and os.path.exists(output_video):
+                os.remove(output_video)
+
+    def set_video_duration_ffmpeg(video_url, duration):
+        """Sets the duration of a video by slowing it down or trimming it to match the required duration."""
+        
+        with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_output:
+            output_path = temp_output.name
+
+            clip = VideoFileClip(video_url)
+            original_duration = clip.duration
+
+            if duration < original_duration:
+                # Trim the video
+                cmd = [
+                    "ffmpeg", "-y", "-i", video_url,  
+                    "-t", str(duration),
+                    "-c:v", "libx264", "-preset", "fast", "-crf", "23", 
+                    "-c:a", "aac", "-b:a", "128k",
+                    output_path
+                ]
+            
+            else:
+                # Slow down video and audio to match duration
+                speed_factor = original_duration / duration  # Factor to slow down video
+                audio_speed_factor = max(0.5, min(2.0, speed_factor))  # Limit audio speed between 0.5x and 2x
+                
+                cmd = [
+                    "ffmpeg", "-y", "-i", video_url,  
+                    "-vf", f"setpts={1/speed_factor}*PTS",  # Slow down video
+                    "-af", f"atempo={audio_speed_factor}",  # Adjust audio speed
+                    "-c:v", "libx264", "-preset", "fast", "-crf", "23", 
+                    "-c:a", "aac", "-b:a", "128k",
+                    output_path
+                ]
+
+            subprocess.run(cmd, check=True)
+            return output_path  # Return the modified video file path
 
     def crop_video_ffmpeg(self, video_url):
+        width,height=RESOLUTIONS[self.text_file_instance.resolution]
         with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_output:
             output_path = temp_output.name
 
             cmd = [
                 "ffmpeg", "-y", "-i", video_url,  
-                "-vf", "scale=-2:1280,crop=720:1280", 
+                "-vf", f"scale=-2:{height},crop={width}:{height}", 
                 "-c:v", "libx264", "-preset", "fast", "-crf", "23", 
                 "-c:a", "copy", 
                 output_path
@@ -487,9 +613,9 @@ class Command(BaseCommand):
 
             subprocess.run(cmd, check=True)
 
-            clip = VideoFileClip(output_path)
+            # clip = VideoFileClip(output_path)
 
-            return clip             
+            return output_path           
 
 
     def extract_start_end(self,generated_srt):
@@ -1455,8 +1581,9 @@ class Command(BaseCommand):
         return isinstance(clip, VideoFileClip)
 
 
+
     # def final_concatenate_with_ffmpeg(self):
-    #     """Resize and concatenate videos using FFmpeg, ensuring correct temporary handling."""
+    #     """Resize, concatenate videos using FFmpeg, and set the provided MP3 audio correctly."""
     #     width, height = RESOLUTIONS[self.text_file_instance.resolution]
     #     video_urls = [clip.subtitled_clip.name for clip in self.text_file_instance.video_clips.all() if clip.subtitled_clip]
 
@@ -1486,41 +1613,70 @@ class Command(BaseCommand):
     #             subprocess.run(resize_command, shell=True, check=True)
     #             resized_paths.append(resized_path)
 
-    #         # ✅ Create list file for FFmpeg concat
     #         list_file_path = os.path.join(temp_dir, "file_list.txt")
     #         with open(list_file_path, "w") as f:
     #             for path in resized_paths:
     #                 f.write(f"file '{path}'\n")
 
-    #         # ✅ Concatenate videos
     #         with tempfile.NamedTemporaryFile(suffix=".mp4", dir=temp_dir, delete=False) as final_temp:
     #             final_video_path = final_temp.name
 
     #         concat_command = f"ffmpeg -y -f concat -safe 0 -i {list_file_path} -c:v libx264 -crf 23 -preset veryfast {final_video_path}"
     #         subprocess.run(concat_command, shell=True, check=True)
 
-    #         # ✅ Save the final video to Django model
+    #         with tempfile.NamedTemporaryFile(suffix=".mp3", dir=temp_dir, delete=False) as audio_temp:
+    #             audio_path = audio_temp.name
+    #             audio_content = download_from_s3(self.text_file_instance.generated_audio.name, audio_path)
+
+    #             if not audio_content:
+    #                 raise ValueError("Failed to download MP3 audio from S3.")
+
+    #             with open(audio_path, "wb") as audio_file:
+    #                 audio_file.write(audio_content)
+
+    #         def get_duration(file_path):
+    #             command = f"ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 {file_path}"
+    #             return float(subprocess.check_output(command, shell=True).strip())
+
+    #         concatenated_duration = get_duration(final_video_path)
+    #         audio_duration = get_duration(audio_path)
+
+    #         with tempfile.NamedTemporaryFile(suffix=".aac", dir=temp_dir, delete=False) as aac_audio_temp:
+    #             aac_audio_path = aac_audio_temp.name
+
+    #         trim_audio_command = (
+    #             f"ffmpeg -y -i {audio_path} -c:a aac -b:a 192k -t {min(concatenated_duration, audio_duration)} {aac_audio_path}"
+    #         )
+    #         subprocess.run(trim_audio_command, shell=True, check=True)
+
+    #         with tempfile.NamedTemporaryFile(suffix=".mp4", dir=temp_dir, delete=False) as final_output_temp:
+    #             final_output_path = final_output_temp.name
+
+    #         final_audio_command = (
+    #             f"ffmpeg -y -i {final_video_path} -i {aac_audio_path} -c:v copy -c:a aac -strict experimental {final_output_path}"
+    #         )
+    #         subprocess.run(final_audio_command, shell=True, check=True)
+
     #         if self.text_file_instance.generated_final_video:
     #             self.text_file_instance.generated_final_video.delete(save=False)
 
     #         self.text_file_instance.generated_final_video.save(
     #             f"video_{self.text_file_instance.id}_{self.generate_random_string()}.mp4",
-    #             ContentFile(open(final_video_path, "rb").read())
+    #             ContentFile(open(final_output_path, "rb").read())
     #         )
 
     #         self.text_file_instance.save()
 
     #     return self.text_file_instance.generated_final_video.url
 
-
     def final_concatenate_with_ffmpeg(self):
-        """Resize, concatenate videos using FFmpeg, and set the provided MP3 audio correctly."""
-        width, height = RESOLUTIONS[self.text_file_instance.resolution]
+        """Concatenate videos with FPS=30 using FFmpeg and set the provided MP3 audio correctly."""
         video_urls = [clip.subtitled_clip.name for clip in self.text_file_instance.video_clips.all() if clip.subtitled_clip]
 
         with tempfile.TemporaryDirectory() as temp_dir:
             video_paths = []
 
+            # Download videos from S3
             for idx, url in enumerate(video_urls):
                 with tempfile.NamedTemporaryFile(suffix=".mp4", dir=temp_dir, delete=False) as temp_video:
                     video_content = download_from_s3(url, temp_video.name)
@@ -1533,28 +1689,35 @@ class Command(BaseCommand):
 
                     video_paths.append(temp_video.name)
 
-            resized_paths = []
+            # Process videos to set FPS=30
+            processed_paths = []
             for path in video_paths:
-                with tempfile.NamedTemporaryFile(suffix=".mp4", dir=temp_dir, delete=False) as temp_resized:
-                    resized_path = temp_resized.name
+                with tempfile.NamedTemporaryFile(suffix=".mp4", dir=temp_dir, delete=False) as temp_processed:
+                    processed_path = temp_processed.name
 
-                resize_command = (
-                    f"ffmpeg -y -i {path} -vf scale={width}:{height} -c:v libx264 -crf 23 -preset veryfast {resized_path}"
+                # Set FPS to 30
+                fps_command = (
+                    f"ffmpeg -y -i {path} -vf fps=30 -c:v libx264 -crf 23 -preset veryfast {processed_path}"
                 )
-                subprocess.run(resize_command, shell=True, check=True)
-                resized_paths.append(resized_path)
+                subprocess.run(fps_command, shell=True, check=True)
+                processed_paths.append(processed_path)
 
+            # Create a list file for FFmpeg concatenation
             list_file_path = os.path.join(temp_dir, "file_list.txt")
             with open(list_file_path, "w") as f:
-                for path in resized_paths:
+                for path in processed_paths:
                     f.write(f"file '{path}'\n")
 
+            # Concatenate videos
             with tempfile.NamedTemporaryFile(suffix=".mp4", dir=temp_dir, delete=False) as final_temp:
                 final_video_path = final_temp.name
 
-            concat_command = f"ffmpeg -y -f concat -safe 0 -i {list_file_path} -c:v libx264 -crf 23 -preset veryfast {final_video_path}"
+            concat_command = (
+                f"ffmpeg -y -f concat -safe 0 -i {list_file_path} -c:v libx264 -crf 23 -preset veryfast {final_video_path}"
+            )
             subprocess.run(concat_command, shell=True, check=True)
 
+            # Download and process audio
             with tempfile.NamedTemporaryFile(suffix=".mp3", dir=temp_dir, delete=False) as audio_temp:
                 audio_path = audio_temp.name
                 audio_content = download_from_s3(self.text_file_instance.generated_audio.name, audio_path)
@@ -1565,6 +1728,7 @@ class Command(BaseCommand):
                 with open(audio_path, "wb") as audio_file:
                     audio_file.write(audio_content)
 
+            # Get durations of concatenated video and audio
             def get_duration(file_path):
                 command = f"ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 {file_path}"
                 return float(subprocess.check_output(command, shell=True).strip())
@@ -1572,6 +1736,7 @@ class Command(BaseCommand):
             concatenated_duration = get_duration(final_video_path)
             audio_duration = get_duration(audio_path)
 
+            # Convert audio to AAC and trim it to match the video duration
             with tempfile.NamedTemporaryFile(suffix=".aac", dir=temp_dir, delete=False) as aac_audio_temp:
                 aac_audio_path = aac_audio_temp.name
 
@@ -1580,6 +1745,7 @@ class Command(BaseCommand):
             )
             subprocess.run(trim_audio_command, shell=True, check=True)
 
+            # Merge video and audio
             with tempfile.NamedTemporaryFile(suffix=".mp4", dir=temp_dir, delete=False) as final_output_temp:
                 final_output_path = final_output_temp.name
 
@@ -1588,6 +1754,7 @@ class Command(BaseCommand):
             )
             subprocess.run(final_audio_command, shell=True, check=True)
 
+            # Save the final video to the model
             if self.text_file_instance.generated_final_video:
                 self.text_file_instance.generated_final_video.delete(save=False)
 
@@ -1599,101 +1766,7 @@ class Command(BaseCommand):
             self.text_file_instance.save()
 
         return self.text_file_instance.generated_final_video.url
-
-    def concatenate_clips_ffmpeg(self, video_urls, main_clip, target_resolution=(720, 1280), target_fps=30):
-        """
-        Concatenates video clips from URLs using FFmpeg, ensuring they meet the target resolution & FPS.
-        If only one video is provided, it is processed and saved directly without concatenation.
-        
-        Args:
-            video_urls (list): List of video URLs or local paths.
-            main_clip (object): The main clip instance where the final video should be saved.
-            target_resolution (tuple): Desired resolution (width, height).
-            target_fps (int): Frame rate for output video.
-        
-        Returns:
-            str: Path to the final processed video.
-        """
-        temp_files = []
-        output_video = None
-        timestamp = int(time.time())
-
-        try:
-            if len(video_urls) == 1:
-                # Only one video: Process it directly
-                single_video = video_urls[0]
-
-                with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as temp_video:
-                    temp_video_path = temp_video.name
-
-                # Process video to match target resolution and FPS
-                cmd = [
-                    "ffmpeg", "-y", "-i", single_video,
-                    "-vf", f"scale={target_resolution[0]}:{target_resolution[1]},fps={target_fps}",
-                    "-c:v", "libx264", "-preset", "fast", "-crf", "23",
-                    "-c:a", "aac", "-b:a", "128k", "-strict", "experimental",
-                    temp_video_path
-                ]
-                subprocess.run(cmd, check=True)
-                output_video = temp_video_path
-
-            else:
-                # Multiple videos: Process and concatenate
-                for video_url in video_urls:
-                    with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as temp_video:
-                        temp_files.append(temp_video.name)
-
-                        # Standardize video properties
-                        cmd = [
-                            "ffmpeg", "-y", "-i", video_url,
-                            "-vf", f"scale={target_resolution[0]}:{target_resolution[1]},fps={target_fps}",
-                            "-c:v", "libx264", "-preset", "fast", "-crf", "23",
-                            "-c:a", "aac", "-b:a", "128k", "-strict", "experimental",
-                            temp_video.name
-                        ]
-                        subprocess.run(cmd, check=True)
-
-                # Create list file for FFmpeg concat demuxer
-                with tempfile.NamedTemporaryFile(delete=False, suffix=".txt") as list_file:
-                    list_file_path = list_file.name
-                    with open(list_file_path, "w") as f:
-                        for temp_video in temp_files:
-                            f.write(f"file '{temp_video}'\n")
-
-                # Output file for concatenation
-                with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as output_file:
-                    output_video = output_file.name
-
-                # FFmpeg concatenation
-                concat_cmd = [
-                    "ffmpeg", "-y", "-f", "concat", "-safe", "0", "-i", list_file_path,
-                    "-c:v", "libx264", "-preset", "fast", "-crf", "23",
-                    "-c:a", "aac", "-b:a", "128k",
-                    output_video
-                ]
-                subprocess.run(concat_cmd, check=True)
-
-            # Save the final video to the main_clip
-            if output_video and main_clip:
-                if main_clip.video_file:
-                    main_clip.video_file.delete(save=False)
-                main_clip.video_file.save(
-                    f"video_{main_clip.id}_{self.generate_random_string()}_{timestamp}.mp4",
-                    ContentFile(open(output_video, "rb").read())
-                )
-
-            return output_video  # Return the final processed video path
-
-        finally:
-            # Cleanup temporary files
-            for temp_file in temp_files:
-                if os.path.exists(temp_file):
-                    os.remove(temp_file)
-            if 'list_file_path' in locals() and os.path.exists(list_file_path):
-                os.remove(list_file_path)
-            if output_video and os.path.exists(output_video):
-                os.remove(output_video)
-
+    
     def concatenate_clips(self, clips, target_resolution=None, target_fps=30):
         """Concatenates video clips safely, ensuring smooth transitions without glitches."""
 
