@@ -210,8 +210,8 @@ class TextLineVideoClip(models.Model):
     )
     slide=models.CharField(max_length=100,null=True, blank=True)
     remaining=models.CharField(max_length=100,null=True, blank=True)
-    # line_number = models.IntegerField()
     video_file = models.FileField(upload_to='text_clip_upload_videos/', null=True,blank=True)
+    subtitled_clip = models.FileField(upload_to='subtitled_clips/', null=True,blank=True)
     position = models.PositiveIntegerField(default=0) 
     def __str__(self):
         return f"VideoClip for line {self.position} of {self.text_file}"

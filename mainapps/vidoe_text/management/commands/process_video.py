@@ -335,23 +335,23 @@ class Command(BaseCommand):
 
 
         self.text_file_instance.track_progress(54)
-        # replacement_video_clips=self.resize_clips_to_max_size(replacement_video_clips)
         final_video_segments = self.replace_video_segments(
             output_video_segments, replacement_video_clips, subtitles, blank_vide_clip
         )
         logging.info("Done  replace_video_segments")
-        final_resized_clips=self.resize_clips_to_max_size(final_video_segments)
-        concatenated_video = self.concatenate_clips(
-            final_resized_clips,
-        )
-        original_audio = blank_vide_clip.audio.subclip(
-            0, min(concatenated_video.duration, blank_vide_clip.audio.duration)
-        )
-        final_video = concatenated_video.set_audio(
-            original_audio
-        )  
-        final_video_speeded_up_clip = self.speed_up_video_with_audio(final_video, 1)
-        final_video = self.save_final_video(final_video_speeded_up_clip)
+        # final_resized_clips=self.resize_clips_to_max_size(final_video_segments)
+        done_video=self.final_concatenate_with_ffmpeg()
+        # concatenated_video = self.concatenate_clips(
+        #     final_resized_clips,
+        # )
+        # original_audio = blank_vide_clip.audio.subclip(
+        #     0, min(concatenated_video.duration, blank_vide_clip.audio.duration)
+        # )
+        # final_video = concatenated_video.set_audio(
+        #     original_audio
+        # )  
+        # final_video_speeded_up_clip = self.speed_up_video_with_audio(final_video, 1)
+        # final_video = self.save_final_video(final_video_speeded_up_clip)
         watermarked = self.add_static_watermark_to_instance()
         self.text_file_instance.track_progress(100)
 
@@ -360,61 +360,6 @@ class Command(BaseCommand):
         )
     
 
-
-    # def crop_and_setduratio_ffmpeg(self,video_path, target_duration, desired_aspect_ratio,clip_model):
-    #     with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_output:
-    #         output_path = temp_output.name
-
-    #         ffmpeg_cmd = ["ffmpeg", "-y", "-i", video_path]
-
-    #         clip = VideoFileClip(video_path)
-    #         original_width, original_height = clip.size
-    #         original_duration = clip.duration
-
-    #         if target_duration and abs(original_duration - target_duration) > 1e-3:
-    #             if original_duration < target_duration:
-    #                 speed_factor = original_duration / target_duration
-    #             else:
-    #                 speed_factor = target_duration / original_duration
-
-    #             ffmpeg_cmd += ["-filter:v", f"setpts={1/speed_factor}*PTS"]
-
-    #         if desired_aspect_ratio:
-    #             original_aspect_ratio = original_width / original_height
-
-    #             if abs(original_aspect_ratio - desired_aspect_ratio) > 0.01:
-    #                 if original_aspect_ratio > desired_aspect_ratio:
-    #                     new_width = int(original_height * desired_aspect_ratio)
-    #                     new_height = original_height
-    #                     x_offset = (original_width - new_width) // 2
-    #                     y_offset = 0
-    #                 else:
-    #                     new_width = original_width
-    #                     new_height = int(original_width / desired_aspect_ratio)
-    #                     x_offset = 0
-    #                     y_offset = (original_height - new_height) // 2
-
-    #                 crop_filter = f"crop={new_width}:{new_height}:{x_offset}:{y_offset}"
-    #                 ffmpeg_cmd += ["-vf", crop_filter]
-
-    #         # Encoding settings
-    #         ffmpeg_cmd += [
-    #             "-c:v", "libx264", "-preset", "fast", "-crf", "23",
-    #             "-c:a", "aac", "-b:a", "128k",
-    #             output_path
-    #         ]
-
-    #         # Run FFmpeg command
-    #         subprocess.run(ffmpeg_cmd, check=True)
-    #         with open(output_path, "rb") as output_video_file:
-    #             video_content = output_video_file.read()
-    #             if clip_model.processed_video:
-    #                 clip_model.processed_video.delete(save=False)
-    #             clip_model.processed_video.save(
-    #                 f"video_{clip_model.id}_{self.generate_random_string()}_{timestamp}.mp4",
-    #                 ContentFile(video_content),
-    #             )
-    #         return True
 
     def crop_and_setduration_ffmpeg(self, video_path, target_duration, desired_aspect_ratio, clip_model):
         with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_output:
@@ -474,9 +419,9 @@ class Command(BaseCommand):
                     clip_model.processed_video.delete(save=False)
                 clip_model.processed_video.save(
                     f"video_{clip_model.id}_{self.generate_random_string()}_{timestamp}.mp4",
-                    ContentFile(video_content),
+                   ContentFile(video_content),
                 )
-            return True
+            return output_path
 
 
     def generate_subclip_videos_with_duration(self):
@@ -1501,8 +1446,54 @@ class Command(BaseCommand):
         Checks if the provided MoviePy clip is a VideoFileClip.
         """
         return isinstance(clip, VideoFileClip)
-    
 
+    def final_concatenate_with_ffmpeg(self):
+        """Resize and concatenate videos using FFmpeg command-line, then store the final output correctly."""
+        width, height=RESOLUTIONS[self.text_file_instance.resolution]
+        video_urls=[clip.subtitled_clip for clip in self.text_file_instance.video_clips.all() if clip.subtitled_clip  ]
+        with tempfile.TemporaryDirectory() as temp_dir:
+            video_paths = []
+
+            # Download videos from S3 and store locally in temp_dir
+            for idx, url in enumerate(video_urls):
+                temp_file_path = os.path.join(temp_dir, f"video_{idx}.mp4")
+                download_from_s3(url, temp_file_path)  # Using your existing function
+                video_paths.append(temp_file_path)
+
+            # Resize each video
+            resized_paths = []
+            for path in video_paths:
+                resized_path = os.path.join(temp_dir, f"resized_{os.path.basename(path)}")
+                resize_command = (
+                    f"ffmpeg -i {path} -vf scale={width}:{height} -c:v libx264 -crf 23 -preset veryfast {resized_path}"
+                )
+                subprocess.run(resize_command, shell=True, check=True)
+                resized_paths.append(resized_path)
+
+            # Create list file for FFmpeg concat
+            list_file_path = os.path.join(temp_dir, "file_list.txt")
+            with open(list_file_path, "w") as f:
+                for path in resized_paths:
+                    f.write(f"file '{path}'\n")
+
+            # Concatenate videos smoothly
+            final_video_path = os.path.join(temp_dir, "final_output.mp4")
+            concat_command = f"ffmpeg -f concat -safe 0 -i {list_file_path} -c:v libx264 -crf 23 -preset veryfast -y {final_video_path}"
+            subprocess.run(concat_command, shell=True, check=True)
+
+            # Save the final video to the Django model
+            if self.text_file_instance.generated_final_video:
+                self.text_file_instance.generated_final_video.delete(save=False)
+
+            self.text_file_instance.generated_final_video.save(
+                f"video_{self.text_file_instance.id}_{self.generate_random_string()}.mp4",
+                ContentFile(open(final_video_path, "rb").read())
+            )
+
+            self.text_file_instance.save()
+
+        return self.text_file_instance.generated_final_video.url
+    
     def concatenate_clips_ffmpeg(self, video_urls, main_clip, target_resolution=(720, 1280), target_fps=30):
         """
         Concatenates video clips from URLs using FFmpeg, ensuring they meet the target resolution & FPS.
@@ -1659,11 +1650,12 @@ class Command(BaseCommand):
         original_video: VideoFileClip,
     ) -> List[VideoFileClip]:
         combined_segments = original_segments.copy()
+        main_lines= self.text_file_instance.video_clips.all()
         for replace_index in range(len(replacement_videos)):
             if 0 <= replace_index < len(combined_segments):
                 target_duration = combined_segments[replace_index].duration
-                start = self.subriptime_to_seconds(subtitles[replace_index].start)
-                end = self.subriptime_to_seconds(subtitles[replace_index].end)
+                # start = self.subriptime_to_seconds(subtitles[replace_index].start)
+                # end = self.subriptime_to_seconds(subtitles[replace_index].end)
 
                 if replacement_videos[replace_index].duration < target_duration:
                     replacement_segment = loop(
@@ -1681,6 +1673,7 @@ class Command(BaseCommand):
                 adjusted_segment_with_subtitles = self.add_subtitles_to_clip(
                     adjusted_segment, subtitles[replace_index]
                 )
+                self.write_clip_file(adjusted_segment_with_subtitles,main_lines[replace_index].subtitled_clip,main_lines[replace_index])
                 combined_segments[replace_index] = adjusted_segment_with_subtitles
         return combined_segments
 

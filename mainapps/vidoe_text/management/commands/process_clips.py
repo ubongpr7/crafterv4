@@ -414,24 +414,6 @@ class Command(BaseCommand):
                 self.write_clip_file(concatenated_clip, clip.video_file,clip)
         return True 
 
-    # def crop_video_ffmpeg(self,video_url):
-    #     with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_output:
-    #         output_path = temp_output.name
-
-    #         cmd = [
-    #             "ffmpeg","-y", "-i", video_url,  
-    #             "-vf", "crop=in_h*720/1280:in_h",  
-    #             "-c:v", "libx264", "-preset", "fast", "-crf", "23", 
-    #             "-c:a", "copy", 
-    #             output_path
-    #         ]
-
-    #         subprocess.run(cmd, check=True)
-
-    #         clip = VideoFileClip(output_path)
-
-    #         return clip 
-
     def crop_video_ffmpeg(self, video_url):
         with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_output:
             output_path = temp_output.name
@@ -1487,18 +1469,6 @@ class Command(BaseCommand):
         """
         return isinstance(clip, VideoFileClip)
     
-
-    # def concatenate_clips(self, clips, target_resolution=None, target_fps=30):
-    #     """Concatenates video clips safely, ensuring smooth transitions without glitches."""
-
-    #     for i,clip in enumerate(clips):
-    #         clips[i]=clip.subclip(0,clip.duration).set_fps(30)
-            
-    #     final_clip = concatenate_videoclips(clips,transition=None, method="chain",bg_color=None, padding=0) 
-
-    #     logging.info("Clips have been concatenated successfully.")
-    #     return final_clip
-
 
     def concatenate_clips(self, clips, target_resolution=None, target_fps=30):
         """Concatenates video clips safely, ensuring smooth transitions without glitches."""
