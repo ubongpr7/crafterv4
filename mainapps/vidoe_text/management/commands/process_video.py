@@ -354,7 +354,7 @@ class Command(BaseCommand):
         # )  
         # final_video_speeded_up_clip = self.speed_up_video_with_audio(final_video, 1)
         # final_video = self.save_final_video(final_video_speeded_up_clip)
-        # watermarked = self.add_static_watermark_to_instance()
+        watermarked = self.add_static_watermark_to_instance()
         self.text_file_instance.track_progress(100)
 
         self.stdout.write(
