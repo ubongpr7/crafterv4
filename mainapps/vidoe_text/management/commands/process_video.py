@@ -353,7 +353,8 @@ class Command(BaseCommand):
         #     original_audio
         # )  
         # final_video_speeded_up_clip = self.speed_up_video_with_audio(final_video, 1)
-        # final_video = self.save_final_video(final_video_speeded_up_clip)
+        final_video = self.save_final_video()
+
         watermarked = self.add_static_watermark_to_instance()
         self.text_file_instance.track_progress(100)
 
@@ -587,21 +588,25 @@ class Command(BaseCommand):
     random_string = generate_random_string(12)  # Generate a string of length 12
     print("Random String:", random_string)
 
-    def save_final_video(self, clip):
+    def save_final_video(self, ):
         with tempfile.NamedTemporaryFile(
             suffix=".mp4", delete=False
         ) as temp_output_video:
             self.text_file_instance.track_progress(60)
-
-            clip.write_videofile(
+            clip=self.load_video_from_file_field(self.text_file_instance.generated_final_bgm_video)
+            blank_video=self.load_video_from_file_field(self.text_file_instance.generated_blank_video)
+            original_audio = blank_video.audio.subclip(
+                0, min(clip.duration, blank_video.audio.duration)
+            )
+            final_video = clip.set_audio(
+                original_audio
+            )  
+            final_video.write_videofile(
                 temp_output_video.name,
                 codec="libx264",
                 preset="ultrafast",
                 audio_codec="aac",
                 fps=30,
-                # temp_audiofile='temp-audio.m4a', 
-                # remove_temp=True
-                # ffmpeg_params=["-movflags", "+faststart"],
             )
             self.text_file_instance.track_progress(70)
 
