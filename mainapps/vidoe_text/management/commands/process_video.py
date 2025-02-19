@@ -562,7 +562,7 @@ class Command(BaseCommand):
             if output_video and os.path.exists(output_video):
                 os.remove(output_video)
 
-    def set_video_duration_ffmpeg(video_url, duration):
+    def set_video_duration_ffmpeg(self,video_url, duration):
         """Sets the duration of a video by slowing it down or trimming it to match the required duration."""
         
         with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_output:
