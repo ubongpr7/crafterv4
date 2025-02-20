@@ -1238,22 +1238,22 @@ class Command(BaseCommand):
         return video_segments, subtitle_segments
 
 
-    def adjust_segment_duration(self, segment: VideoFileClip, duration: float) -> VideoFileClip:
-        current_duration = segment.duration
+    # def adjust_segment_duration(self, segment: VideoFileClip, duration: float) -> VideoFileClip:
+    #     current_duration = segment.duration
 
-        if duration < 0:
-            raise ValueError("Target duration must be non-negative.")
-        if current_duration == 0:
-            raise ValueError("Segment duration is zero; cannot adjust.")
+    #     if duration < 0:
+    #         raise ValueError("Target duration must be non-negative.")
+    #     if current_duration == 0:
+    #         raise ValueError("Segment duration is zero; cannot adjust.")
 
-        if abs(current_duration - duration) < 1e-3:  
-            return segment
+    #     if abs(current_duration - duration) < 1e-3:  
+    #         return segment
 
-        if current_duration < duration:
-            speed_factor = current_duration / duration
-            return segment.fx(vfx.speedx, speed_factor)
+    #     if current_duration < duration:
+    #         speed_factor = current_duration / duration
+    #         return segment.fx(vfx.speedx, speed_factor)
 
-        return segment.subclip(0, duration)
+    #     return segment.subclip(0, duration)
 
     def get_video_paths_for_text_file(self):
         """
@@ -1653,12 +1653,12 @@ class Command(BaseCommand):
                 combined_segments[replace_index] = adjusted_segment_with_subtitles
 
         return combined_segments
-    # def adjust_segment_properties(
-    #     self, segment: VideoFileClip, original: VideoFileClip
-    # ) -> VideoFileClip:
-    #     segment = segment.set_fps(original.fps)
-    #     segment = segment.set_duration(segment.duration)
-    #     return segment
+    def adjust_segment_properties(
+        self, segment: VideoFileClip, original: VideoFileClip
+    ) -> VideoFileClip:
+        segment = segment.set_fps(original.fps)
+        segment = segment.set_duration(segment.duration)
+        return segment
 
     def adjust_segment_duration(self, segment: VideoFileClip, duration: float) -> VideoFileClip:
         current_duration = segment.duration
