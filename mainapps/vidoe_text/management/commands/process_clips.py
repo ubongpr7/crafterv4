@@ -1238,22 +1238,22 @@ class Command(BaseCommand):
         return video_segments, subtitle_segments
 
 
-    # def adjust_segment_duration(self, segment: VideoFileClip, duration: float) -> VideoFileClip:
-    #     current_duration = segment.duration
+    def adjust_segment_duration(self, segment: VideoFileClip, duration: float) -> VideoFileClip:
+        current_duration = segment.duration
 
-    #     if duration < 0:
-    #         raise ValueError("Target duration must be non-negative.")
-    #     if current_duration == 0:
-    #         raise ValueError("Segment duration is zero; cannot adjust.")
+        if duration < 0:
+            raise ValueError("Target duration must be non-negative.")
+        if current_duration == 0:
+            raise ValueError("Segment duration is zero; cannot adjust.")
 
-    #     if abs(current_duration - duration) < 1e-3:  
-    #         return segment
+        if abs(current_duration - duration) < 1e-3:  
+            return segment
 
-    #     if current_duration < duration:
-    #         speed_factor = current_duration / duration
-    #         return segment.fx(vfx.speedx, speed_factor)
+        if current_duration < duration:
+            speed_factor = current_duration / duration
+            return segment.fx(vfx.speedx, speed_factor)
 
-    #     return segment.subclip(0, duration)
+        return segment.subclip(0, duration)
 
     def get_video_paths_for_text_file(self):
         """
@@ -1270,93 +1270,6 @@ class Command(BaseCommand):
 
         return [clip.video_file for clip in video_clips ]
 
-   
-    def repair_and_load_video(self, file_field) -> VideoFileClip:
-        """
-        Load a video or image from a file field, downloading it from S3, repairing it with untrunc if necessary,
-        and returning it as a MoviePy VideoFileClip or ImageClip.
-
-        Args:
-            file_field: The FileField containing the S3 path for the file.
-
-        Returns:
-            VideoFileClip or ImageClip: The loaded clip.
-
-        Raises:
-            ValueError: If the file field is empty or not a valid video/image file.
-        """
-        try:
-            if not file_field or not file_field.name:
-                raise ValueError("File field is empty or invalid.")
-
-            file_extension = os.path.splitext(file_field.name)[1].lower()
-
-            # Create temp files for the corrupted video and repaired video
-            with tempfile.NamedTemporaryFile(suffix=file_extension, delete=False) as bad_video:
-                bad_video_path = bad_video.name
-
-                # Download the corrupted video from S3
-                download_from_s3(file_field.name, bad_video_path)
-
-                # Create another tempfile for the repaired video
-                with tempfile.NamedTemporaryFile(suffix=file_extension, delete=False) as repaired_video:
-                    repaired_video_path = repaired_video.name
-
-                    # Use untrunc to repair the video
-                    reference_video_path = "/app/reference.mp4"  # Reference video must be mounted in the untrunc container
-                    repair_command = [
-                        "docker", "exec", "untrunc_service",  # Run the command in the 'untrunc' container
-                        "untrunc",
-                        reference_video_path,
-                        bad_video_path,
-                    ]
-
-                    subprocess.run(repair_command, check=True)
-                    logging.info(f"Video repaired: {repaired_video_path}")
-
-                    # Load the repaired video clip into MoviePy
-                    clip = VideoFileClip(repaired_video_path)
-
-                    # Clean up the temp files
-                    os.unlink(bad_video_path)
-                    os.unlink(repaired_video_path)
-
-                    return clip
-        except subprocess.CalledProcessError as untrunc_error:
-            logging.error(f"Untrunc error during video repair: {untrunc_error}")
-            raise
-
-        except Exception as e:
-            logging.error(f"Error loading video from file field: {e}")
-            raise
-
-    def add_moov_atom(self,input_path, output_path):
-        """
-        Adds the moov atom to a .mov video using FFmpeg.
-
-        Args:
-            input_path (str): Path to the input .mov video.
-            output_path (str): Path to save the output .mov video with moov atom.
-
-        Returns:
-            str: Path to the fixed video file.
-        Raises:
-            Exception: If FFmpeg fails to process the file.
-        """
-        try:
-            ffmpeg_command = [
-                "ffmpeg",
-                "-i", input_path,
-                "-c:v", "copy",
-                "-c:a", "copy",
-                "-movflags", "faststart",
-                output_path
-            ]
-            subprocess.run(ffmpeg_command, check=True)
-            print(f"Successfully added moov atom to: {output_path}")
-            return output_path
-        except subprocess.CalledProcessError as e:
-            raise Exception(f"FFmpeg error: {e}")
 
     def load_video_from_file_field(self, file_field) -> VideoFileClip:
         """
@@ -1468,25 +1381,7 @@ class Command(BaseCommand):
         Checks if the provided MoviePy clip is a VideoFileClip.
         """
         return isinstance(clip, VideoFileClip)
-    
 
-    # def concatenate_clips(self, clips, target_resolution=None, target_fps=30):
-    #     """Concatenates video clips safely, ensuring smooth transitions without glitches."""
-
-    #     processed_clips = []
-
-    #     for  clip in clips:
-    #         clip = clip.set_fps(target_fps)
-            
-    #         if clip.audio:
-    #             clip = clip.set_audio(clip.audio.set_duration(clip.duration))
-            
-    #         processed_clips.append(clip)
-
-    #     final_clip = concatenate_videoclips(processed_clips, method="compose")
-
-    #     logging.info("Clips have been concatenated successfully.")
-        #     return final_clip
     def concatenate_clips(self, clips, target_resolution=None, target_fps=30):
         processed_clips = []
         total_duration = 0
@@ -1660,29 +1555,29 @@ class Command(BaseCommand):
         segment = segment.set_duration(segment.duration)
         return segment
 
-    def adjust_segment_duration(self, segment: VideoFileClip, duration: float) -> VideoFileClip:
-        current_duration = segment.duration
+    # def adjust_segment_duration(self, segment: VideoFileClip, duration: float) -> VideoFileClip:
+    #     current_duration = segment.duration
         
-        if duration < 0:
-            raise ValueError("Target duration must be non-negative.")
-        if current_duration == 0:
-            raise ValueError("Segment duration is zero; cannot adjust.")
+    #     if duration < 0:
+    #         raise ValueError("Target duration must be non-negative.")
+    #     if current_duration == 0:
+    #         raise ValueError("Segment duration is zero; cannot adjust.")
 
-        # If durations are very close (within 0.05 seconds), no adjustment needed
-        if abs(current_duration - duration) < 0.05:  
-            return segment
+    #     # If durations are very close (within 0.05 seconds), no adjustment needed
+    #     if abs(current_duration - duration) < 0.05:  
+    #         return segment
 
-        # Calculate speed factor to match duration exactly
-        speed_factor = current_duration / duration
+    #     # Calculate speed factor to match duration exactly
+    #     speed_factor = current_duration / duration
         
-        # Apply speed adjustment to match the audio duration
-        adjusted_segment = segment.fx(vfx.speedx, speed_factor)
+    #     # Apply speed adjustment to match the audio duration
+    #     adjusted_segment = segment.fx(vfx.speedx, speed_factor)
         
-        # Ensure exact duration by trimming if necessary
-        if abs(adjusted_segment.duration - duration) > 0.01:
-            adjusted_segment = adjusted_segment.subclip(0, duration)
+    #     # Ensure exact duration by trimming if necessary
+    #     if abs(adjusted_segment.duration - duration) > 0.01:
+    #         adjusted_segment = adjusted_segment.subclip(0, duration)
         
-        return adjusted_segment 
+    #     return adjusted_segment 
     def add_subtitles_to_clip(
             self, clip: VideoFileClip, subtitle: pysrt.SubRipItem
         ) -> VideoFileClip:
