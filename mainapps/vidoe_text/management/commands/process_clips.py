@@ -1448,39 +1448,6 @@ class Command(BaseCommand):
             return video_clip
         return None
     
-    # def replace_video_segments(
-    #     self,
-    #     original_segments: List[VideoFileClip],
-    #     replacement_videos: Dict[int, VideoFileClip],
-    #     subtitles: pysrt.SubRipFile,
-    #     original_video: VideoFileClip,
-    # ) -> List[VideoFileClip]:
-    #     combined_segments = original_segments.copy()
-    #     for replace_index in range(len(replacement_videos)):
-    #         if 0 <= replace_index < len(combined_segments):
-    #             target_duration = combined_segments[replace_index].duration
-    #             start = self.subriptime_to_seconds(subtitles[replace_index].start)
-    #             end = self.subriptime_to_seconds(subtitles[replace_index].end)
-
-    #             if replacement_videos[replace_index].duration < target_duration:
-    #                 replacement_segment = loop(
-    #                     replacement_videos[replace_index], duration=target_duration
-    #                 )
-    #             else:
-    #                 replacement_segment = replacement_videos[replace_index].subclip(
-    #                     0, target_duration
-    #                 )
-
-    #             adjusted_segment = self.adjust_segment_properties(
-    #                 replacement_segment,
-    #                 original_video,
-    #             )
-    #             adjusted_segment_with_subtitles = self.add_subtitles_to_clip(
-    #                 adjusted_segment, subtitles[replace_index]
-    #             )
-    #             combined_segments[replace_index] = adjusted_segment_with_subtitles
-    #     return combined_segments
-
     def replace_video_segments(
         self,
         original_segments: List[VideoFileClip],
@@ -1489,33 +1456,67 @@ class Command(BaseCommand):
         original_video: VideoFileClip,
     ) -> List[VideoFileClip]:
         combined_segments = original_segments.copy()
-        
         for replace_index in range(len(replacement_videos)):
             if 0 <= replace_index < len(combined_segments):
-                # Get exact audio duration from subtitles
+                target_duration = combined_segments[replace_index].duration
                 start = self.subriptime_to_seconds(subtitles[replace_index].start)
                 end = self.subriptime_to_seconds(subtitles[replace_index].end)
-                exact_duration = end - start
-                
-                # Adjust replacement video to match audio duration exactly
-                # replacement_segment = self.adjust_segment_duration(
-                #     replacement_videos[replace_index], 
-                #     exact_duration
-                # )
-                
+
+                if replacement_videos[replace_index].duration < target_duration:
+                    replacement_segment = self.adjust_segment_duration(
+                        replacement_videos[replace_index], duration=target_duration
+                    )
+                else:
+                    replacement_segment = replacement_videos[replace_index].subclip(
+                        0, target_duration
+                    )
+
                 adjusted_segment = self.adjust_segment_properties(
-                    replacement_videos[replace_index],
+                    replacement_segment,
                     original_video,
                 )
-                
                 adjusted_segment_with_subtitles = self.add_subtitles_to_clip(
-                    adjusted_segment, 
-                    subtitles[replace_index]
+                    adjusted_segment, subtitles[replace_index]
                 )
-                
                 combined_segments[replace_index] = adjusted_segment_with_subtitles
-
         return combined_segments
+
+    # def replace_video_segments(
+    #     self,
+    #     original_segments: List[VideoFileClip],
+    #     replacement_videos: Dict[int, VideoFileClip],
+    #     subtitles: pysrt.SubRipFile,
+    #     original_video: VideoFileClip,
+    # ) -> List[VideoFileClip]:
+    #     combined_segments = original_segments.copy()
+        
+    #     for replace_index in range(len(replacement_videos)):
+    #         if 0 <= replace_index < len(combined_segments):
+    #             # Get exact audio duration from subtitles
+    #             start = self.subriptime_to_seconds(subtitles[replace_index].start)
+    #             end = self.subriptime_to_seconds(subtitles[replace_index].end)
+    #             exact_duration = end - start
+                
+    #             # Adjust replacement video to match audio duration exactly
+    #             replacement_segment = self.adjust_segment_duration(
+    #                 replacement_videos[replace_index], 
+    #                 exact_duration
+    #             )
+                
+    #             adjusted_segment = self.adjust_segment_properties(
+    #                 replacement_videos[replace_index],
+    #                 original_video,
+    #             )
+                
+    #             adjusted_segment_with_subtitles = self.add_subtitles_to_clip(
+    #                 adjusted_segment, 
+    #                 subtitles[replace_index]
+    #             )
+                
+    #             combined_segments[replace_index] = adjusted_segment_with_subtitles
+
+    #     return combined_segments
+    
     def adjust_segment_properties(
         self, segment: VideoFileClip, original: VideoFileClip
     ) -> VideoFileClip:
