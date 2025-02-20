@@ -1481,38 +1481,6 @@ class Command(BaseCommand):
     #             combined_segments[replace_index] = adjusted_segment_with_subtitles
     #     return combined_segments
 
-    # def replace_video_segments(
-    #     self,
-    #     original_segments: List[VideoFileClip],
-    #     replacement_videos: Dict[int, VideoFileClip],
-    #     subtitles: pysrt.SubRipFile,
-    #     original_video: VideoFileClip,
-    # ) -> List[VideoFileClip]:
-    #     combined_segments = original_segments.copy()
-    #     for replace_index in range(len(replacement_videos)):
-    #         if 0 <= replace_index < len(combined_segments):
-    #             target_duration = combined_segments[replace_index].duration
-    #             start = self.subriptime_to_seconds(subtitles[replace_index].start)
-    #             end = self.subriptime_to_seconds(subtitles[replace_index].end)
-
-    #             # Calculate the speed factor needed to match the target duration
-    #             if replacement_videos[replace_index].duration < target_duration:
-    #                 speed_factor = replacement_videos[replace_index].duration / target_duration
-    #                 replacement_segment = replacement_videos[replace_index].fx(vfx.speedx, speed_factor)
-    #             else:
-    #                 replacement_segment = replacement_videos[replace_index].subclip(0, target_duration)
-
-    #             adjusted_segment = self.adjust_segment_properties(
-    #                 replacement_segment,
-    #                 original_video,
-    #             )
-    #             adjusted_segment_with_subtitles = self.add_subtitles_to_clip(
-    #                 adjusted_segment, subtitles[replace_index]
-    #             )
-    #             combined_segments[replace_index] = adjusted_segment_with_subtitles
-                
-    #     return combined_segments
-
     def replace_video_segments(
         self,
         original_segments: List[VideoFileClip],
@@ -1530,13 +1498,13 @@ class Command(BaseCommand):
                 exact_duration = end - start
                 
                 # Adjust replacement video to match audio duration exactly
-                replacement_segment = self.adjust_segment_duration(
-                    replacement_videos[replace_index], 
-                    exact_duration
-                )
+                # replacement_segment = self.adjust_segment_duration(
+                #     replacement_videos[replace_index], 
+                #     exact_duration
+                # )
                 
                 adjusted_segment = self.adjust_segment_properties(
-                    replacement_segment,
+                    replacement_videos[replace_index],
                     original_video,
                 )
                 
@@ -1602,31 +1570,6 @@ class Command(BaseCommand):
             rectangle_color = (int(x * 255), int(y * 255), int(z * 255))
             
             font_size = int(base_font_size * scaling_factor)
-
-            # def wrap_text_dynamically(text: str, max_text_width: int, font_size: int, font: str, max_lines: int = 4) -> str:
-            #     words = text.split()
-            #     lines = []
-            #     current_line = []
-                
-            #     for word in words:
-            #         test_line = " ".join(current_line + [word])
-            #         test_clip = TextClip(test_line, fontsize=font_size, font=font)
-                    
-            #         if test_clip.w <= max_text_width:
-            #             current_line.append(word)
-            #         else:
-            #             if current_line:
-            #                 lines.append(" ".join(current_line))
-            #             current_line = [word]
-                    
-            #         if len(lines) >= max_lines:
-            #             break
-
-            #     if current_line and len(lines) < max_lines:
-            #         lines.append(" ".join(current_line))
-
-            #     return "\n".join(lines)
-            
 
             def wrap_text_dynamically(text: str, max_text_width: int, font_size: int, font: str, max_lines: int = 4) -> str:
                 """
