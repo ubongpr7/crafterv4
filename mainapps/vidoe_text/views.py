@@ -333,10 +333,20 @@ def delete_textfile(request, textfile_id):
 
     return render(request, "partials/confirm_delete.html", {"item":textfile })
 
+# def manage_textfile(request):
+#     user =request.user
+#     textfiles=TextFile.objects.filter(user=user)
+#     return render(request,'assets/text_files.html', {'textfiles':textfiles})
+
 def manage_textfile(request):
-    user =request.user
-    textfiles=TextFile.objects.filter(user=user)
-    return render(request,'assets/text_files.html', {'textfiles':textfiles})
+    user = request.user
+    textfiles = TextFile.objects.filter(user=user).values("id", "created_at")
+    
+    for textfile in textfiles:
+        textfile["get_clip_number"] = TextFile.objects.get(id=textfile["id"]).get_clip_number()
+
+    return render(request, "assets/text_files.html", {"textfiles": textfiles})
+
 def edit_subclip(request,id):
     if request.method =='POST':
         subclip= SubClip.objects.get(id= id)
