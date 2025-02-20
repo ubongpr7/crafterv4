@@ -379,30 +379,6 @@ function clearCurrentFile() {
     document.getElementById('currentFile').innerHTML = ''
 }
 
-function saveInput(inputElement) {
-    const uploadElement = document.getElementById('upload-text');
-
-    if (inputElement.type === 'file') {
-
-        if (inputElement.value) {
-            document.getElementById('upload-text').style.color = 'black'
-
-
-            const fileName = inputElement.files.length > 0 ? inputElement.files[0].name : "Choode File";
-            uploadElement.textContent = fileName.slice(0, 13)
-            document.getElementById('currentFile').textContent = ''
-            document.getElementById('clear-file').style.display = 'flex'
-
-        } else {
-            uploadElement.textContent = "Choode File"
-            // document.getElementById('currentFile').textContent = ''
-            document.getElementById('clear-file').style.display = 'none'
-
-        }
-
-    }
-
-};
 
 
 
@@ -656,6 +632,7 @@ async function fetchVideoClips(selected) {
     let video_id = `videoSelect`
     // saveInput(selected)
     if (id) {
+        saveInput(selected)
         populateVideoCategories(video_id, `/video/get_clip/${id}`)
 
     } else {
