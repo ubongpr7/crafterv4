@@ -1462,17 +1462,17 @@ class Command(BaseCommand):
                 start = self.subriptime_to_seconds(subtitles[replace_index].start)
                 end = self.subriptime_to_seconds(subtitles[replace_index].end)
 
-                if replacement_videos[replace_index].duration < target_duration:
-                    replacement_segment = self.adjust_segment_duration(
-                        replacement_videos[replace_index], duration=target_duration
-                    )
-                else:
-                    replacement_segment = replacement_videos[replace_index].subclip(
-                        0, target_duration
-                    )
+                # if replacement_videos[replace_index].duration < target_duration:
+                #     replacement_segment = self.adjust_segment_duration(
+                #         replacement_videos[replace_index], duration=target_duration
+                #     )
+                # else:
+                #     replacement_segment = replacement_videos[replace_index].subclip(
+                #         0, target_duration
+                #     )
 
                 adjusted_segment = self.adjust_segment_properties(
-                    replacement_segment,
+                    replacement_videos[replace_index],
                     original_video,
                 )
                 adjusted_segment_with_subtitles = self.add_subtitles_to_clip(
@@ -1547,6 +1547,7 @@ class Command(BaseCommand):
     #         adjusted_segment = adjusted_segment.subclip(0, duration)
         
     #     return adjusted_segment 
+    
     def add_subtitles_to_clip(
             self, clip: VideoFileClip, subtitle: pysrt.SubRipItem
         ) -> VideoFileClip:
