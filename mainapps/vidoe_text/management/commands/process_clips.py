@@ -1490,20 +1490,33 @@ class Command(BaseCommand):
     def concatenate_clips(self, clips, target_resolution=None, target_fps=30):
         processed_clips = []
         total_duration = 0
+
         for clip in clips:
             original_duration = clip.duration
+
+            # Set frame rate
             clip = clip.set_fps(target_fps)
+
+            # Ensure audio matches video duration
             if clip.audio:
-                clip = clip.set_audio(clip.audio.set_duration(clip.duration))
-            if abs(original_duration - clip.duration) > 0.1:
+                clip = clip.set_audio(clip.audio.subclip(0, min(clip.audio.duration, clip.duration)))
+
+            # Ensure clip doesn't exceed its original duration
+            clip = clip.subclip(0, original_duration)
+
+            if abs(original_duration - clip.duration) > 0.1: 
                 logging.warning(f"Clip duration changed from {original_duration} to {clip.duration}")
+
             total_duration += clip.duration
             processed_clips.append(clip)
-        final_clip = concatenate_videoclips(processed_clips, method="compose")
+
+        method = "chain" if all(c.size == processed_clips[0].size and c.fps == target_fps for c in processed_clips) else "compose"
+        final_clip = concatenate_videoclips(processed_clips, method=method)
+
+        # Trim final clip to expected duration
         expected_duration = sum(clip.duration for clip in processed_clips)
-        if abs(final_clip.duration - expected_duration) > 0.1:
-            logging.warning(f"Final duration {final_clip.duration} differs from expected {expected_duration}")
-        final_clip = final_clip.subclip(0,expected_duration)
+        final_clip = final_clip.subclip(0, min(final_clip.duration, expected_duration))
+
         logging.info(f"Clips concatenated successfully. Duration: {final_clip.duration}")
         return final_clip
 
