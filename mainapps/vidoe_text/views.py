@@ -344,6 +344,7 @@ def manage_textfile(request):
     
     for textfile in textfiles:
         textfile["get_clip_number"] = TextFile.objects.get(id=textfile["id"]).get_clip_number()
+        textfile["get_file_text"] = TextFile.objects.get(id=textfile["id"]).get_file_text()
 
     return render(request, "assets/text_files.html", {"textfiles": textfiles})
 
