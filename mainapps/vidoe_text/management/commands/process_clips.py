@@ -1463,16 +1463,16 @@ class Command(BaseCommand):
                 end = self.subriptime_to_seconds(subtitles[replace_index].end)
 
                 # if replacement_videos[replace_index].duration < target_duration:
-                #     replacement_segment = self.adjust_segment_duration(
-                #         replacement_videos[replace_index], duration=target_duration
-                #     )
+                replacement_segment = self.adjust_segment_duration(
+                        replacement_videos[replace_index], duration=target_duration
+                    )
                 # else:
                 #     replacement_segment = replacement_videos[replace_index].subclip(
                 #         0, target_duration
                 #     )
 
                 adjusted_segment = self.adjust_segment_properties(
-                    replacement_videos[replace_index],
+                    replacement_segment,
                     original_video,
                 )
                 adjusted_segment_with_subtitles = self.add_subtitles_to_clip(
