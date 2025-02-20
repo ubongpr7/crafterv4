@@ -1410,7 +1410,7 @@ class Command(BaseCommand):
 
         # Trim final clip to expected duration
         expected_duration = sum(clip.duration for clip in processed_clips)
-        final_clip = final_clip.subclip(0, min(final_clip.duration, expected_duration))
+        final_clip = final_clip.subclip(0, max(final_clip.duration, expected_duration))
 
         logging.info(f"Clips concatenated successfully. Duration: {final_clip.duration}")
         return final_clip
