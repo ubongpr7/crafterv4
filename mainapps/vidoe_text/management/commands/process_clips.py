@@ -1638,20 +1638,22 @@ class Command(BaseCommand):
                 logging.info(f'Done with tiktok')
                 return tiktok  
             max_text_width = clip.w*0.8 
+            max_text_width_2=0.9
             if self.text_file_instance.resolution=='16:9':
                 max_text_width = clip.w*0.65
             elif self.text_file_instance.resolution=='1:1':
-                max_text_width = clip.w*0.9
+                max_text_width = clip.w*0.75
+
             
             elif self.text_file_instance.resolution=='4:5':
-                max_text_width = clip.w*0.9
+                max_text_width = clip.w*0.70
             
 
             max_line_width = max_text_width // (font_size // 2)
             
             
-            if self.text_file_instance.resolution=='4:5':
-                wrapped_text,font_size = wrap_text_dynamically(
+            if self.text_file_instance.resolution !='16:9':
+                wrapped_text_1,font_size_1 = wrap_text_dynamically(
 
                         subtitle.text, 
                         max_text_width, 
@@ -1659,8 +1661,17 @@ class Command(BaseCommand):
                         self.text_file_instance.font,
                         2
                     )
+                if font_size_1<font_size:
+                    wrapped_text_1,font_size_1 = wrap_text_dynamically(
+
+                        subtitle.text, 
+                        max_text_width_2, 
+                        font_size, 
+                        self.text_file_instance.font,
+                        2
+                    )
             else:
-                wrapped_text,font_size = wrap_text_dynamically(
+                wrapped_text_1,font_size_1 = wrap_text_dynamically(
                     subtitle.text, 
                     max_text_width=max_text_width, 
                     font_size=font_size, 
@@ -1668,15 +1679,15 @@ class Command(BaseCommand):
                     max_lines=3
                 )
             temp_subtitle_clip = TextClip(
-                wrapped_text,
-                fontsize=font_size,
+                wrapped_text_1,
+                fontsize=font_size_1,
                 font=self.text_file_instance.font
             )
             longest_line_width, text_height = temp_subtitle_clip.size
 
             subtitle_clip = TextClip(
-                wrapped_text,
-                fontsize=font_size,
+                wrapped_text_1,
+                fontsize=font_size_1,
                 color=color,
                 stroke_width=0,
                 font=self.text_file_instance.font,
