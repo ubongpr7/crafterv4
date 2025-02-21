@@ -1287,7 +1287,7 @@ function handleAPIError(response) {
     });
 </script>
 
-<script>
+<!-- <script>
  document.addEventListener('DOMContentLoaded', function () {
     const colorPicker1 = document.getElementById('colorPicker1'); 
     const colorPicker2 = document.getElementById('colorPicker2');
@@ -1401,6 +1401,139 @@ function handleAPIError(response) {
         }
     });
 });
+</script> -->
+
+<script>
+   document.addEventListener('DOMContentLoaded', function () {
+    const colorPicker1 = document.getElementById('colorPicker1'); 
+    const colorPicker2 = document.getElementById('colorPicker2');
+    const colortext1 = document.getElementById('colortext1');
+    const colortext2 = document.getElementById('colortext2'); 
+    const colorBox1 = document.getElementById('color1'); 
+    const colorBox2 = document.getElementById('color2'); 
+    const subtitleSpans = document.querySelectorAll('#tiktokPreview span'); 
+    const previewBackground = document.getElementById('previewBackground'); 
+    const previewText = document.getElementById('previewText'); 
+    const fontSelect = document.getElementById('font_select'); 
+    const tiktokFontOption = document.querySelector('option[value="tiktokfont"]'); // TikTok font option
+
+    // Default colors for TikTok/Reels (9:16)
+    const tiktokDefaultFontColor = '#000000'; 
+    const tiktokDefaultBgColor = '#ffffff'; 
+
+    const defaultFontColor = '#ffffff'; 
+    const defaultBgColor = '#000000'; 
+
+    function setTikTokDefaultColors() {
+        // Update color pickers and text inputs
+        colorPicker1.value = tiktokDefaultFontColor;
+        colortext1.value = tiktokDefaultFontColor;
+        colorBox1.style.backgroundColor = tiktokDefaultFontColor;
+
+        colorPicker2.value = tiktokDefaultBgColor;
+        colortext2.value = tiktokDefaultBgColor;
+        colorBox2.style.backgroundColor = tiktokDefaultBgColor;
+
+        subtitleSpans.forEach(span => {
+            span.style.color = tiktokDefaultFontColor;
+            span.style.backgroundColor = tiktokDefaultBgColor;
+        });
+
+        tiktokFontOption.style.display = 'none';
+    }
+
+    function setOtherDimensionDefaults() {
+        colorPicker1.value = defaultFontColor;
+        colortext1.value = defaultFontColor;
+        colorBox1.style.backgroundColor = defaultFontColor;
+
+        colorPicker2.value = defaultBgColor;
+        colortext2.value = defaultBgColor;
+        colorBox2.style.backgroundColor = defaultBgColor;
+
+        if (previewBackground && previewText) {
+            previewBackground.style.backgroundColor = defaultBgColor;
+            previewText.style.color = defaultFontColor;
+        }
+
+        tiktokFontOption.style.display = 'none';
+
+        fontSelect.value = '';
+    }
+
+    document.querySelectorAll('.box').forEach((box) => {
+        box.addEventListener('click', () => {
+            const resolution = box.getAttribute('data-resolution');
+
+            if (resolution === '9:16') { // TikTok/Reels
+                setTikTokDefaultColors(); // Apply TikTok defaults
+            } else { // Other dimensions (1:1, 4:5, 16:9)
+                setOtherDimensionDefaults(); // Apply other dimension defaults
+            }
+        });
+    });
+
+    colorPicker1.addEventListener('input', function () {
+        const selectedColor = colorPicker1.value;
+        colortext1.value = selectedColor;
+        colorBox1.style.backgroundColor = selectedColor;
+
+        subtitleSpans.forEach(span => {
+            span.style.color = selectedColor;
+        });
+
+        if (previewText) {
+            previewText.style.color = selectedColor;
+        }
+    });
+
+    colorPicker2.addEventListener('input', function () {
+        const selectedColor = colorPicker2.value;
+        colortext2.value = selectedColor;
+        colorBox2.style.backgroundColor = selectedColor;
+
+        subtitleSpans.forEach(span => {
+            span.style.backgroundColor = selectedColor;
+        });
+
+        if (previewBackground) {
+            previewBackground.style.backgroundColor = selectedColor;
+        }
+    });
+
+    colortext1.addEventListener('input', function () {
+        const selectedColor = colortext1.value;
+        if (/^#[0-9A-F]{6}$/i.test(selectedColor)) { 
+            colorPicker1.value = selectedColor; 
+            colorBox1.style.backgroundColor = selectedColor;
+
+            subtitleSpans.forEach(span => {
+                span.style.color = selectedColor;
+            });
+
+            if (previewText) {
+                previewText.style.color = selectedColor;
+            }
+        }
+    });
+
+    colortext2.addEventListener('input', function () {
+        const selectedColor = colortext2.value;
+        if (/^#[0-9A-F]{6}$/i.test(selectedColor)) { 
+            colorPicker2.value = selectedColor; 
+            colorBox2.style.backgroundColor = selectedColor;
+
+            subtitleSpans.forEach(span => {
+                span.style.backgroundColor = selectedColor;
+            });
+
+            if (previewBackground) {
+                previewBackground.style.backgroundColor = selectedColor;
+            }
+        }
+    });
+});
+
 </script>
   </body>
 
