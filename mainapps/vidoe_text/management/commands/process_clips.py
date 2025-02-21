@@ -1638,7 +1638,7 @@ class Command(BaseCommand):
                 logging.info(f'Done with tiktok')
                 return tiktok  
             max_text_width = clip.w*0.8 
-            max_text_width_2=0.9
+            max_text_width_2=clip.w*0.9
             if self.text_file_instance.resolution=='16:9':
                 max_text_width = clip.w*0.65
             elif self.text_file_instance.resolution=='1:1':
