@@ -1700,8 +1700,6 @@ class Command(BaseCommand):
             small_margin = max(10, int(box_radius * 1.5))
             
             box_width = min(text_width + small_margin, clip.w * 0.92)
-            if self.text_file_instance.resolution =='9:16':
-                box_width=max(text_width + small_margin, clip.w * 0.75)
 
             box_height = text_height + margin
             rounded_box_array = self.create_rounded_rectangle(
