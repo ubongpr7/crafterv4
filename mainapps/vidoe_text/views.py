@@ -208,13 +208,16 @@ def check_s3_file_exists_or_retry(bucket_name, s3_key, file_):
 
     try:
         s3_client.head_object(Bucket=bucket_name, Key=s3_key)
+        logging.info(f'{s3_key} exists in S3')
         return True  # File exists
     except s3_client.exceptions.ClientError as e:
         # Check if the error is "Not Found" (404)
         if e.response['Error']['Code'] == '404':
             try:
-                print(f"File {s3_key} missing in S3, re-uploading...")
+                logging.info(f"File {s3_key} missing in S3, re-uploading...")
                 s3_client.upload_fileobj(file_, bucket_name, s3_key)
+                logging.info(f'{s3_key} now exists in S3')
+
                 return True  # Re-upload successful
             except Exception as upload_error:
                 print(f"Retry upload failed: {upload_error}")
