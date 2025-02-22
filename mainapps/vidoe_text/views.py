@@ -417,7 +417,7 @@ def manage_textfile(request):
             ),
         )
         .values("id", "created_at", "clip_number", "file_text")
-    )
+    ).order_by("-created_at")
 
     return render(request, "assets/text_files.html", {"textfiles": textfiles})
 
