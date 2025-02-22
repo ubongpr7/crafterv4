@@ -405,23 +405,23 @@ def delete_textfile(request, textfile_id):
 #     ).order_by("-created_at")
 
 #     return render(request, "assets/text_files.html", {"textfiles": textfiles})
-from django.db.models import Count, OuterRef, Subquery, Value, CharField
-from django.db.models.functions import Concat,Coalesce
+from django.db.models import Count, OuterRef, Subquery, Value, F
+from django.db.models.functions import Concat, Coalesce
 
 def manage_textfile(request):
     user = request.user
 
-    # Subquery to get the first slide from video_clips
+    # Subquery to get the first slide from TextLineVideoClip
     first_slide_subquery = (
-        VideoClip.objects.filter(textfile=OuterRef("pk"))
+        TextLineVideoClip.objects.filter(textfile=OuterRef("pk"))
         .order_by("id")
         .values("slide")[:1]
     )
 
-    # Subquery to count the total number of subclips
+    # Subquery to count the total number of SubClip objects
     total_subclips_subquery = (
-        SubClip.objects.filter(video_clip__textfile=OuterRef("pk"))
-        .values("video_clip__textfile")
+        SubClip.objects.filter(main_line__textfile=OuterRef("pk"))
+        .values("main_line__textfile")
         .annotate(total=Count("id"))
         .values("total")
     )
