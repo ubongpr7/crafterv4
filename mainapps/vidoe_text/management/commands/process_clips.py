@@ -500,13 +500,14 @@ class Command(BaseCommand):
         output_width, output_height = output_resolution
 
         # Get the original video width and height
-        input_width, input_height = clip.size
-        clip.close()
+        
+        input_width, input_height = self.get_video_resolution(input_video)
+        # input_width, input_height = clip.size
+        # clip.close()
 
         # Calculate crop size while maintaining aspect ratio
         input_aspect = input_width / input_height
         output_aspect = output_width / output_height
-
         if input_aspect > output_aspect:
             # Input is wider than needed, crop width
             new_width = int(input_height * output_aspect)
@@ -523,7 +524,7 @@ class Command(BaseCommand):
         # Create a temporary output file
         with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_output:
             output_path = temp_output.name
-            if abs(input_aspect-9/16)<0.1:
+            if abs(input_aspect-9/16)<0.09:
             
                 cmd = [
                     "ffmpeg", "-y", "-i", input_video,
@@ -583,7 +584,19 @@ class Command(BaseCommand):
     #     clip = VideoFileClip(output_path)
 
     #     return clip
-
+    def get_video_resolution(self,input_video):
+        """
+        Uses FFmpeg to get the width and height of a video.
+        """
+        cmd = [
+            "ffprobe", "-v", "error", "-select_streams", "v:0",
+            "-show_entries", "stream=width,height",
+            "-of", "csv=p=0", input_video
+        ]
+        
+        result = subprocess.run(cmd, capture_output=True, text=True)
+        width, height = map(int, result.stdout.strip().split(","))
+        return width, height
     def extract_start_end(self,generated_srt):
         """
         Extracts the start and end times from each index in the aligned_output list.
