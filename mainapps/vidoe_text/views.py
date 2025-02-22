@@ -413,14 +413,14 @@ def manage_textfile(request):
 
     # Subquery to get the first slide from TextLineVideoClip
     first_slide_subquery = (
-        TextLineVideoClip.objects.filter(textfile=OuterRef("pk"))
+        TextLineVideoClip.objects.filter(text_file=OuterRef("pk"))
         .order_by("id")
         .values("slide")[:1]
     )
 
     # Subquery to count the total number of SubClip objects
     total_subclips_subquery = (
-        SubClip.objects.filter(main_line__textfile=OuterRef("pk"))
+        SubClip.objects.filter(main_line__text_file=OuterRef("pk"))
         .values("main_line__textfile")
         .annotate(total=Count("id"))
         .values("total")
