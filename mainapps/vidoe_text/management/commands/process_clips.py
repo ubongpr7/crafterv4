@@ -536,7 +536,7 @@ class Command(BaseCommand):
         # Run FFmpeg
         subprocess.run(cmd, check=True)
 
-        return output_path
+        return VideoFileClip(output_path)
 
 
     # def crop_9_16_video_ffmpeg(self,input_video, resolution):
