@@ -400,11 +400,14 @@ class Command(BaseCommand):
 
                 else:
                     mv_clip = self.load_video_from_file_field(subclip.to_dict().get('video_path'))
-                    clip_with_duration = self.adjust_segment_duration(mv_clip,float(subclip.end - subclip.start))
+                    if self.is_near_9_16(mv_clip):
+                        cropped_clip=self.crop_9_16_video_ffmpeg(subclip.to_dict().get('video_path').url, RESOLUTIONS[self.text_file_instance.resolution])
+                    else:
+                        cropped_clip = self.crop_to_aspect_ratio_(mv_clip, MAINRESOLUTIONS[self.text_file_instance.resolution])
+                    clip_with_duration = self.adjust_segment_duration(cropped_clip,float(subclip.end - subclip.start))
                     logging.debug(f"Loaded video clip from path: {subclip.to_dict().get('video_path')}")
-                    cropped_clip = self.crop_to_aspect_ratio_(clip_with_duration, MAINRESOLUTIONS[self.text_file_instance.resolution])
                     logging.debug(f"Cropped clip to resolution: {MAINRESOLUTIONS[self.text_file_instance.resolution]}")
-                    clip_subclips.append(cropped_clip)
+                    clip_subclips.append(clip_with_duration)
             if len(clip_subclips) == 1:
                 self.write_clip_file(clip_subclips[0], clip.video_file,clip)
             else:
@@ -431,6 +434,57 @@ class Command(BaseCommand):
             clip = VideoFileClip(output_path)
 
             return clip             
+    def is_near_9_16(self,clip, tolerance=0.1):
+        """
+        Check if a video has an aspect ratio close to 9:16.
+        
+        Parameters:
+        - video_path (str): Path to the video file.
+        - tolerance (float): Allowed deviation from the 9:16 ratio (default: ±0.02).
+        
+        Returns:
+        - bool: True if the video is close to 9:16, False otherwise.
+        """
+        width, height = clip.size
+        aspect_ratio = width / height
+        target_ratio = 9 / 16  # 0.5625
+
+        # Check if aspect ratio is close to 9:16 within the tolerance
+        return abs(aspect_ratio - target_ratio) <= tolerance
+
+    def crop_9_16_video_ffmpeg(self,input_video, resoltion):
+        """
+        Convert a 9:16 video (or close to it) to another resolution while preserving aspect ratio.
+        
+        Parameters:
+        - input_video (str): Path to the input video file.
+        - output_width (int): Desired output width.
+        - output_height (int): Desired output height.
+        
+        Returns:
+        - VideoFileClip: Converted video clip.
+        """
+        # Create a temporary output file
+        output_width, output_height=resoltion
+        with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_output:
+            output_path = temp_output.name
+
+        # FFmpeg command to resize while preserving aspect ratio
+        cmd = [
+            "ffmpeg", "-y", "-i", input_video,
+            "-vf", f"scale={output_width}:{output_height}:force_original_aspect_ratio=decrease,pad={output_width}:{output_height}:(ow-iw)/2:(oh-ih)/2",
+            "-c:v", "libx264", "-preset", "fast", "-crf", "23",
+            "-c:a", "aac", "-b:a", "128k",
+            output_path
+        ]
+
+        # Run FFmpeg
+        subprocess.run(cmd, check=True)
+
+        # Load the processed video using MoviePy
+        clip = VideoFileClip(output_path)
+
+        return clip
 
 
     def extract_start_end(self,generated_srt):
@@ -1378,6 +1432,7 @@ class Command(BaseCommand):
         return clip_with_margins
 
     def crop_to_aspect_ratio_(self, clip, desired_aspect_ratio):
+
         original_width, original_height = clip.size
 
         original_aspect_ratio = original_width / original_height
