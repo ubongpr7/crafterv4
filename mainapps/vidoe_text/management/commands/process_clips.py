@@ -452,27 +452,62 @@ class Command(BaseCommand):
         # Check if aspect ratio is close to 9:16 within the tolerance
         return abs(aspect_ratio - target_ratio) <= tolerance
 
-    def crop_9_16_video_ffmpeg(self,input_video, resoltion):
+    # def crop_9_16_video_ffmpeg(self,input_video, resoltion):
+    #     """
+    #     Convert a 9:16 video (or close to it) to another resolution while preserving aspect ratio.
+        
+    #     Parameters:
+    #     - input_video (str): Path to the input video file.
+    #     - output_width (int): Desired output width.
+    #     - output_height (int): Desired output height.
+        
+    #     Returns:
+    #     - VideoFileClip: Converted video clip.
+    #     """
+    #     # Create a temporary output file
+    #     output_width, output_height=resoltion
+    #     with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_output:
+    #         output_path = temp_output.name
+
+    #     # FFmpeg command to resize while preserving aspect ratio
+    #     cmd = [
+    #         "ffmpeg", "-y", "-i", input_video,
+    #         "-vf", f"scale={output_width}:{output_height}:force_original_aspect_ratio=decrease,pad={output_width}:{output_height}:(ow-iw)/2:(oh-ih)/2",
+    #         "-c:v", "libx264", "-preset", "fast", "-crf", "23",
+    #         "-c:a", "aac", "-b:a", "128k",
+    #         output_path
+    #     ]
+
+    #     # Run FFmpeg
+    #     subprocess.run(cmd, check=True)
+
+    #     # Load the processed video using MoviePy
+    #     clip = VideoFileClip(output_path)
+
+    #     return clip
+
+
+    def crop_9_16_video_ffmpeg(self,input_video, resolution):
         """
-        Convert a 9:16 video (or close to it) to another resolution while preserving aspect ratio.
+        Crop a 9:16 (or close) video to the target resolution without black borders.
         
         Parameters:
-        - input_video (str): Path to the input video file.
-        - output_width (int): Desired output width.
-        - output_height (int): Desired output height.
+        - input_video (str): Path to the input video.
+        - resolution (tuple): (desired_width, desired_height).
         
         Returns:
-        - VideoFileClip: Converted video clip.
+        - VideoFileClip: Cropped video clip.
         """
+        output_width, output_height = resolution
+
         # Create a temporary output file
-        output_width, output_height=resoltion
         with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_output:
             output_path = temp_output.name
 
-        # FFmpeg command to resize while preserving aspect ratio
+        # FFmpeg command to crop the video to the exact resolution
         cmd = [
             "ffmpeg", "-y", "-i", input_video,
-            "-vf", f"scale={output_width}:{output_height}:force_original_aspect_ratio=decrease,pad={output_width}:{output_height}:(ow-iw)/2:(oh-ih)/2",
+            "-vf", f"scale={output_width+100}:{output_height+100},crop={output_width}:{output_height}",
             "-c:v", "libx264", "-preset", "fast", "-crf", "23",
             "-c:a", "aac", "-b:a", "128k",
             output_path
@@ -485,7 +520,6 @@ class Command(BaseCommand):
         clip = VideoFileClip(output_path)
 
         return clip
-
 
     def extract_start_end(self,generated_srt):
         """
