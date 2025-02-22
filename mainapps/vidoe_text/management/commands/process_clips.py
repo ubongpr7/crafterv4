@@ -793,10 +793,10 @@ class Command(BaseCommand):
                 voice=Voice(
                     voice_id=voice_id,
                     settings=VoiceSettings(
-                        stability=0.71,
+                        stability=0.9,
                         similarity_boost=0.5,
                         style=0.0,
-                        use_speaker_boost=True,
+                        use_speaker_boost=False,
                     ),
                 ),
             )
