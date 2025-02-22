@@ -383,7 +383,7 @@
 
               <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15M7 10L12 15M12 15L17 10M12 15V3" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
-            <span style="line-height: 24px;">Download</span>
+            <span  id="download_text" style="line-height: 24px;">Download</span>
           </a>
         {% else %}
           <a id="downloadButton"
@@ -413,7 +413,7 @@
 
               <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15M7 10L12 15M12 15L17 10M12 15V3" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
-            <span style="line-height: 24px;">Download</span>
+            <span  id="download_text" style="line-height: 24px;">Download</span>
           </a>
         {% endif %}
         {% else %}
@@ -443,7 +443,7 @@
 
          <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15M7 10L12 15M12 15L17 10M12 15V3" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
        </svg>
-       <span style="line-height: 24px;">Download</span>
+       <span id="download_text" style="line-height: 24px;">Download</span>
      </a>
         {%endif%}
 
@@ -502,6 +502,7 @@
             </div>
           </div>
         </div>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
         <script>
           document.querySelector('.close-popup').addEventListener('click', () => {
@@ -539,7 +540,42 @@
           //       });
           //   }
           // });
-          document.getElementById('downloadButton').addEventListener('click', function(event) {
+//   document.getElementById('downloadButton').addEventListener('click', function(event) {
+//     event.preventDefault(); // Prevent the default anchor behavior
+
+//     if ('{{ user.subscription.plan.name|lower }}' === 'free') {
+//         document.querySelector('.plans-popup-container').classList.remove('hidden');
+//     } else {
+//         // Fetch the URL to start the download
+//         const href = event.currentTarget.getAttribute('href');
+//         startProcessingAnimation()
+//         fetch(href)
+//             .then(response => {
+//                 if (response.ok) {
+//                     // Create a temporary link to trigger the download
+//                     const tempLink = document.createElement('a');
+//                     tempLink.href = href;
+//                     tempLink.setAttribute('download', 'videocrafter.mp4');
+//                     document.body.appendChild(tempLink);
+//                     tempLink.click();
+//                     document.body.removeChild(tempLink);
+
+//                     // Add a delay before redirecting to ensure the download starts
+//                     window.location.href = '/text';
+                    
+//                 } else {
+//                     console.error('Download failed or could not start.');
+//                     alert('Download failed. Please try again.');
+//                 }
+//             })
+//             .catch(error => {
+//                 console.error('Error initiating the download:', error);
+//                 alert('An error occurred. Please try again.');
+//             });
+//     }
+// });
+
+document.getElementById('downloadButton').addEventListener('click', function(event) {
     event.preventDefault(); // Prevent the default anchor behavior
 
     if ('{{ user.subscription.plan.name|lower }}' === 'free') {
@@ -547,6 +583,7 @@
     } else {
         // Fetch the URL to start the download
         const href = event.currentTarget.getAttribute('href');
+        startProcessingAnimation(); // Show processing animation
 
         fetch(href)
             .then(response => {
@@ -559,10 +596,19 @@
                     tempLink.click();
                     document.body.removeChild(tempLink);
 
-                    // Add a delay before redirecting to ensure the download starts
-                    window.location.href = '/text';
-                    // setTimeout(() => {
-                    // }, 1000); // 1-second delay (adjust as needed)
+                    // Monitor network activity to detect when the download starts
+                    const startTime = performance.now();
+                    const checkDownload = setInterval(() => {
+                        const entries = performance.getEntriesByType('resource');
+                        const downloadStarted = entries.some(entry => 
+                            entry.name === href && entry.initiatorType === 'link'
+                        );
+
+                        if (downloadStarted || performance.now() - startTime > 5000) {
+                            clearInterval(checkDownload);
+                            window.location.href = '/text';
+                        }
+                    }, 100); // Check every 100ms
                 } else {
                     console.error('Download failed or could not start.');
                     alert('Download failed. Please try again.');
@@ -574,6 +620,36 @@
             });
     }
 });
+function startProcessingAnimation() {
+        const button_text = $('#download_text');
+        let dots = 0;
+
+        // Clear any existing interval to avoid multiple intervals running
+        if (button_text.data('intervalId')) {
+          clearInterval(button_text.data('intervalId'));
+        }
+
+        // Set the interval to change the text every 500 milliseconds
+        const intervalId = setInterval(function () {
+          dots = (dots + 1) % 4; // Cycle between 0, 1, 2, and 3
+          let loadingText = 'Processing' + '.'.repeat(dots); // Add dots dynamically
+          button_text.text(loadingText);
+        }, 500); // 500 milliseconds = 0.5 seconds
+
+        // Store the interval ID in the button text element for later use
+        button_text.data('intervalId', intervalId);
+      }
+
+      function stopProcessingAnimation() {
+        const button_text = $('#download_text');
+        const intervalId = button_text.data('intervalId');
+
+        if (intervalId) {
+          clearInterval(intervalId);
+          button_text.data('intervalId', null); // Remove the stored interval ID
+          button_text.text('Proceed To Scene Selection'); // Optionally reset the text or set it to another value
+        }
+      }
        </script>
 
       </body>
