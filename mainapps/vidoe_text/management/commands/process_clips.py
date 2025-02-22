@@ -586,7 +586,7 @@ class Command(BaseCommand):
     #     return clip
     def get_video_resolution(self,input_video):
         """
-        Uses FFmpeg to get the width and height of a video.
+        Uses FFmpeg (ffprobe) to get the width and height of a video.
         """
         cmd = [
             "ffprobe", "-v", "error", "-select_streams", "v:0",
@@ -595,8 +595,18 @@ class Command(BaseCommand):
         ]
         
         result = subprocess.run(cmd, capture_output=True, text=True)
-        width, height = map(int, result.stdout.strip().split(","))
-        return width, height
+        output = result.stdout.strip()
+
+        # If output is empty, raise an error
+        if not output:
+            raise ValueError(f"FFprobe failed to get resolution for {input_video}")
+
+        try:
+            width, height = map(int, output.split(","))
+            return width, height
+        except ValueError:
+            raise ValueError(f"Invalid FFprobe output: {output}")
+
     def extract_start_end(self,generated_srt):
         """
         Extracts the start and end times from each index in the aligned_output list.
