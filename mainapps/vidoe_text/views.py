@@ -30,10 +30,8 @@ from botocore.exceptions import NoCredentialsError, PartialCredentialsError
 from django.apps import apps
 import tempfile
 import boto3
-from django.db.models import Count, F, Value, CharField
-from django.db.models.functions import Concat
-
-
+from django.db.models import Count, OuterRef, Subquery, Value, F
+from django.db.models.functions import Concat, Coalesce
 @csrf_exempt
 def update_subtitle_positions(request):
     if request.method == "POST":
@@ -386,27 +384,6 @@ def delete_textfile(request, textfile_id):
 
 
 
-# def manage_textfile(request):
-#     user = request.user
-
-#     textfiles = (
-#         TextFile.objects.filter(user=user)
-#         .annotate(
-#             clip_number=Count("video_clips__subclips", distinct=True),
-#             file_text=Concat(
-#                 Value("Id: "),
-#                 F("id"),
-#                 Value(" -> "),
-#                 F("video_clips__slide"),
-#                 output_field=CharField(),
-#             ),
-#         )
-#         .values("id", "created_at", "clip_number", "file_text")
-#     ).order_by("-created_at")
-
-#     return render(request, "assets/text_files.html", {"textfiles": textfiles})
-from django.db.models import Count, OuterRef, Subquery, Value, F
-from django.db.models.functions import Concat, Coalesce
 
 def manage_textfile(request):
     user = request.user
@@ -418,7 +395,6 @@ def manage_textfile(request):
         .values("slide")[:1]
     )
 
-    # Subquery to count the total number of SubClip objects
     total_subclips_subquery = (
         SubClip.objects.filter(main_line__text_file=OuterRef("pk"))
         .values("main_line__text_file")
