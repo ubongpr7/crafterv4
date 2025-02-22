@@ -30,6 +30,8 @@ from botocore.exceptions import NoCredentialsError, PartialCredentialsError
 from django.apps import apps
 import tempfile
 import boto3
+from django.db.models import Count, F, Value, CharField
+from django.db.models.functions import Concat
 
 
 @csrf_exempt
@@ -381,46 +383,67 @@ def delete_textfile(request, textfile_id):
 
     return render(request, "partials/confirm_delete.html", {"item":textfile })
 
-# def manage_textfile(request):
-#     user =request.user
-#     textfiles=TextFile.objects.filter(user=user)
-#     return render(request,'assets/text_files.html', {'textfiles':textfiles})
+
+
 
 # def manage_textfile(request):
 #     user = request.user
-#     textfiles = TextFile.objects.filter(user=user).values("id", "created_at")
-    
-#     for textfile in textfiles:
-#         textfile["get_clip_number"] = TextFile.objects.get(id=textfile["id"]).get_clip_number()
-#         textfile["get_file_text"] = TextFile.objects.get(id=textfile["id"]).get_file_text()
+
+#     textfiles = (
+#         TextFile.objects.filter(user=user)
+#         .annotate(
+#             clip_number=Count("video_clips__subclips", distinct=True),
+#             file_text=Concat(
+#                 Value("Id: "),
+#                 F("id"),
+#                 Value(" -> "),
+#                 F("video_clips__slide"),
+#                 output_field=CharField(),
+#             ),
+#         )
+#         .values("id", "created_at", "clip_number", "file_text")
+#     ).order_by("-created_at")
 
 #     return render(request, "assets/text_files.html", {"textfiles": textfiles})
-
-
-from django.db.models import Count, F, Value, CharField
-from django.db.models.functions import Concat
+from django.db.models import Count, OuterRef, Subquery, Value, CharField
+from django.db.models.functions import Concat,Coalesce
 
 def manage_textfile(request):
     user = request.user
 
-    # Fetch all TextFile objects for the user with related data
+    # Subquery to get the first slide from video_clips
+    first_slide_subquery = (
+        VideoClip.objects.filter(textfile=OuterRef("pk"))
+        .order_by("id")
+        .values("slide")[:1]
+    )
+
+    # Subquery to count the total number of subclips
+    total_subclips_subquery = (
+        SubClip.objects.filter(video_clip__textfile=OuterRef("pk"))
+        .values("video_clip__textfile")
+        .annotate(total=Count("id"))
+        .values("total")
+    )
+
+    # Main query
     textfiles = (
         TextFile.objects.filter(user=user)
         .annotate(
-            clip_number=Count("video_clips__subclips", distinct=True),
+            clip_number=Coalesce(Subquery(total_subclips_subquery), Value(0)),
             file_text=Concat(
                 Value("Id: "),
                 F("id"),
                 Value(" -> "),
-                F("video_clips__slide"),
+                Coalesce(Subquery(first_slide_subquery), Value("No TextFile added to this Instance")),
                 output_field=CharField(),
             ),
         )
         .values("id", "created_at", "clip_number", "file_text")
-    ).order_by("-created_at")
+        .order_by("-created_at")
+    )
 
     return render(request, "assets/text_files.html", {"textfiles": textfiles})
-
 
 def edit_subclip(request,id):
     if request.method =='POST':
