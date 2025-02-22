@@ -508,38 +508,57 @@
             document.querySelector('.plans-popup-container').classList.add('hidden');
           });
 
+          // document.getElementById('downloadButton').addEventListener('click', function(event) {
+          //   event.preventDefault(); // Prevent the default anchor behavior
+
+          //   if ('{{ user.subscription.plan.name|lower }}' === 'free') {
+          //     document.querySelector('.plans-popup-container').classList.remove('hidden');
+          //   } else {
+          //     // Fetch the URL to start the download
+          //     const href = event.currentTarget.getAttribute('href');
+
+          //     fetch(href)
+          //       .then(response => {
+          //         if (response.ok) {
+          //           // Create a temporary link to trigger the download
+          //           const tempLink = document.createElement('a');
+          //           tempLink.href = href;
+          //           tempLink.setAttribute('download', 'videocrafter.mp4');
+          //           document.body.appendChild(tempLink);
+          //           tempLink.click();
+          //           document.body.removeChild(tempLink);
+
+          //           // After the download starts, redirect to /text
+          //           window.location.href = '/text';
+          //         } else {
+          //           console.error('Download failed or could not start.');
+          //         }
+          //       })
+          //       .catch(error => {
+          //         console.error('Error initiating the download:', error);
+          //       });
+          //   }
+          // });
           document.getElementById('downloadButton').addEventListener('click', function(event) {
-            event.preventDefault(); // Prevent the default anchor behavior
+              event.preventDefault(); // Prevent default behavior
 
-            if ('{{ request.user.subscription.plan.name }}' == 'free') {
-              document.querySelector('.plans-popup-container').classList.remove('hidden');
-            } else {
-              // Fetch the URL to start the download
-              const href = event.currentTarget.getAttribute('href');
+              if ('{{ user.subscription.plan.name|lower }}' === 'free') {
+                  document.querySelector('.plans-popup-container').classList.remove('hidden');
+              } else {
+                  // Get the actual Django-generated download URL
+                  const downloadUrl = event.currentTarget.getAttribute('href');
 
-              fetch(href)
-                .then(response => {
-                  if (response.ok) {
-                    // Create a temporary link to trigger the download
-                    const tempLink = document.createElement('a');
-                    tempLink.href = href;
-                    tempLink.setAttribute('download', 'videocrafter.mp4');
-                    document.body.appendChild(tempLink);
-                    tempLink.click();
-                    document.body.removeChild(tempLink);
+                  // Open in a new tab (fixes Safari issues)
+                  window.open(downloadUrl, '_self');
 
-                    // After the download starts, redirect to /text
-                    window.location.href = '/text';
-                  } else {
-                    console.error('Download failed or could not start.');
-                  }
-                })
-                .catch(error => {
-                  console.error('Error initiating the download:', error);
-                });
-            }
+                  // Redirect after a delay to ensure download starts
+                  setTimeout(() => {
+                      window.location.href = '/text';
+                  }, 2000);
+              }
           });
-        </script>
+
+       </script>
 
       </body>
     </html>
