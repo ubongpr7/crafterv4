@@ -624,7 +624,7 @@ function saveInput(inputElement) {
                     console.log("Video Height:", dimensions.height);
             
                     let aspectRatio = dimensions.width / dimensions.height;
-                    if (Math.abs(aspectRatio - (9 / 16)) < 0.05) { // Allowing a small tolerance
+                    if (Math.abs(aspectRatio - (9 / 16)) < 0.09) { // Allowing a small tolerance
                         document.getElementById('is_tiktok').value = 1;
                     } else {
                         document.getElementById('is_tiktok').value = 0;
