@@ -64,3 +64,4 @@ urllib3==2.2.3
 websockets==13.1
 apify-client
 cloudconvert
+modal

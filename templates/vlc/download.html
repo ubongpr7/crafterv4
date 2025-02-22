@@ -502,78 +502,12 @@
             </div>
           </div>
         </div>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-        <script>
-          document.querySelector('.close-popup').addEventListener('click', () => {
-            document.querySelector('.plans-popup-container').classList.add('hidden');
-          });
-
-          // document.getElementById('downloadButton').addEventListener('click', function(event) {
-          //   event.preventDefault(); // Prevent the default anchor behavior
-
-          //   if ('{{ user.subscription.plan.name|lower }}' === 'free') {
-          //     document.querySelector('.plans-popup-container').classList.remove('hidden');
-          //   } else {
-          //     // Fetch the URL to start the download
-          //     const href = event.currentTarget.getAttribute('href');
-
-          //     fetch(href)
-          //       .then(response => {
-          //         if (response.ok) {
-          //           // Create a temporary link to trigger the download
-          //           const tempLink = document.createElement('a');
-          //           tempLink.href = href;
-          //           tempLink.setAttribute('download', 'videocrafter.mp4');
-          //           document.body.appendChild(tempLink);
-          //           tempLink.click();
-          //           document.body.removeChild(tempLink);
-
-          //           // After the download starts, redirect to /text
-          //           window.location.href = '/text';
-          //         } else {
-          //           console.error('Download failed or could not start.');
-          //         }
-          //       })
-          //       .catch(error => {
-          //         console.error('Error initiating the download:', error);
-          //       });
-          //   }
-          // });
-//   document.getElementById('downloadButton').addEventListener('click', function(event) {
-//     event.preventDefault(); // Prevent the default anchor behavior
-
-//     if ('{{ user.subscription.plan.name|lower }}' === 'free') {
-//         document.querySelector('.plans-popup-container').classList.remove('hidden');
-//     } else {
-//         // Fetch the URL to start the download
-//         const href = event.currentTarget.getAttribute('href');
-//         startProcessingAnimation()
-//         fetch(href)
-//             .then(response => {
-//                 if (response.ok) {
-//                     // Create a temporary link to trigger the download
-//                     const tempLink = document.createElement('a');
-//                     tempLink.href = href;
-//                     tempLink.setAttribute('download', 'videocrafter.mp4');
-//                     document.body.appendChild(tempLink);
-//                     tempLink.click();
-//                     document.body.removeChild(tempLink);
-
-//                     // Add a delay before redirecting to ensure the download starts
-//                     window.location.href = '/text';
-                    
-//                 } else {
-//                     console.error('Download failed or could not start.');
-//                     alert('Download failed. Please try again.');
-//                 }
-//             })
-//             .catch(error => {
-//                 console.error('Error initiating the download:', error);
-//                 alert('An error occurred. Please try again.');
-//             });
-//     }
-// });
+<script>
+document.querySelector('.close-popup').addEventListener('click', () => {
+  document.querySelector('.plans-popup-container').classList.add('hidden');
+});
 
 document.getElementById('downloadButton').addEventListener('click', function(event) {
     event.preventDefault(); // Prevent the default anchor behavior
@@ -645,17 +579,18 @@ function startProcessingAnimation() {
         button_text.data('intervalId', intervalId);
       }
 
-      function stopProcessingAnimation() {
-        const button_text = $('#download_text');
-        const intervalId = button_text.data('intervalId');
+function stopProcessingAnimation() {
+  const button_text = $('#download_text');
+  const intervalId = button_text.data('intervalId');
 
-        if (intervalId) {
-          clearInterval(intervalId);
-          button_text.data('intervalId', null); // Remove the stored interval ID
-          button_text.text('Download'); // Optionally reset the text or set it to another value
-        }
-      }
-       </script>
+  if (intervalId) {
+    clearInterval(intervalId);
+    button_text.data('intervalId', null); // Remove the stored interval ID
+    button_text.text('Download'); // Optionally reset the text or set it to another value
+  }
+}
+
+</script>
 
       </body>
     </html>

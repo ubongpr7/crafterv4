@@ -457,40 +457,7 @@ class Command(BaseCommand):
         # Check if aspect ratio is close to 9:16 within the tolerance
         return abs(aspect_ratio - target_ratio) <= tolerance
 
-    # def crop_9_16_video_ffmpeg(self,input_video, resoltion):
-    #     """
-    #     Convert a 9:16 video (or close to it) to another resolution while preserving aspect ratio.
-        
-    #     Parameters:
-    #     - input_video (str): Path to the input video file.
-    #     - output_width (int): Desired output width.
-    #     - output_height (int): Desired output height.
-        
-    #     Returns:
-    #     - VideoFileClip: Converted video clip.
-    #     """
-    #     # Create a temporary output file
-    #     output_width, output_height=resoltion
-    #     with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_output:
-    #         output_path = temp_output.name
-
-    #     # FFmpeg command to resize while preserving aspect ratio
-    #     cmd = [
-    #         "ffmpeg", "-y", "-i", input_video,
-    #         "-vf", f"scale={output_width}:{output_height}:force_original_aspect_ratio=decrease,pad={output_width}:{output_height}:(ow-iw)/2:(oh-ih)/2",
-    #         "-c:v", "libx264", "-preset", "fast", "-crf", "23",
-    #         "-c:a", "aac", "-b:a", "128k",
-    #         output_path
-    #     ]
-
-    #     # Run FFmpeg
-    #     subprocess.run(cmd, check=True)
-
-    #     # Load the processed video using MoviePy
-    #     clip = VideoFileClip(output_path)
-
-    #     return clip
-
+   
     def crop_video_with_ffmpeg(self,input_video, output_resolution,clip,is_tiktok):
         """
         Crops a video to the desired resolution without stretching.
@@ -555,42 +522,6 @@ class Command(BaseCommand):
             subprocess.run(cmd, check=True)
 
             return VideoFileClip(output_path)
-
-
-    # def crop_9_16_video_ffmpeg(self,input_video, resolution):
-    #     """
-    #     Crop a 9:16 (or close) video to the target resolution without black borders.
-        
-    #     Parameters:
-    #     - input_video (str): Path to the input video.
-    #     - resolution (tuple): (desired_width, desired_height).
-        
-    #     Returns:
-    #     - VideoFileClip: Cropped video clip.
-    #     """
-    #     output_width, output_height = resolution
-
-    #     # Create a temporary output file
-    #     with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_output:
-    #         output_path = temp_output.name
-
-    #     # FFmpeg command to crop the video to the exact resolution
-    #     cmd = [
-    #         "ffmpeg", "-y", "-i", input_video,
-    #         "-vf", f"scale={output_width}:{output_height},crop={output_width}:{output_height}",
-    #         #  "-vf", f"crop={output_width}:{output_height}",
-    #         "-c:v", "libx264", "-preset", "fast", "-crf", "23",
-    #         "-c:a", "aac", "-b:a", "128k",
-    #         output_path
-    #     ]
-
-    #     # Run FFmpeg
-    #     subprocess.run(cmd, check=True)
-
-    #     # Load the processed video using MoviePy
-    #     clip = VideoFileClip(output_path)
-
-    #     return clip
     def get_video_resolution(self,input_video):
         """
         Uses FFmpeg to get the width and height of a video.
@@ -1408,23 +1339,6 @@ class Command(BaseCommand):
 
         return video_segments, subtitle_segments
 
-
-    # def adjust_segment_duration(self, segment: VideoFileClip, duration: float) -> VideoFileClip:
-    #     current_duration = segment.duration
-
-    #     if duration < 0:
-    #         raise ValueError("Target duration must be non-negative.")
-    #     if current_duration == 0:
-    #         raise ValueError("Segment duration is zero; cannot adjust.")
-
-    #     if abs(current_duration - duration) < 1e-3:  
-    #         return segment
-
-    #     if current_duration < duration:
-    #         speed_factor = current_duration / duration
-    #         return segment.fx(vfx.speedx, speed_factor)
-
-    #     return segment.subclip(0, duration)
     def adjust_segment_duration(
             self, 
             segment: VideoFileClip, 
