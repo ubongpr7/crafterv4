@@ -507,8 +507,8 @@ class Command(BaseCommand):
         # FFmpeg command to crop the video to the exact resolution
         cmd = [
             "ffmpeg", "-y", "-i", input_video,
-            # "-vf", f"scale={output_width+100}:{output_height+100},crop={output_width}:{output_height}",
-             "-vf", f"crop={output_width}:{output_height}",
+            "-vf", f"scale={output_width+100}:{output_height+100},crop={output_width}:{output_height}",
+            #  "-vf", f"crop={output_width}:{output_height}",
             "-c:v", "libx264", "-preset", "fast", "-crf", "23",
             "-c:a", "aac", "-b:a", "128k",
             output_path
