@@ -236,6 +236,7 @@ def add_subcliphtmx(request, id):
         file_ = request.FILES.get("slide_file")
         text = request.POST.get("slide_text")
         asset_clip_id = request.POST.get("selected_video")
+        is_tiktok = request.POST.get("is_tiktok")
 
         subclip = None
 
@@ -254,6 +255,8 @@ def add_subcliphtmx(request, id):
                             subtittle=text,
                             video_file=ContentFile(file_content, name=os.path.basename(converted_file_path)),
                             main_line=text_clip,
+                            is_tiktok= True if int(is_tiktok) ==1 else False
+
                         )
 
                     # Cleanup the converted file
@@ -266,7 +269,10 @@ def add_subcliphtmx(request, id):
                     subtittle=text,
                     video_file=file_,
                     main_line=text_clip,
+                    is_tiktok= True if int(is_tiktok) ==1 else False
                 )
+
+        
         elif asset_clip_id:
             video = get_object_or_404(VideoClip, id=asset_clip_id)
             subclip = SubClip.objects.create(
@@ -322,6 +328,9 @@ def edit_subcliphtmx(request,id):
     if request.method =='POST':
         file_=request.FILES.get(f'slide_file')
         asset_clip_id=request.POST.get(f'selected_video')
+        is_tiktok=request.POST.get(f'is_tiktok')
+        subclip.is_tiktok= False
+        
         if subclip.video_file:
             subclip.video_file.delete(save=False)
         subclip.video_clip=None
@@ -336,6 +345,7 @@ def edit_subcliphtmx(request,id):
                         file_content = converted_file.read()
                         subclip.video_file=ContentFile(file_content, name=os.path.basename(converted_file_path))
 
+                    subclip.is_tiktok= True if int(is_tiktok) ==1 else False
 
                     os.remove(converted_file_path)
                 except Exception as e:
@@ -343,6 +353,10 @@ def edit_subcliphtmx(request,id):
                     return JsonResponse({"success": False, "error": str(e)}, status=500)
             else:
                 subclip.video_file.save(file_.name, file_)
+                subclip.is_tiktok= True if int(is_tiktok) ==1 else False
+
+
+                
 
         elif asset_clip_id:
             video= VideoClip.objects.get(id=asset_clip_id)

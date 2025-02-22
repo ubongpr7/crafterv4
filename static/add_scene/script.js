@@ -579,7 +579,21 @@ function closeModal() {
         console.log("No <li> items found to remove.");
     }
 }
+function getVideoDimensions(file, callback) {
+    const video = document.createElement("video");
+    video.preload = "metadata";
 
+    video.onloadedmetadata = function () {
+        window.URL.revokeObjectURL(video.src);
+        callback({ width: video.videoWidth, height: video.videoHeight });
+    };
+
+    video.onerror = function () {
+        callback({ error: "Invalid video file" });
+    };
+
+    video.src = URL.createObjectURL(file);
+}
 function saveInput(inputElement) {
     const uploadElement = document.getElementById('upload-text');
 
@@ -587,6 +601,7 @@ function saveInput(inputElement) {
         console.log(inputElement.value);
 
         if (inputElement.value) {
+    
             document.getElementById('upload-text').style.color = 'black'
 
             document.getElementById('error-slide').textContent = '';
@@ -601,6 +616,23 @@ function saveInput(inputElement) {
             document.getElementById(`selected_topic`).value = ""
             saveInput(document.getElementById(`videoSelect`))
             saveInput(document.getElementById(`selected_topic`))
+            getVideoDimensions(inputElement.files[0], function (dimensions) {
+                if (dimensions.error) {
+                    console.error(dimensions.error);
+                } else {
+                    console.log("Video Width:", dimensions.width);
+                    console.log("Video Height:", dimensions.height);
+            
+                    let aspectRatio = dimensions.width / dimensions.height;
+                    if (Math.abs(aspectRatio - (9 / 16)) < 0.05) { // Allowing a small tolerance
+                        document.getElementById('is_tiktok').value = 1;
+                    } else {
+                        document.getElementById('is_tiktok').value = 0;
+                    }
+                }
+            });
+            
+            
         }
 
     } else {
@@ -609,6 +641,7 @@ function saveInput(inputElement) {
 
         if (inputElement.value !== '') {
             document.getElementById('error-slide').textContent = '';
+            document.getElementById('is_tiktok').value = 0;
 
             console.log('first line is true')
             document.getElementById('currentFile').textContent = '';

@@ -401,7 +401,12 @@ class Command(BaseCommand):
                 else:
                     mv_clip = self.load_video_from_file_field(subclip.to_dict().get('video_path'))
                     # if self.is_near_9_16(mv_clip):
-                    cropped_clip=self.crop_video_with_ffmpeg(subclip.to_dict().get('video_path').url, RESOLUTIONS[self.text_file_instance.resolution],mv_clip)
+                    cropped_clip=self.crop_video_with_ffmpeg(
+                        subclip.to_dict().get('video_path').url, 
+                        RESOLUTIONS[self.text_file_instance.resolution],
+                        mv_clip,
+                        subclip.is_tiktok
+                        )
                     # else:
                         # cropped_clip = self.crop_to_aspect_ratio_(mv_clip, MAINRESOLUTIONS[self.text_file_instance.resolution])
                     clip_with_duration = self.adjust_segment_duration(cropped_clip,float(subclip.end - subclip.start))
@@ -486,7 +491,7 @@ class Command(BaseCommand):
 
     #     return clip
 
-    def crop_video_with_ffmpeg(self,input_video, output_resolution,clip):
+    def crop_video_with_ffmpeg(self,input_video, output_resolution,clip,is_tiktok):
         """
         Crops a video to the desired resolution without stretching.
         
@@ -500,10 +505,8 @@ class Command(BaseCommand):
         output_width, output_height = output_resolution
 
         # Get the original video width and height
-        
-        input_width, input_height = self.get_video_resolution(input_video)
-        # input_width, input_height = clip.size
-        # clip.close()
+        input_width, input_height = clip.size
+        clip.close()
 
         # Calculate crop size while maintaining aspect ratio
         input_aspect = input_width / input_height
@@ -524,7 +527,7 @@ class Command(BaseCommand):
         # Create a temporary output file
         with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_output:
             output_path = temp_output.name
-            if abs(input_aspect-9/16)<0.09:
+            if is_tiktok:
             
                 cmd = [
                     "ffmpeg", "-y", "-i", input_video,
@@ -586,7 +589,7 @@ class Command(BaseCommand):
     #     return clip
     def get_video_resolution(self,input_video):
         """
-        Uses FFmpeg (ffprobe) to get the width and height of a video.
+        Uses FFmpeg to get the width and height of a video.
         """
         cmd = [
             "ffprobe", "-v", "error", "-select_streams", "v:0",
@@ -595,18 +598,8 @@ class Command(BaseCommand):
         ]
         
         result = subprocess.run(cmd, capture_output=True, text=True)
-        output = result.stdout.strip()
-
-        # If output is empty, raise an error
-        if not output:
-            raise ValueError(f"FFprobe failed to get resolution for {input_video}")
-
-        try:
-            width, height = map(int, output.split(","))
-            return width, height
-        except ValueError:
-            raise ValueError(f"Invalid FFprobe output: {output}")
-
+        width, height = map(int, result.stdout.strip().split(","))
+        return width, height
     def extract_start_end(self,generated_srt):
         """
         Extracts the start and end times from each index in the aligned_output list.
