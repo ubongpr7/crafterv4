@@ -540,23 +540,48 @@
           //   }
           // });
           document.getElementById('downloadButton').addEventListener('click', function(event) {
-              event.preventDefault(); // Prevent default behavior
+    event.preventDefault(); // Prevent default link behavior
 
-              if ('{{ user.subscription.plan.name|lower }}' === 'free') {
-                  document.querySelector('.plans-popup-container').classList.remove('hidden');
-              } else {
-                  // Get the actual Django-generated download URL
-                  const downloadUrl = event.currentTarget.getAttribute('href');
+    if ('{{ user.subscription.plan.name|lower }}' === 'free') {
+        document.querySelector('.plans-popup-container').classList.remove('hidden');
+    } else {
+        // Get the actual download URL
+        const downloadUrl = event.currentTarget.getAttribute('href');
 
-                  // Open in a new tab (fixes Safari issues)
-                  window.open(downloadUrl, '_self');
+        // Use Fetch API to get the file as a blob (fixes Safari issues)
+        fetch(downloadUrl)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.blob(); // Convert response to a blob
+            })
+            .then(blob => {
+                // Create a temporary download link
+                const tempLink = document.createElement('a');
+                const objectUrl = URL.createObjectURL(blob);
+                tempLink.href = objectUrl;
 
-                  // Redirect after a delay to ensure download starts
-                  setTimeout(() => {
-                      window.location.href = '/text';
-                  }, 2000);
-              }
-          });
+                // Extract filename from URL or set default
+                const filename = downloadUrl.split('/').pop() || 'download.mp4';
+                tempLink.setAttribute('download', filename);
+
+                // Append link to body, trigger download, then remove
+                document.body.appendChild(tempLink);
+                tempLink.click();
+                document.body.removeChild(tempLink);
+
+                // Cleanup the object URL to free memory
+                URL.revokeObjectURL(objectUrl);
+
+                // Redirect after download starts
+                setTimeout(() => {
+                    window.location.href = '/text';
+                }, 2000);
+            })
+            .catch(error => console.error('Download error:', error));
+    }
+});
 
        </script>
 
