@@ -292,7 +292,6 @@ def add_subcliphtmx(request, id):
                     "id": subclip.id,
                     "current_file": subclip.get_video_file_name(),
                     "video_clip": subclip.get_video_clip_id(),
-                    'exists_in_s3':exists_in_s3
                 }
             )
         return JsonResponse({"success": False, "error": "Failed to create subclip."}, status=400)
@@ -361,7 +360,6 @@ def edit_subcliphtmx(request,id):
             "id": subclip.id,
                 "current_file": subclip.get_video_file_name(),
             "video_clip":subclip.get_video_clip_id(),
-            'exists_in_s3':exists_in_s3
             
             
         })
