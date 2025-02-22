@@ -401,7 +401,7 @@ class Command(BaseCommand):
                 else:
                     mv_clip = self.load_video_from_file_field(subclip.to_dict().get('video_path'))
                     # if self.is_near_9_16(mv_clip):
-                    cropped_clip=self.crop_9_16_video_ffmpeg(subclip.to_dict().get('video_path').url, RESOLUTIONS[self.text_file_instance.resolution],mv_clip)
+                    cropped_clip=self.crop_video_with_ffmpeg(subclip.to_dict().get('video_path').url, RESOLUTIONS[self.text_file_instance.resolution],mv_clip)
                     # else:
                         # cropped_clip = self.crop_to_aspect_ratio_(mv_clip, MAINRESOLUTIONS[self.text_file_instance.resolution])
                     clip_with_duration = self.adjust_segment_duration(cropped_clip,float(subclip.end - subclip.start))
@@ -486,7 +486,7 @@ class Command(BaseCommand):
 
     #     return clip
 
-    def crop_9_16_video_ffmpeg(self,input_video, output_resolution,clip):
+    def crop_video_with_ffmpeg(self,input_video, output_resolution,clip):
         """
         Crops a video to the desired resolution without stretching.
         
@@ -523,20 +523,30 @@ class Command(BaseCommand):
         # Create a temporary output file
         with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_output:
             output_path = temp_output.name
+            if abs(input_aspect-9/16)<0.1:
+            
+                cmd = [
+                    "ffmpeg", "-y", "-i", input_video,
+                    "-vf", f"scale={output_width}:{output_height}:force_original_aspect_ratio=decrease,pad={output_width}:{output_height}:(ow-iw)/2:(oh-ih)/2",
+                    "-c:v", "libx264", "-preset", "fast", "-crf", "23",
+                    "-c:a", "aac", "-b:a", "128k",
+                    output_path
+                ]
+            # FFmpeg command to crop the video
+            else:
 
-        # FFmpeg command to crop the video
-        cmd = [
-            "ffmpeg", "-y", "-i", input_video,
-            "-vf", f"crop={new_width}:{new_height}:{x_offset}:{y_offset}",
-            "-c:v", "libx264", "-preset", "fast", "-crf", "23",
-            "-c:a", "copy",
-            output_path
-        ]
+                cmd = [
+                    "ffmpeg", "-y", "-i", input_video,
+                    "-vf", f"crop={new_width}:{new_height}:{x_offset}:{y_offset}",
+                    "-c:v", "libx264", "-preset", "fast", "-crf", "23",
+                    "-c:a", "copy",
+                    output_path
+                ]
 
-        # Run FFmpeg
-        subprocess.run(cmd, check=True)
+            # Run FFmpeg
+            subprocess.run(cmd, check=True)
 
-        return VideoFileClip(output_path)
+            return VideoFileClip(output_path)
 
 
     # def crop_9_16_video_ffmpeg(self,input_video, resolution):
