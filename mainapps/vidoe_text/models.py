@@ -201,7 +201,7 @@ class TextFile(models.Model):
 
 def text_clip_upload_path(instance, filename):
     """Generate a unique file path for each uploaded text file."""
-    return os.path.join("text_clips", str(instance.main_line.id), filename)
+    return os.path.join("text_clips", str(instance.main_line.id),f'{uuid.uuid4()}', filename)
 
 
 class TextLineVideoClip(models.Model):

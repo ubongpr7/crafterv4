@@ -29,6 +29,7 @@ import boto3
 from botocore.exceptions import NoCredentialsError, PartialCredentialsError
 from django.apps import apps
 import tempfile
+import boto3
 
 
 @csrf_exempt
@@ -60,8 +61,6 @@ def check_subtitles_length(request, text_file_id):
         return JsonResponse({'status': 'error', 'message': 'Character limit exceeded!'})
     
     return JsonResponse({'status': 'success', 'message': 'Character limit okay.'})
-
-
 
 @csrf_exempt 
 def add_text_clip_line(request, textfile_id):
@@ -198,6 +197,33 @@ def add_subclip(request, id):
 
 
 
+
+def check_s3_file_exists_or_retry(bucket_name, s3_key, file_):
+    """Check if a file exists in S3, retry upload if missing."""
+    s3_client = boto3.client(
+        's3',
+        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
+    )
+
+    try:
+        s3_client.head_object(Bucket=bucket_name, Key=s3_key)
+        return True  # File exists
+    except s3_client.exceptions.ClientError as e:
+        # Check if the error is "Not Found" (404)
+        if e.response['Error']['Code'] == '404':
+            try:
+                print(f"File {s3_key} missing in S3, re-uploading...")
+                s3_client.upload_fileobj(file_, bucket_name, s3_key)
+                return True  # Re-upload successful
+            except Exception as upload_error:
+                print(f"Retry upload failed: {upload_error}")
+                return False  # Upload failed
+        else:
+            print(f"Unexpected S3 error: {e}")
+            return False  # Some other S3 error occurred
+
+    
 def add_subcliphtmx(request, id):
     text_clip = get_object_or_404(TextLineVideoClip, id=id)
 
@@ -245,10 +271,17 @@ def add_subcliphtmx(request, id):
                 video_clip=video,
                 main_line=text_clip,
             )
+        exists_in_s3=False
+        if file_ and subclip.video_file:
+            s3_key = subclip.video_file.name  # Get the S3 key
+            
+            exists_in_s3 = check_s3_file_exists_or_retry(settings.AWS_STORAGE_BUCKET_NAME, s3_key,file_)
+
 
         if subclip:
             text_clip.remaining = remaining
             text_clip.save()
+        
 
             return JsonResponse(
                 {
@@ -256,6 +289,7 @@ def add_subcliphtmx(request, id):
                     "id": subclip.id,
                     "current_file": subclip.get_video_file_name(),
                     "video_clip": subclip.get_video_clip_id(),
+                    'exists_in_s3':exists_in_s3
                 }
             )
         return JsonResponse({"success": False, "error": "Failed to create subclip."}, status=400)
@@ -272,6 +306,7 @@ def add_subcliphtmx(request, id):
             "remaining_text": remaining_text,
         },
     )
+
 
 
 def edit_subcliphtmx(request,id):
@@ -304,19 +339,26 @@ def edit_subcliphtmx(request,id):
                     print(e)
                     return JsonResponse({"success": False, "error": str(e)}, status=500)
             else:
-                # subclip.video_file=file_
                 subclip.video_file.save(file_.name, file_)
 
         elif asset_clip_id:
             video= VideoClip.objects.get(id=asset_clip_id)
             subclip.video_clip=video
         subclip.save()
+        exists_in_s3=False
+        if file_ and subclip.video_file:
+            s3_key = subclip.video_file.name  
+            exists_in_s3 = check_s3_file_exists_or_retry(settings.AWS_STORAGE_BUCKET_NAME, s3_key,file_)
+
+            
+
 
         return JsonResponse({
             "success": True,
             "id": subclip.id,
                 "current_file": subclip.get_video_file_name(),
             "video_clip":subclip.get_video_clip_id(),
+            'exists_in_s3':exists_in_s3
             
             
         })
