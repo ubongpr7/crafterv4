@@ -401,7 +401,7 @@ class Command(BaseCommand):
                 else:
                     mv_clip = self.load_video_from_file_field(subclip.to_dict().get('video_path'))
                     # if self.is_near_9_16(mv_clip):
-                    cropped_clip=self.crop_9_16_video_ffmpeg(subclip.to_dict().get('video_path').url, RESOLUTIONS[self.text_file_instance.resolution])
+                    cropped_clip=self.crop_9_16_video_ffmpeg(subclip.to_dict().get('video_path').url, RESOLUTIONS[self.text_file_instance.resolution],mv_clip)
                     # else:
                         # cropped_clip = self.crop_to_aspect_ratio_(mv_clip, MAINRESOLUTIONS[self.text_file_instance.resolution])
                     clip_with_duration = self.adjust_segment_duration(cropped_clip,float(subclip.end - subclip.start))
@@ -486,7 +486,7 @@ class Command(BaseCommand):
 
     #     return clip
 
-    def crop_9_16_video_ffmpeg(self,input_video, output_resolution):
+    def crop_9_16_video_ffmpeg(self,input_video, output_resolution,clip):
         """
         Crops a video to the desired resolution without stretching.
         
@@ -500,7 +500,6 @@ class Command(BaseCommand):
         output_width, output_height = output_resolution
 
         # Get the original video width and height
-        clip = VideoFileClip(input_video)
         input_width, input_height = clip.size
         clip.close()
 
