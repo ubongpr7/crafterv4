@@ -421,7 +421,7 @@ def manage_textfile(request):
     # Subquery to count the total number of SubClip objects
     total_subclips_subquery = (
         SubClip.objects.filter(main_line__text_file=OuterRef("pk"))
-        .values("main_line__textfile")
+        .values("main_line__text_file")
         .annotate(total=Count("id"))
         .values("total")
     )
