@@ -529,13 +529,28 @@ class Command(BaseCommand):
             output_path = temp_output.name
             if is_tiktok:
             
+                # cmd = [
+                #     "ffmpeg", "-y", "-i", input_video,
+                #     "-vf", f"scale={output_width}:{output_height}:force_original_aspect_ratio=decrease,pad={output_width}:{output_height}:(ow-iw)/2:(oh-ih)/2",
+                #     "-c:v", "libx264", "-preset", "fast", "-crf", "23",
+                #     "-c:a", "aac", "-b:a", "128k",
+                #     output_path
+                # ]
                 cmd = [
                     "ffmpeg", "-y", "-i", input_video,
-                    "-vf", f"scale={output_width}:{output_height}:force_original_aspect_ratio=decrease,pad={output_width}:{output_height}:(ow-iw)/2:(oh-ih)/2",
+                    "-filter_complex",
+                    (
+                        f"[0:v]scale={output_width}:{output_height}:force_original_aspect_ratio=decrease,"
+                        f"pad={output_width}:{output_height}:(ow-iw)/2:(oh-ih)/2:color=black, "
+                        f"split=2 [fg][bg]; "
+                        f"[bg]boxblur=luma_radius=min(h\,w)/20:luma_power=2 [blurred]; "
+                        f"[blurred][fg]overlay=(W-w)/2:(H-h)/2"
+                    ),
                     "-c:v", "libx264", "-preset", "fast", "-crf", "23",
                     "-c:a", "aac", "-b:a", "128k",
                     output_path
                 ]
+
             # FFmpeg command to crop the video
             else:
 
