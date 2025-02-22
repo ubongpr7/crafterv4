@@ -736,8 +736,15 @@ function attachValidation(formId, clipId, cNumber, li) {
 
 
 
-                            };
-                            li.dataset.current_file = response.current_file
+                            }else {
+                                li.dataset.current_file = response.current_file
+                                if (!response.exists_in_s3){
+                                    li.disabled = false;
+                                    li.style.cursor = 'pointer';
+                                    li.style.border='1px solid red';
+                                    alert('Please Reupload File For The Subclip With Red Border')
+                                }
+                            }
                             li.disabled = false;
                             li.style.cursor = 'pointer';
                         }
@@ -841,6 +848,11 @@ function editAttachValidation(formId, clipId, getUrl, li) {
                         if (li) {
 
                             li.dataset.id = newId;
+                            li.dataset.name = ''
+                                li.dataset.clipid =''
+                                li.dataset.cat_id = ''
+                                li.dataset.current_file=''
+
                             if (response.video_clip) {
                                 li.dataset.name = response.video_clip.name
                                 li.dataset.clipid = response.video_clip.id
@@ -849,8 +861,16 @@ function editAttachValidation(formId, clipId, getUrl, li) {
 
 
 
-                            };
-                            li.dataset.current_file = response.current_file
+                            }else {
+                                li.dataset.current_file = response.current_file
+                                if (!response.exists_in_s3){
+                                    li.disabled = false;
+                                    li.style.cursor = 'pointer';
+                                    li.style.border='1px solid red'
+                                    alert('Please Reupload File For The Subclip With Red Border')
+                                }
+
+                            }
                             li.disabled = false;
                             li.style.cursor = 'pointer';
 
