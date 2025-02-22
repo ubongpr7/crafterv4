@@ -132,11 +132,11 @@ display:none
                         <div>
                             
                             <a href="{%url 'video_text:download_video' textfile.id %}">
-                                {{textfile.get_file_text}}
+                                {{textfile.file_text}}
                             </a>
                         </div>
                     </div>
-                    <div>{{textfile.get_clip_number}}</div>
+                    <div>{{textfile.clip_number}}</div>
                     <div>{{textfile.created_at }}</div>
                     <img src="{% static 'resources/assets/assets1/dots.svg' %}"class="menu" alt="">
                     <div class="actions">
