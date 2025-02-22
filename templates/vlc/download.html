@@ -606,17 +606,22 @@ document.getElementById('downloadButton').addEventListener('click', function(eve
 
                         if (downloadStarted || performance.now() - startTime > 5000) {
                             clearInterval(checkDownload);
+                            stopProcessingAnimation()
                             window.location.href = '/text';
                         }
                     }, 100); // Check every 100ms
                 } else {
                     console.error('Download failed or could not start.');
                     alert('Download failed. Please try again.');
+                    stopProcessingAnimation()
+
                 }
             })
             .catch(error => {
                 console.error('Error initiating the download:', error);
                 alert('An error occurred. Please try again.');
+                stopProcessingAnimation()
+
             });
     }
 });
@@ -632,7 +637,7 @@ function startProcessingAnimation() {
         // Set the interval to change the text every 500 milliseconds
         const intervalId = setInterval(function () {
           dots = (dots + 1) % 4; // Cycle between 0, 1, 2, and 3
-          let loadingText = 'Processing' + '.'.repeat(dots); // Add dots dynamically
+          let loadingText = 'Downloading' + '.'.repeat(dots); // Add dots dynamically
           button_text.text(loadingText);
         }, 500); // 500 milliseconds = 0.5 seconds
 
@@ -647,7 +652,7 @@ function startProcessingAnimation() {
         if (intervalId) {
           clearInterval(intervalId);
           button_text.data('intervalId', null); // Remove the stored interval ID
-          button_text.text('Proceed To Scene Selection'); // Optionally reset the text or set it to another value
+          button_text.text('Download'); // Optionally reset the text or set it to another value
         }
       }
        </script>
