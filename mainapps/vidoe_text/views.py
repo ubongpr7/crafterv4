@@ -386,15 +386,41 @@ def delete_textfile(request, textfile_id):
 #     textfiles=TextFile.objects.filter(user=user)
 #     return render(request,'assets/text_files.html', {'textfiles':textfiles})
 
+# def manage_textfile(request):
+#     user = request.user
+#     textfiles = TextFile.objects.filter(user=user).values("id", "created_at")
+    
+#     for textfile in textfiles:
+#         textfile["get_clip_number"] = TextFile.objects.get(id=textfile["id"]).get_clip_number()
+#         textfile["get_file_text"] = TextFile.objects.get(id=textfile["id"]).get_file_text()
+
+#     return render(request, "assets/text_files.html", {"textfiles": textfiles})
+
+
+from django.db.models import Count, F, Value, CharField
+from django.db.models.functions import Concat
+
 def manage_textfile(request):
     user = request.user
-    textfiles = TextFile.objects.filter(user=user).values("id", "created_at")
-    
-    for textfile in textfiles:
-        textfile["get_clip_number"] = TextFile.objects.get(id=textfile["id"]).get_clip_number()
-        textfile["get_file_text"] = TextFile.objects.get(id=textfile["id"]).get_file_text()
+
+    # Fetch all TextFile objects for the user with related data
+    textfiles = (
+        TextFile.objects.filter(user=user)
+        .annotate(
+            clip_number=Count("video_clips__subclips", distinct=True),
+            file_text=Concat(
+                Value("Id: "),
+                F("id"),
+                Value(" -> "),
+                F("video_clips__slide"),
+                output_field=CharField(),
+            ),
+        )
+        .values("id", "created_at", "clip_number", "file_text")
+    )
 
     return render(request, "assets/text_files.html", {"textfiles": textfiles})
+
 
 def edit_subclip(request,id):
     if request.method =='POST':
