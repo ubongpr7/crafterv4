@@ -400,10 +400,10 @@ class Command(BaseCommand):
 
                 else:
                     mv_clip = self.load_video_from_file_field(subclip.to_dict().get('video_path'))
-                    if self.is_near_9_16(mv_clip):
-                        cropped_clip=self.crop_9_16_video_ffmpeg(subclip.to_dict().get('video_path').url, RESOLUTIONS[self.text_file_instance.resolution])
-                    else:
-                        cropped_clip = self.crop_to_aspect_ratio_(mv_clip, MAINRESOLUTIONS[self.text_file_instance.resolution])
+                    # if self.is_near_9_16(mv_clip):
+                    cropped_clip=self.crop_9_16_video_ffmpeg(subclip.to_dict().get('video_path').url, RESOLUTIONS[self.text_file_instance.resolution])
+                    # else:
+                        # cropped_clip = self.crop_to_aspect_ratio_(mv_clip, MAINRESOLUTIONS[self.text_file_instance.resolution])
                     clip_with_duration = self.adjust_segment_duration(cropped_clip,float(subclip.end - subclip.start))
                     logging.debug(f"Loaded video clip from path: {subclip.to_dict().get('video_path')}")
                     logging.debug(f"Cropped clip to resolution: {MAINRESOLUTIONS[self.text_file_instance.resolution]}")
