@@ -560,9 +560,9 @@
                     document.body.removeChild(tempLink);
 
                     // Add a delay before redirecting to ensure the download starts
-                    setTimeout(() => {
-                        window.location.href = '/text';
-                    }, 1000); // 1-second delay (adjust as needed)
+                    window.location.href = '/text';
+                    // setTimeout(() => {
+                    // }, 1000); // 1-second delay (adjust as needed)
                 } else {
                     console.error('Download failed or could not start.');
                     alert('Download failed. Please try again.');
