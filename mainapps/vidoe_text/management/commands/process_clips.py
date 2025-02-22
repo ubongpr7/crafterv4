@@ -486,41 +486,94 @@ class Command(BaseCommand):
 
     #     return clip
 
-
-    def crop_9_16_video_ffmpeg(self,input_video, resolution):
+    def crop_9_16_video_ffmpeg(self,input_video, output_resolution):
         """
-        Crop a 9:16 (or close) video to the target resolution without black borders.
+        Crops a video to the desired resolution without stretching.
         
         Parameters:
-        - input_video (str): Path to the input video.
-        - resolution (tuple): (desired_width, desired_height).
+        - input_video (str): Path to the input video file.
+        - output_resolution (tuple): Desired (width, height) output resolution.
         
         Returns:
-        - VideoFileClip: Cropped video clip.
+        - str: Path to the cropped output video.
         """
-        output_width, output_height = resolution
+        output_width, output_height = output_resolution
+
+        # Get the original video width and height
+        clip = VideoFileClip(input_video)
+        input_width, input_height = clip.size
+        clip.close()
+
+        # Calculate crop size while maintaining aspect ratio
+        input_aspect = input_width / input_height
+        output_aspect = output_width / output_height
+
+        if input_aspect > output_aspect:
+            # Input is wider than needed, crop width
+            new_width = int(input_height * output_aspect)
+            new_height = input_height
+            x_offset = (input_width - new_width) // 2
+            y_offset = 0
+        else:
+            # Input is taller than needed, crop height
+            new_width = input_width
+            new_height = int(input_width / output_aspect)
+            x_offset = 0
+            y_offset = (input_height - new_height) // 2
 
         # Create a temporary output file
         with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_output:
             output_path = temp_output.name
 
-        # FFmpeg command to crop the video to the exact resolution
+        # FFmpeg command to crop the video
         cmd = [
             "ffmpeg", "-y", "-i", input_video,
-            "-vf", f"scale={output_width+100}:{output_height+100},crop={output_width}:{output_height}",
-            #  "-vf", f"crop={output_width}:{output_height}",
+            "-vf", f"crop={new_width}:{new_height}:{x_offset}:{y_offset}",
             "-c:v", "libx264", "-preset", "fast", "-crf", "23",
-            "-c:a", "aac", "-b:a", "128k",
+            "-c:a", "copy",
             output_path
         ]
 
         # Run FFmpeg
         subprocess.run(cmd, check=True)
 
-        # Load the processed video using MoviePy
-        clip = VideoFileClip(output_path)
+        return output_path
 
-        return clip
+
+    # def crop_9_16_video_ffmpeg(self,input_video, resolution):
+    #     """
+    #     Crop a 9:16 (or close) video to the target resolution without black borders.
+        
+    #     Parameters:
+    #     - input_video (str): Path to the input video.
+    #     - resolution (tuple): (desired_width, desired_height).
+        
+    #     Returns:
+    #     - VideoFileClip: Cropped video clip.
+    #     """
+    #     output_width, output_height = resolution
+
+    #     # Create a temporary output file
+    #     with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_output:
+    #         output_path = temp_output.name
+
+    #     # FFmpeg command to crop the video to the exact resolution
+    #     cmd = [
+    #         "ffmpeg", "-y", "-i", input_video,
+    #         "-vf", f"scale={output_width}:{output_height},crop={output_width}:{output_height}",
+    #         #  "-vf", f"crop={output_width}:{output_height}",
+    #         "-c:v", "libx264", "-preset", "fast", "-crf", "23",
+    #         "-c:a", "aac", "-b:a", "128k",
+    #         output_path
+    #     ]
+
+    #     # Run FFmpeg
+    #     subprocess.run(cmd, check=True)
+
+    #     # Load the processed video using MoviePy
+    #     clip = VideoFileClip(output_path)
+
+    #     return clip
 
     def extract_start_end(self,generated_srt):
         """
