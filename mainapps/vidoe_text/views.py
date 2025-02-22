@@ -305,7 +305,6 @@ def edit_subcliphtmx(request,id):
                     return JsonResponse({"success": False, "error": str(e)}, status=500)
             else:
                 # subclip.video_file=file_
-                # subclip.video_file.save(file_)
                 subclip.video_file.save(file_.name, file_)
 
         elif asset_clip_id:
