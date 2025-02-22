@@ -30,7 +30,7 @@ from botocore.exceptions import NoCredentialsError, PartialCredentialsError
 from django.apps import apps
 import tempfile
 import boto3
-from django.db.models import Count, OuterRef, Subquery, Value, F
+from django.db.models import Count, OuterRef, Subquery, Value, F,CharField
 from django.db.models.functions import Concat, Coalesce
 @csrf_exempt
 def update_subtitle_positions(request):
