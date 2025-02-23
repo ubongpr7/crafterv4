@@ -1940,7 +1940,7 @@ class Command(BaseCommand):
         text_clip_sizes = []
         box_padding = 16  
         apparent_padding = 0  
-        x_padding = 20  
+        x_padding = 30  
         box_radius = 10
 
         for line in lines:
@@ -1955,7 +1955,7 @@ class Command(BaseCommand):
             #     align="center",
             # )
 
-            text_image = self.render_text_with_emoji(line, font_size=40, )
+            text_image = self.render_text_with_emoji(line, font_size=44, )
 
         # Create a TextClip from the rendered image
             text_clip = ImageClip(text_image,ismask=False)
@@ -1966,7 +1966,7 @@ class Command(BaseCommand):
                 total_text_height += box_height
                 text_clip_sizes.append((text_clip, box_width, box_height))
 
-        first_text_top = int(video_height * 0.75 - 18)
+        first_text_top = int(video_height * 0.6 - 18)
         y_offset = first_text_top
 
         for idx, (text_clip, box_width, box_height) in enumerate(text_clip_sizes):
