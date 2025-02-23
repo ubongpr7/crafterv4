@@ -1704,7 +1704,32 @@ class Command(BaseCommand):
 
                 # If the font size reaches the minimum and the text still doesn't fit, return the best effort
                 return "\n".join(lines),font_size
+            
+            # def split_text_two_lines(text: str) -> str:
+            #     if len(text) <= 30:
+            #         return text  # Return as a single line if ≤ 30 chars
+
+            #     words = text.split()
+            #     first_line, second_line = [], []
+            #     char_count = 0
+
+            #     for word in words:
+            #         if char_count + len(word) + (1 if first_line else 0) <= 30:  # Ensure first line gets at least 30 chars
+            #             first_line.append(word)
+            #             char_count += len(word) + (1 if first_line else 0)  # Account for spaces
+            #         else:
+            #             second_line.append(word)
+
+            #     # Rebalance if second line is longer than 20 chars
+            #     while len(" ".join(second_line)) > 25:
+            #         first_line.append(second_line.pop(0))  # Move words to first line
+
+            #     return " ".join(first_line) + ("\n" + " ".join(second_line) if second_line else "")
+
             def split_text_two_lines(text: str) -> str:
+                """
+                Splits text into two lines, ensuring emojis are not split across lines.
+                """
                 if len(text) <= 30:
                     return text  # Return as a single line if ≤ 30 chars
 
@@ -1713,18 +1738,32 @@ class Command(BaseCommand):
                 char_count = 0
 
                 for word in words:
-                    if char_count + len(word) + (1 if first_line else 0) <= 30:  # Ensure first line gets at least 30 chars
+                    # Check if adding the word exceeds the limit for the first line
+                    if char_count + len(word) + (1 if first_line else 0) <= 30:
                         first_line.append(word)
                         char_count += len(word) + (1 if first_line else 0)  # Account for spaces
                     else:
                         second_line.append(word)
 
-                # Rebalance if second line is longer than 20 chars
+                # Rebalance if the second line is too long
                 while len(" ".join(second_line)) > 25:
-                    first_line.append(second_line.pop(0))  # Move words to first line
+                    # Move the last word from the first line to the second line
+                    if first_line:
+                        second_line.insert(0, first_line.pop())
+                    else:
+                        break  # Avoid infinite loop if first_line is empty
 
-                return " ".join(first_line) + ("\n" + " ".join(second_line) if second_line else "")
+                # Ensure emojis are not split across lines
+                first_line_text = " ".join(first_line)
+                second_line_text = " ".join(second_line)
 
+                # Check if the last character of the first line is an emoji
+                if first_line_text and ord(first_line_text[-1]) > 0xFFFF:
+                    # Move the emoji to the second line
+                    second_line_text = first_line_text[-1] + " " + second_line_text
+                    first_line_text = first_line_text[:-1].strip()
+
+                return first_line_text + ("\n" + second_line_text if second_line_text else "")
             
             if self.text_file_instance.resolution=='9:16':
 
