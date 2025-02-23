@@ -24,6 +24,7 @@ from moviepy.editor import (
     VideoFileClip,
 )
 import moviepy
+from pilmoji import Pilmoji
 
 from moviepy.video.fx.all import crop as fix_all_crop
 import moviepy.video.fx.resize as rz
@@ -1728,10 +1729,20 @@ class Command(BaseCommand):
             #         first_line.append(second_line.pop(0))  # Move words to first line
 
             #     return " ".join(first_line) + ("\n" + " ".join(second_line) if second_line else "")
+            def is_emoji(word: str) -> bool:
+                """Checks if a word is an emoji using pilmoji."""
+                try:
+                    Pilmoji.replace_emoji(word)  # Try to replace emojis
+                    if Pilmoji.replace_emoji(word) != word:
+                        return True
+                    else:
+                        return False
+                except Exception:
+                    return False  # If Pilmoji encounters an error, it's not an emoji
 
             def split_text_two_lines(text: str) -> str:
                 """Splits text into two lines, ensuring the last word (with emoji) is kept together."""
-
+                l_is_emoji=False
                 if len(text) <= 30:
                     return text  # Return as a single line if ≤ 30 chars
 
@@ -1743,18 +1754,18 @@ class Command(BaseCommand):
                 if not words:
                     return "" # return if empty string
 
-                last_word = words.pop()  # Remove the last word
+                last_word = words.pop() 
+                # l_is_emoji=is_emoji(last_word)
                 first_line, second_line = [], []
                 char_count = 0
 
                 for word in words:
                     if char_count + len(word) + (1 if first_line else 0) <= 30:  # Ensure first line gets at least 30 chars
                         first_line.append(word)
-                        char_count += len(word) + (1 if first_line else 0)  # Account for spaces
+                        char_count += len(word) + (1 if first_line else 0) 
                     else:
                         second_line.append(word)
 
-                # Rebalance if second line is longer than 25 chars
                 while len(" ".join(second_line)) > 25:
                     if second_line:
                         first_line.append(second_line.pop(0))  # Move words to first line
@@ -1903,7 +1914,6 @@ class Command(BaseCommand):
         Renders text with emojis, using a custom font for text and ensuring emojis retain their default color.
         Emojis are rendered in their correct positions relative to the text.
         """
-        from pilmoji import Pilmoji
 
         # Load text color
         color = ImageColor.getrgb(self.text_file_instance.font_color) + (255,)
@@ -1919,12 +1929,12 @@ class Command(BaseCommand):
         text_width, text_height = draw.textbbox((0, 0), text, font=text_font)[2:]
 
         # Create the final image with transparent background
-        image = Image.new("RGBA", (text_width, text_height), (0, 0, 0, 0))
+        image = Image.new("RGBA", (text_width+10, text_height), (0, 0, 0, 0))
 
         # Draw text with emojis
         with Pilmoji(image) as pilmoji:
             # Use the same font for both text and emojis
-            pilmoji.text((0, 0), text, fill=color, font=text_font, emoji_position_offset=(-5, 0))
+            pilmoji.text((0, 0), text, fill=color, font=text_font, emoji_position_offset=(0, 0))
 
         # Convert PIL image to numpy array for MoviePy
         return np.array(image)
@@ -1940,7 +1950,7 @@ class Command(BaseCommand):
         text_clip_sizes = []
         box_padding = 16  
         apparent_padding = 0  
-        x_padding = 50  
+        x_padding = 20
         box_radius = 10
 
         for line in lines:
@@ -1966,7 +1976,7 @@ class Command(BaseCommand):
                 total_text_height += box_height
                 text_clip_sizes.append((text_clip, box_width, box_height))
 
-        first_text_top = int(video_height * 0.6 - 18)
+        first_text_top = int(video_height * 0.7 - 18)
         y_offset = first_text_top
 
         for idx, (text_clip, box_width, box_height) in enumerate(text_clip_sizes):
