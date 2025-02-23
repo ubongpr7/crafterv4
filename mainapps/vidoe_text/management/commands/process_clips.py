@@ -1855,25 +1855,34 @@ class Command(BaseCommand):
 
 
     def render_text_with_emoji(self, text, font_size):
-        import emoji 
+        """
+        Renders text with emojis, using a custom font for text and ensuring emojis retain their default color.
+        """
+        from pilmoji import Pilmoji
+
+        # Load text color
+
         color = ImageColor.getrgb(self.text_file_instance.font_color) + (255,)
 
+        # Load fonts
         text_font = ImageFont.truetype(os.path.join(os.getcwd(), 'fonts', 'tiktokfont.otf'), font_size)
 
-        # Use pillow-emoji to enable colored emojis
+        # Create a blank image (temporary, just for size calculation)
         image = Image.new("RGBA", (1, 1), (0, 0, 0, 0))
         draw = ImageDraw.Draw(image)
 
+        # Get text bounding box to determine final image size
         text_width, text_height = draw.textbbox((0, 0), text, font=text_font)[2:]
 
+        # Create the final image with transparent background
         image = Image.new("RGBA", (text_width, text_height), (0, 0, 0, 0))
-        draw = ImageDraw.Draw(image)
 
-        # Render text with colored emojis
-        draw.text((0, 0), emoji.emojize(text), font=text_font, fill=color)
+        # Draw text with emojis
+        with Pilmoji(image) as pilmoji:
+            pilmoji.text((0, 0), text, fill=color, font=text_font)
 
+        # Convert PIL image to numpy array for MoviePy
         return np.array(image)
-
     # def render_text_with_emoji(self,text,  font_size):
     #     """
     #     Renders text with emojis using a custom font for text and an emoji font for emojis.
