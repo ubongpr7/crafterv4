@@ -1865,7 +1865,7 @@ class Command(BaseCommand):
         color = ImageColor.getrgb(self.text_file_instance.font_color) + (255,)
 
         text_font = ImageFont.truetype(os.path.join(os.getcwd(),'fonts','tiktokfont.otf'), font_size)
-        emoji_font = ImageFont.truetype(os.path.join(os.getcwd(),'fonts','SegoeUIEmoji.TTF'), 25)
+        emoji_font = ImageFont.truetype(os.path.join(os.getcwd(),'fonts','SegoeUIEmoji.TTF'), 20)
 
         # Create a blank image with transparent background
         image = Image.new("RGBA", (1, 1), (0, 0, 0, 0))
@@ -1882,7 +1882,7 @@ class Command(BaseCommand):
         x = 0
         for char in text:
             if ord(char) > 0xFFFF:  # Check if the character is an emoji
-                draw.text((x, 0), char, font=emoji_font, fill=color)
+                draw.text((x, 0), char, font=emoji_font, )
             else:
                 draw.text((x, 0), char, font=text_font, fill=color)
             # Update x position based on character width
