@@ -1920,7 +1920,7 @@ class Command(BaseCommand):
             text_image = self.render_text_with_emoji(line, font_size=40, )
 
         # Create a TextClip from the rendered image
-            text_clip = TextClip(text_image,)
+            text_clip = ImageClip(text_image,ismask=False)
 
 
             if text_clip.size:
