@@ -1909,10 +1909,40 @@ class Command(BaseCommand):
 
 
 
+    # def render_text_with_emoji(self, text, font_size):
+    #     """
+    #     Renders text with emojis, using a custom font for text and ensuring emojis retain their default color.
+    #     Emojis are rendered in their correct positions relative to the text.
+    #     """
+
+    #     # Load text color
+    #     color = ImageColor.getrgb(self.text_file_instance.font_color) + (255,)
+
+    #     # Load fonts
+    #     text_font = ImageFont.truetype(os.path.join(os.getcwd(), 'fonts', 'tiktokfont.otf'), font_size)
+
+    #     # Create a blank image (temporary, just for size calculation)
+    #     image = Image.new("RGBA", (1, 1), (0, 0, 0, 0))
+    #     draw = ImageDraw.Draw(image)
+
+    #     # Get text bounding box to determine final image size
+    #     text_width, text_height = draw.textbbox((0, 0), text, font=text_font)[2:]
+
+    #     # Create the final image with transparent background
+    #     image = Image.new("RGBA", (text_width+24, text_height), (0, 0, 0, 0))
+
+    #     # Draw text with emojis
+    #     with Pilmoji(image) as pilmoji:
+    #         # Use the same font for both text and emojis
+    #         pilmoji.text((0, 0), text, fill=color, font=text_font, emoji_position_offset=(0, 0))
+
+    #     # Convert PIL image to numpy array for MoviePy
+    #     return np.array(image)
     def render_text_with_emoji(self, text, font_size):
         """
         Renders text with emojis, using a custom font for text and ensuring emojis retain their default color.
         Emojis are rendered in their correct positions relative to the text.
+        Text is centered horizontally.
         """
 
         # Load text color
@@ -1928,17 +1958,27 @@ class Command(BaseCommand):
         # Get text bounding box to determine final image size
         text_width, text_height = draw.textbbox((0, 0), text, font=text_font)[2:]
 
+        # Add padding for centering
+        padding = 24
+        image_width = text_width + 2 * padding # add double the padding for both sides
+
         # Create the final image with transparent background
-        image = Image.new("RGBA", (text_width+24, text_height), (0, 0, 0, 0))
+        image = Image.new("RGBA", (image_width, text_height), (0, 0, 0, 0))
+        draw = ImageDraw.Draw(image) #create a new draw object for the new image
+
+        # Calculate the horizontal center position
+        x_center = image_width / 2
+
+        # Calculate the starting x-coordinate for the text
+        text_x = x_center - text_width / 2
 
         # Draw text with emojis
         with Pilmoji(image) as pilmoji:
             # Use the same font for both text and emojis
-            pilmoji.text((0, 0), text, fill=color, font=text_font, emoji_position_offset=(0, 0))
+            pilmoji.text((text_x, 0), text, fill=color, font=text_font, emoji_position_offset=(0, 0))
 
         # Convert PIL image to numpy array for MoviePy
         return np.array(image)
-
     def create_text_clips_for_tiktok(self, text, color, clip):
         lines = text.split("\n") 
         text_clips = []
@@ -1950,7 +1990,7 @@ class Command(BaseCommand):
         text_clip_sizes = []
         box_padding = 16  
         apparent_padding = 0  
-        x_padding = 8
+        x_padding = 10
         box_radius = 10
 
         for line in lines:
@@ -1965,7 +2005,7 @@ class Command(BaseCommand):
             #     align="center",
             # )
 
-            text_image = self.render_text_with_emoji(line, font_size=44, )
+            text_image = self.render_text_with_emoji(line.strip(), font_size=44, )
 
         # Create a TextClip from the rendered image
             text_clip = ImageClip(text_image,ismask=False)
