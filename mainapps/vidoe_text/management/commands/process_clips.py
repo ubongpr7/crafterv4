@@ -2018,6 +2018,7 @@ class Command(BaseCommand):
 
         first_text_top = int(video_height * 0.7 - 18)
         y_offset = first_text_top
+        push_text_up=10
 
         for idx, (text_clip, box_width, box_height) in enumerate(text_clip_sizes):
             if idx > 0:
@@ -2032,8 +2033,7 @@ class Command(BaseCommand):
 
             text_clip = text_clip.set_position((
                 "center", 
-                # y_offset + (box_height / 2) - (text_clip.size[1] / 2) + box_padding / 2 + (apparent_padding/2-5)
-                y_offset + (box_height / 2) - (text_clip.size[1] / 2) + box_padding / 2 + (apparent_padding / 2 - 5 if apparent_padding != 0 else 0)
+                y_offset + (box_height / 2) - (text_clip.size[1] / 2) + box_padding / 2 + (apparent_padding / 2 - 5 if apparent_padding != 0 else 0)-push_text_up
 
             )).set_duration(clip.duration)
 
@@ -2041,6 +2041,7 @@ class Command(BaseCommand):
             box_clips.append(box_clip)
 
             y_offset += box_height  -apparent_padding*2
+            push_text_up=0
 
         return CompositeVideoClip([clip] + box_clips + text_clips)
 
