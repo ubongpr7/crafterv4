@@ -518,13 +518,7 @@ class Command(BaseCommand):
                         output_path
                     ]
                 
-                # cmd = [
-                #     "ffmpeg", "-y", "-i", input_video,
-                #     "-vf", f"scale={output_width}:{output_height}:force_original_aspect_ratio=decrease,pad={output_width}:{output_height}:(ow-iw)/2:(oh-ih)/2",
-                #     "-c:v", "libx264", "-preset", "fast", "-crf", "23",
-                #     "-c:a", "aac", "-b:a", "128k",
-                #     output_path
-                # ]
+                
             # FFmpeg command to crop the video
             else:
 
@@ -1859,6 +1853,43 @@ class Command(BaseCommand):
 
         return np.array(img)
 
+# from moviepy.editor import TextClip, CompositeVideoClip
+# from PIL import Image, ImageDraw, ImageFont
+# import numpy as np
+
+    def render_text_with_emoji(self,text,  font_size):
+        """
+        Renders text with emojis using a custom font for text and an emoji font for emojis.
+        """
+        # Load fonts
+        color = ImageColor.getrgb(self.text_file_instance.font_color) + (255,)
+
+        text_font = ImageFont.truetype(os.path.join(os.getcwd(),'fonts','tiktokfont.otf'), font_size)
+        emoji_font = ImageFont.truetype(os.path.join(os.getcwd(),'fonts','SegoeUIEmoji.TTF'), font_size)
+
+        # Create a blank image with transparent background
+        image = Image.new("RGBA", (1, 1), (0, 0, 0, 0))
+        draw = ImageDraw.Draw(image)
+
+        # Calculate text size
+        text_width, text_height = draw.textsize(text, font=text_font)
+
+        # Create a new image with the calculated size
+        image = Image.new("RGBA", (text_width, text_height), (0, 0, 0, 0))
+        draw = ImageDraw.Draw(image)
+
+        # Draw text with emojis
+        x = 0
+        for char in text:
+            if ord(char) > 0xFFFF:  # Check if the character is an emoji
+                draw.text((x, 0), char, font=emoji_font, fill=color)
+            else:
+                draw.text((x, 0), char, font=text_font, fill=color)
+            # Update x position based on character width
+            x += draw.textsize(char, font=text_font if ord(char) <= 0xFFFF else emoji_font)[0]
+
+        # Convert PIL image to numpy array for MoviePy
+        return np.array(image)
 
     def create_text_clips_for_tiktok(self, text, color, clip):
         lines = text.split("\n") 
@@ -1878,13 +1909,19 @@ class Command(BaseCommand):
             if not line.strip():
                 continue 
 
-            text_clip = TextClip(       
-                line, 
-                font='tiktokfont', 
-                fontsize=35, 
-                color=color, 
-                align="center",
-            )
+            # text_clip = TextClip(       
+            #     line, 
+            #     font='tiktokfont', 
+            #     fontsize=35, 
+            #     color=color, 
+            #     align="center",
+            # )
+            
+            text_image = self.render_text_with_emoji(line, font_size=35, color=color)
+
+        # Create a TextClip from the rendered image
+            text_clip = TextClip(text_image, ismask=False)
+
 
             if text_clip.size:
                 box_width, box_height = text_clip.size
