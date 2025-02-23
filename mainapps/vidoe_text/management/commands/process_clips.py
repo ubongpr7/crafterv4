@@ -1725,17 +1725,19 @@ class Command(BaseCommand):
             #         first_line.append(second_line.pop(0))  # Move words to first line
 
             #     return " ".join(first_line) + ("\n" + " ".join(second_line) if second_line else "")
+
             def split_text_two_lines(text: str) -> str:
                 """
                 Splits text into two lines, ensuring emojis are not split across lines
                 and remain attached to their associated words.
                 """
-                if len(text) <= 30:
-                    return text  # Return as a single line if ≤ 30 chars
+                import regex 
 
-                # Split text into words and emojis
-                import re
-                tokens = re.findall(r'\X', text)  # Split text into grapheme clusters (emojis + text)
+                if len(text) <= 30:
+                    return text  
+
+                # Split text into grapheme clusters (emojis + text)
+                tokens = regex.findall(r'\X', text)
 
                 first_line, second_line = [], []
                 char_count = 0
@@ -1761,6 +1763,8 @@ class Command(BaseCommand):
                 second_line_text = "".join(second_line).strip()
 
                 return first_line_text + ("\n" + second_line_text if second_line_text else "")
+
+
             if self.text_file_instance.resolution=='9:16':
 
                 wrapped_text = split_text_two_lines(
