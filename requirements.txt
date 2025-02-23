@@ -65,3 +65,4 @@ websockets==13.1
 apify-client
 cloudconvert
 modal
+pillow-emoji
