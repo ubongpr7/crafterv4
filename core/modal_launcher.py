@@ -26,7 +26,7 @@ def process_video(task_id: int):
 
     django.setup()
 
-    call_command("process_hook", task_id)
+    call_command("process_clips", task_id)
 
 
 
@@ -36,13 +36,13 @@ def process_video(task_id: int):
     memory=65536, 
     timeout=3600
 )
-def merge_hook(task_id: int):
+def process_bg_music(task_id: int):
     
     sys.path.insert(0, "/app")
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'hooks_app.settings')
 
     django.setup()
 
-    call_command("merge_videos", task_id)
+    call_command("music_processor", task_id)
 
 

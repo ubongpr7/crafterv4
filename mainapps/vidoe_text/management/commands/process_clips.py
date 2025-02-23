@@ -400,15 +400,15 @@ class Command(BaseCommand):
 
                 else:
                     mv_clip = self.load_video_from_file_field(subclip.to_dict().get('video_path'))
-                    # if self.is_near_9_16(mv_clip):
-                    cropped_clip=self.crop_video_with_ffmpeg(
-                        subclip.to_dict().get('video_path').url, 
-                        RESOLUTIONS[self.text_file_instance.resolution],
-                        mv_clip,
-                        subclip.is_tiktok
-                        )
-                    # else:
-                        # cropped_clip = self.crop_to_aspect_ratio_(mv_clip, MAINRESOLUTIONS[self.text_file_instance.resolution])
+                    if subclip.is_tiktok:
+                        cropped_clip=self.crop_video_with_ffmpeg(
+                            subclip.to_dict().get('video_path').url, 
+                            RESOLUTIONS[self.text_file_instance.resolution],
+                            mv_clip,
+                            subclip.is_tiktok
+                            )
+                    else:
+                        cropped_clip = self.crop_to_aspect_ratio_(mv_clip, MAINRESOLUTIONS[self.text_file_instance.resolution])
                     clip_with_duration = self.adjust_segment_duration(cropped_clip,float(subclip.end - subclip.start))
                     logging.debug(f"Loaded video clip from path: {subclip.to_dict().get('video_path')}")
                     logging.debug(f"Cropped clip to resolution: {MAINRESOLUTIONS[self.text_file_instance.resolution]}")
@@ -471,21 +471,17 @@ class Command(BaseCommand):
         """
         output_width, output_height = output_resolution
 
-        # Get the original video width and height
         input_width, input_height = clip.size
         clip.close()
 
-        # Calculate crop size while maintaining aspect ratio
         input_aspect = input_width / input_height
         output_aspect = output_width / output_height
         if input_aspect > output_aspect:
-            # Input is wider than needed, crop width
             new_width = int(input_height * output_aspect)
             new_height = input_height
             x_offset = (input_width - new_width) // 2
             y_offset = 0
         else:
-            # Input is taller than needed, crop height
             new_width = input_width
             new_height = int(input_width / output_aspect)
             x_offset = 0
