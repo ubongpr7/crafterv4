@@ -1725,10 +1725,10 @@ class Command(BaseCommand):
             #         first_line.append(second_line.pop(0))  # Move words to first line
 
             #     return " ".join(first_line) + ("\n" + " ".join(second_line) if second_line else "")
-
             def split_text_two_lines(text: str) -> str:
                 """
-                Splits text into two lines, ensuring emojis are not split across lines.
+                Splits text into two lines, ensuring emojis are not split across lines
+                and remain attached to their associated words.
                 """
                 if len(text) <= 30:
                     return text  # Return as a single line if ≤ 30 chars
@@ -1753,15 +1753,33 @@ class Command(BaseCommand):
                     else:
                         break  # Avoid infinite loop if first_line is empty
 
-                # Ensure emojis are not split across lines
+                # Join the lines
                 first_line_text = " ".join(first_line)
                 second_line_text = " ".join(second_line)
 
-                # Check if the last character of the first line is an emoji
-                if first_line_text and ord(first_line_text[-1]) > 0xFFFF:
-                    # Move the emoji to the second line
-                    second_line_text = first_line_text[-1] + " " + second_line_text
-                    first_line_text = first_line_text[:-1].strip()
+                # Ensure emojis are attached to their associated words
+                def attach_emojis(line1, line2):
+                    """
+                    Ensures emojis are attached to their associated words.
+                    """
+                    if not line1 or not line2:
+                        return line1, line2
+
+                    # Check if the last character of the first line is an emoji
+                    if ord(line1[-1]) > 0xFFFF:
+                        # Move the emoji to the second line
+                        line2 = line1[-1] + " " + line2
+                        line1 = line1[:-1].strip()
+                    # Check if the first character of the second line is an emoji
+                    elif ord(line2[0]) > 0xFFFF:
+                        # Move the emoji to the first line
+                        line1 = line1 + " " + line2[0]
+                        line2 = line2[1:].strip()
+
+                    return line1, line2
+
+                # Attach emojis to their associated words
+                first_line_text, second_line_text = attach_emojis(first_line_text, second_line_text)
 
                 return first_line_text + ("\n" + second_line_text if second_line_text else "")
             
@@ -1893,35 +1911,6 @@ class Command(BaseCommand):
         return np.array(img)
 
 
-    # def render_text_with_emoji(self, text, font_size):
-    #     """
-    #     Renders text with emojis, using a custom font for text and ensuring emojis retain their default color.
-    #     """
-    #     from pilmoji import Pilmoji
-
-    #     # Load text color
-
-    #     color = ImageColor.getrgb(self.text_file_instance.font_color) + (255,)
-
-    #     # Load fonts
-    #     text_font = ImageFont.truetype(os.path.join(os.getcwd(), 'fonts', 'tiktokfont.otf'), font_size)
-
-    #     # Create a blank image (temporary, just for size calculation)
-    #     image = Image.new("RGBA", (1, 1), (0, 0, 0, 0))
-    #     draw = ImageDraw.Draw(image)
-
-    #     # Get text bounding box to determine final image size
-    #     text_width, text_height = draw.textbbox((0, 0), text, font=text_font)[2:]
-
-    #     # Create the final image with transparent background
-    #     image = Image.new("RGBA", (text_width, text_height), (0, 0, 0, 0))
-
-    #     # Draw text with emojis
-    #     with Pilmoji(image) as pilmoji:
-    #         pilmoji.text((0, 0), text, fill=color, font=text_font)
-
-    #     # Convert PIL image to numpy array for MoviePy
-    #     return np.array(image)
 
     def render_text_with_emoji(self, text, font_size):
         """
