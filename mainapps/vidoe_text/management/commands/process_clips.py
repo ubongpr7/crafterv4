@@ -1728,13 +1728,14 @@ class Command(BaseCommand):
 
             def split_text_two_lines(text: str) -> str:
                 """
-                Splits text into two lines, ensuring emojis are not split across lines
-                and remain attached to their associated words.
+                Splits text into two lines, ensuring:
+                1. The first line is always longer than the second line.
+                2. Emojis are not split across lines and remain attached to their associated words.
                 """
-                import regex 
+                import regex  
 
                 if len(text) <= 30:
-                    return text  
+                    return text 
 
                 # Split text into grapheme clusters (emojis + text)
                 tokens = regex.findall(r'\X', text)
@@ -1742,28 +1743,30 @@ class Command(BaseCommand):
                 first_line, second_line = [], []
                 char_count = 0
 
+                # Target length for the first line (60% of the total length)
+                target_first_line_length = int(len(text) * 0.6)
+
                 for token in tokens:
-                    # Check if adding the token exceeds the limit for the first line
-                    if char_count + len(token) + (1 if first_line else 0) <= 30:
+                    # Check if adding the token exceeds the target length for the first line
+                    if char_count + len(token) + (1 if first_line else 0) <= target_first_line_length:
                         first_line.append(token)
                         char_count += len(token) + (1 if first_line else 0)  # Account for spaces
                     else:
                         second_line.append(token)
 
-                # Rebalance if the second line is too long
-                while len("".join(second_line)) > 25:
-                    # Move the last token from the first line to the second line
-                    if first_line:
-                        second_line.insert(0, first_line.pop())
-                    else:
-                        break  # Avoid infinite loop if first_line is empty
-
                 # Join the lines
                 first_line_text = "".join(first_line).strip()
                 second_line_text = "".join(second_line).strip()
 
-                return first_line_text + ("\n" + second_line_text if second_line_text else "")
+                # Ensure the first line is longer than the second line
+                if len(first_line_text) < len(second_line_text):
+                    # Move the last token from the first line to the second line
+                    if first_line:
+                        second_line.insert(0, first_line.pop())
+                        first_line_text = "".join(first_line).strip()
+                        second_line_text = "".join(second_line).strip()
 
+                return first_line_text + ("\n" + second_line_text if second_line_text else "")
 
             if self.text_file_instance.resolution=='9:16':
 
