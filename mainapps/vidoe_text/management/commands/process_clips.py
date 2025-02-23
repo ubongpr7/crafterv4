@@ -1916,8 +1916,8 @@ class Command(BaseCommand):
             #     color=color, 
             #     align="center",
             # )
-            
-            text_image = self.render_text_with_emoji(line, font_size=35, color=color)
+
+            text_image = self.render_text_with_emoji(line, font_size=40, )
 
         # Create a TextClip from the rendered image
             text_clip = TextClip(text_image, ismask=False)
