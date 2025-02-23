@@ -2018,7 +2018,7 @@ class Command(BaseCommand):
 
         first_text_top = int(video_height * 0.7 - 18)
         y_offset = first_text_top
-        push_text_up=10
+        push_text_up=5
 
         for idx, (text_clip, box_width, box_height) in enumerate(text_clip_sizes):
             if idx > 0:
