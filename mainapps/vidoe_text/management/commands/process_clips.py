@@ -1726,19 +1726,18 @@ class Command(BaseCommand):
 
             #     return " ".join(first_line) + ("\n" + " ".join(second_line) if second_line else "")
 
+
             def split_text_two_lines(text: str) -> str:
                 """
                 Splits text into two lines, ensuring:
                 1. The first line is always longer than the second line.
                 2. Emojis are not split across lines and remain attached to their associated words.
                 """
-                import regex  
-
                 if len(text) <= 30:
-                    return text 
+                    return text  # Return as a single line if ≤ 30 chars
 
-                # Split text into grapheme clusters (emojis + text)
-                tokens = regex.findall(r'\X', text)
+                # Split text into words (including emojis attached to words)
+                words = text.split()
 
                 first_line, second_line = [], []
                 char_count = 0
@@ -1746,25 +1745,25 @@ class Command(BaseCommand):
                 # Target length for the first line (60% of the total length)
                 target_first_line_length = int(len(text) * 0.6)
 
-                for token in tokens:
-                    # Check if adding the token exceeds the target length for the first line
-                    if char_count + len(token) + (1 if first_line else 0) <= target_first_line_length:
-                        first_line.append(token)
-                        char_count += len(token) + (1 if first_line else 0)  # Account for spaces
+                for word in words:
+                    # Check if adding the word exceeds the target length for the first line
+                    if char_count + len(word) + (1 if first_line else 0) <= target_first_line_length:
+                        first_line.append(word)
+                        char_count += len(word) + (1 if first_line else 0)  # Account for spaces
                     else:
-                        second_line.append(token)
+                        second_line.append(word)
 
                 # Join the lines
-                first_line_text = "".join(first_line).strip()
-                second_line_text = "".join(second_line).strip()
+                first_line_text = " ".join(first_line).strip()
+                second_line_text = " ".join(second_line).strip()
 
                 # Ensure the first line is longer than the second line
                 if len(first_line_text) < len(second_line_text):
-                    # Move the last token from the first line to the second line
+                    # Move the last word from the first line to the second line
                     if first_line:
                         second_line.insert(0, first_line.pop())
-                        first_line_text = "".join(first_line).strip()
-                        second_line_text = "".join(second_line).strip()
+                        first_line_text = " ".join(first_line).strip()
+                        second_line_text = " ".join(second_line).strip()
 
                 return first_line_text + ("\n" + second_line_text if second_line_text else "")
 
