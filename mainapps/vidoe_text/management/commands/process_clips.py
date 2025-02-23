@@ -1733,56 +1733,34 @@ class Command(BaseCommand):
                 if len(text) <= 30:
                     return text  # Return as a single line if ≤ 30 chars
 
-                words = text.split()
+                # Split text into words and emojis
+                import re
+                tokens = re.findall(r'\X', text)  # Split text into grapheme clusters (emojis + text)
+
                 first_line, second_line = [], []
                 char_count = 0
 
-                for word in words:
-                    # Check if adding the word exceeds the limit for the first line
-                    if char_count + len(word) + (1 if first_line else 0) <= 30:
-                        first_line.append(word)
-                        char_count += len(word) + (1 if first_line else 0)  # Account for spaces
+                for token in tokens:
+                    # Check if adding the token exceeds the limit for the first line
+                    if char_count + len(token) + (1 if first_line else 0) <= 30:
+                        first_line.append(token)
+                        char_count += len(token) + (1 if first_line else 0)  # Account for spaces
                     else:
-                        second_line.append(word)
+                        second_line.append(token)
 
                 # Rebalance if the second line is too long
-                while len(" ".join(second_line)) > 25:
-                    # Move the last word from the first line to the second line
+                while len("".join(second_line)) > 25:
+                    # Move the last token from the first line to the second line
                     if first_line:
                         second_line.insert(0, first_line.pop())
                     else:
                         break  # Avoid infinite loop if first_line is empty
 
                 # Join the lines
-                first_line_text = " ".join(first_line)
-                second_line_text = " ".join(second_line)
-
-                # Ensure emojis are attached to their associated words
-                def attach_emojis(line1, line2):
-                    """
-                    Ensures emojis are attached to their associated words.
-                    """
-                    if not line1 or not line2:
-                        return line1, line2
-
-                    # Check if the last character of the first line is an emoji
-                    if ord(line1[-1]) > 0xFFFF:
-                        # Move the emoji to the second line
-                        line2 = line1[-1] + " " + line2
-                        line1 = line1[:-1].strip()
-                    # Check if the first character of the second line is an emoji
-                    elif ord(line2[0]) > 0xFFFF:
-                        # Move the emoji to the first line
-                        line1 = line1 + " " + line2[0]
-                        line2 = line2[1:].strip()
-
-                    return line1, line2
-
-                # Attach emojis to their associated words
-                first_line_text, second_line_text = attach_emojis(first_line_text, second_line_text)
+                first_line_text = "".join(first_line).strip()
+                second_line_text = "".join(second_line).strip()
 
                 return first_line_text + ("\n" + second_line_text if second_line_text else "")
-            
             if self.text_file_instance.resolution=='9:16':
 
                 wrapped_text = split_text_two_lines(
