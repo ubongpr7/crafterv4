@@ -503,15 +503,22 @@ class Command(BaseCommand):
                 #     "-c:a", "aac", "-b:a", "128k",
                 #     output_path
                 # ]
+                # cmd = [
+                #     "ffmpeg", "-y", "-i", input_video,
+                #     "-vf", 
+                #     f"scale={output_width}:{output_height}:force_original_aspect_ratio=decrease,"  # Scale the video
+                #     f"pad={output_width}:{output_height}:(ow-iw)/2:(oh-ih)/2:color=black@0,"      # Add padding
+                #     f"split=2[original][padded];"                                                # Split into two streams
+                #     f"[padded]boxblur=luma_radius=min(h\,w)/40:luma_power=1[blurred];"           # Blur the padded area
+                #     f"[original][blurred]overlay=(W-w)/2:(H-h)/2",                               # Overlay the original video on the blurred padding
+                #     "-c:v", "libx264", "-preset", "superfast", "-crf", "23",
+                #     "-c:a", "aac", "-b:a", "128k",
+                #     output_path
+                # ]
                 cmd = [
                     "ffmpeg", "-y", "-i", input_video,
-                    "-vf", 
-                    f"scale={output_width}:{output_height}:force_original_aspect_ratio=decrease,"  # Scale the video
-                    f"pad={output_width}:{output_height}:(ow-iw)/2:(oh-ih)/2:color=black@0,"      # Add padding
-                    f"split=2[original][padded];"                                                # Split into two streams
-                    f"[padded]boxblur=luma_radius=min(h\,w)/40:luma_power=1[blurred];"           # Blur the padded area
-                    f"[original][blurred]overlay=(W-w)/2:(H-h)/2",                               # Overlay the original video on the blurred padding
-                    "-c:v", "libx264", "-preset", "superfast", "-crf", "23",
+                    "-vf", f"scale={output_width}:{output_height}:force_original_aspect_ratio=decrease,pad={output_width}:{output_height}:(ow-iw)/2:(oh-ih)/2",
+                    "-c:v", "libx264", "-preset", "fast", "-crf", "23",
                     "-c:a", "aac", "-b:a", "128k",
                     output_path
                 ]
