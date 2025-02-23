@@ -66,3 +66,4 @@ apify-client
 cloudconvert
 modal
 pilmoji
+emoji==1.7.0
