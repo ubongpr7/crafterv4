@@ -1865,7 +1865,7 @@ class Command(BaseCommand):
         color = ImageColor.getrgb(self.text_file_instance.font_color) + (255,)
 
         text_font = ImageFont.truetype(os.path.join(os.getcwd(),'fonts','tiktokfont.otf'), font_size)
-        emoji_font = ImageFont.truetype(os.path.join(os.getcwd(),'fonts','SegoeUIEmoji.TTF'), font_size)
+        emoji_font = ImageFont.truetype(os.path.join(os.getcwd(),'fonts','SegoeUIEmoji.TTF'), 25)
 
         # Create a blank image with transparent background
         image = Image.new("RGBA", (1, 1), (0, 0, 0, 0))
