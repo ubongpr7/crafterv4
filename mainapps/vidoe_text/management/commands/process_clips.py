@@ -1705,67 +1705,27 @@ class Command(BaseCommand):
                 # If the font size reaches the minimum and the text still doesn't fit, return the best effort
                 return "\n".join(lines),font_size
             
-            # def split_text_two_lines(text: str) -> str:
-            #     if len(text) <= 30:
-            #         return text  # Return as a single line if ≤ 30 chars
-
-            #     words = text.split()
-            #     first_line, second_line = [], []
-            #     char_count = 0
-
-            #     for word in words:
-            #         if char_count + len(word) + (1 if first_line else 0) <= 30:  # Ensure first line gets at least 30 chars
-            #             first_line.append(word)
-            #             char_count += len(word) + (1 if first_line else 0)  # Account for spaces
-            #         else:
-            #             second_line.append(word)
-
-            #     # Rebalance if second line is longer than 20 chars
-            #     while len(" ".join(second_line)) > 25:
-            #         first_line.append(second_line.pop(0))  # Move words to first line
-
-            #     return " ".join(first_line) + ("\n" + " ".join(second_line) if second_line else "")
-
-
             def split_text_two_lines(text: str) -> str:
-                """
-                Splits text into two lines, ensuring:
-                1. The first line is always longer than the second line.
-                2. Emojis are not split across lines and remain attached to their associated words.
-                """
                 if len(text) <= 30:
                     return text  # Return as a single line if ≤ 30 chars
 
-                # Split text into words (including emojis attached to words)
                 words = text.split()
-
                 first_line, second_line = [], []
                 char_count = 0
 
-                # Target length for the first line (60% of the total length)
-                target_first_line_length = int(len(text) * 0.6)
-
                 for word in words:
-                    # Check if adding the word exceeds the target length for the first line
-                    if char_count + len(word) + (1 if first_line else 0) <= target_first_line_length:
+                    if char_count + len(word) + (1 if first_line else 0) <= 30:  # Ensure first line gets at least 30 chars
                         first_line.append(word)
                         char_count += len(word) + (1 if first_line else 0)  # Account for spaces
                     else:
                         second_line.append(word)
 
-                # Join the lines
-                first_line_text = " ".join(first_line).strip()
-                second_line_text = " ".join(second_line).strip()
+                # Rebalance if second line is longer than 20 chars
+                while len(" ".join(second_line)) > 25:
+                    first_line.append(second_line.pop(0))  # Move words to first line
 
-                # Ensure the first line is longer than the second line
-                if len(first_line_text) < len(second_line_text):
-                    # Move the last word from the first line to the second line
-                    if first_line:
-                        second_line.insert(0, first_line.pop())
-                        first_line_text = " ".join(first_line).strip()
-                        second_line_text = " ".join(second_line).strip()
+                return " ".join(first_line) + ("\n" + " ".join(second_line) if second_line else "")
 
-                return first_line_text + ("\n" + second_line_text if second_line_text else "")
 
             if self.text_file_instance.resolution=='9:16':
 
