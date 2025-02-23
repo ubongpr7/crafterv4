@@ -1705,7 +1705,33 @@ class Command(BaseCommand):
                 # If the font size reaches the minimum and the text still doesn't fit, return the best effort
                 return "\n".join(lines),font_size
             
+            # def split_text_two_lines(text: str) -> str:
+            #     if len(text) <= 30:
+            #         return text  # Return as a single line if ≤ 30 chars
+
+            #     words = text.split()
+            #     logging.info(f'list of words {words}')
+            #     logging.info(f'list of words {words}')
+            #     logging.info(f'list of words {words}')
+            #     first_line, second_line = [], []
+            #     char_count = 0
+
+            #     for word in words:
+            #         if char_count + len(word) + (1 if first_line else 0) <= 30:  # Ensure first line gets at least 30 chars
+            #             first_line.append(word)
+            #             char_count += len(word) + (1 if first_line else 0)  # Account for spaces
+            #         else:
+            #             second_line.append(word)
+
+            #     # Rebalance if second line is longer than 20 chars
+            #     while len(" ".join(second_line)) > 25:
+            #         first_line.append(second_line.pop(0))  # Move words to first line
+
+            #     return " ".join(first_line) + ("\n" + " ".join(second_line) if second_line else "")
+
             def split_text_two_lines(text: str) -> str:
+                """Splits text into two lines, ensuring the last word (with emoji) is kept together."""
+
                 if len(text) <= 30:
                     return text  # Return as a single line if ≤ 30 chars
 
@@ -1713,6 +1739,11 @@ class Command(BaseCommand):
                 logging.info(f'list of words {words}')
                 logging.info(f'list of words {words}')
                 logging.info(f'list of words {words}')
+
+                if not words:
+                    return "" # return if empty string
+
+                last_word = words.pop()  # Remove the last word
                 first_line, second_line = [], []
                 char_count = 0
 
@@ -1723,12 +1754,18 @@ class Command(BaseCommand):
                     else:
                         second_line.append(word)
 
-                # Rebalance if second line is longer than 20 chars
+                # Rebalance if second line is longer than 25 chars
                 while len(" ".join(second_line)) > 25:
-                    first_line.append(second_line.pop(0))  # Move words to first line
+                    if second_line:
+                        first_line.append(second_line.pop(0))  # Move words to first line
+
+                # Add the last word to the appropriate line
+                if len(" ".join(first_line) + " " + last_word) <= 30 :
+                    first_line.append(last_word)
+                else:
+                    second_line.append(last_word)
 
                 return " ".join(first_line) + ("\n" + " ".join(second_line) if second_line else "")
-
 
             if self.text_file_instance.resolution=='9:16':
 
