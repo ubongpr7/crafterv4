@@ -1959,7 +1959,7 @@ class Command(BaseCommand):
         text_width, text_height = draw.textbbox((0, 0), text, font=text_font)[2:]
 
         # Add padding for centering
-        padding = 16
+        padding = 20
         image_width = text_width + 2 * padding # add double the padding for both sides
 
         # Create the final image with transparent background
@@ -1975,7 +1975,7 @@ class Command(BaseCommand):
         # Draw text with emojis
         with Pilmoji(image) as pilmoji:
             # Use the same font for both text and emojis
-            pilmoji.text((int(text_x), 0), text, fill=color, font=text_font, emoji_position_offset=(0, 0))
+            pilmoji.text((int(text_x), 0), text, fill=color, font=text_font, emoji_position_offset=(-5, 0))
 
         # Convert PIL image to numpy array for MoviePy
         return np.array(image)
