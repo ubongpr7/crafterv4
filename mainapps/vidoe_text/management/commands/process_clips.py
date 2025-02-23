@@ -1940,7 +1940,7 @@ class Command(BaseCommand):
         text_clip_sizes = []
         box_padding = 16  
         apparent_padding = 0  
-        x_padding = 35  
+        x_padding = 50  
         box_radius = 10
 
         for line in lines:
