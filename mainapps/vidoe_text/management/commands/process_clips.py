@@ -1929,7 +1929,7 @@ class Command(BaseCommand):
         text_width, text_height = draw.textbbox((0, 0), text, font=text_font)[2:]
 
         # Create the final image with transparent background
-        image = Image.new("RGBA", (text_width+10, text_height), (0, 0, 0, 0))
+        image = Image.new("RGBA", (text_width+20, text_height), (0, 0, 0, 0))
 
         # Draw text with emojis
         with Pilmoji(image) as pilmoji:
