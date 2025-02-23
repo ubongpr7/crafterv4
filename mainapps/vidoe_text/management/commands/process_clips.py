@@ -1705,13 +1705,45 @@ class Command(BaseCommand):
                 # If the font size reaches the minimum and the text still doesn't fit, return the best effort
                 return "\n".join(lines),font_size
             
+            # def split_text_two_lines(text: str) -> str:
+            #     if len(text) <= 30:
+            #         return text  # Return as a single line if ≤ 30 chars
+
+            #     words = text.split()
+            #     first_line, second_line = [], []
+            #     char_count = 0
+
+            #     for word in words:
+            #         if char_count + len(word) + (1 if first_line else 0) <= 30:  # Ensure first line gets at least 30 chars
+            #             first_line.append(word)
+            #             char_count += len(word) + (1 if first_line else 0)  # Account for spaces
+            #         else:
+            #             second_line.append(word)
+
+            #     # Rebalance if second line is longer than 20 chars
+            #     while len(" ".join(second_line)) > 25:
+            #         first_line.append(second_line.pop(0))  # Move words to first line
+
+            #     return " ".join(first_line) + ("\n" + " ".join(second_line) if second_line else "")
+
+
             def split_text_two_lines(text: str) -> str:
+                """Splits text into two lines, keeping the last word and emoji together."""
+                import re
+
                 if len(text) <= 30:
                     return text  # Return as a single line if ≤ 30 chars
 
                 words = text.split()
                 first_line, second_line = [], []
                 char_count = 0
+
+                # Combine last word and emoji if present
+                if words and re.search(r'[\U0001F600-\U0001F64F\U0001F300-\U0001F5FF\U0001F680-\U0001F6FF\U0001F700-\U0001F77F\U0001F780-\U0001F7FF\U0001F800-\U0001F8FF\U0001F900-\U0001F9FF\U0001FA00-\U0001FA6F\U0001FA70-\U0001FAFF\u2600-\u26FF\u2700-\u27BF]$', words[-1]):
+                    last_word_emoji = words[-1]
+                    words = words[:-1]  # Remove the last word from the list
+                else:
+                    last_word_emoji = None
 
                 for word in words:
                     if char_count + len(word) + (1 if first_line else 0) <= 30:  # Ensure first line gets at least 30 chars
@@ -1720,12 +1752,19 @@ class Command(BaseCommand):
                     else:
                         second_line.append(word)
 
-                # Rebalance if second line is longer than 20 chars
+                # Add the last word and emoji back if it exists
+                if last_word_emoji:
+                    if char_count + len(last_word_emoji) + (1 if first_line else 0) <= 30:
+                        first_line.append(last_word_emoji)
+                    else:
+                        second_line.append(last_word_emoji)
+
+                # Rebalance if second line is longer than 25 chars
                 while len(" ".join(second_line)) > 25:
-                    first_line.append(second_line.pop(0))  # Move words to first line
+                    if second_line:
+                        first_line.append(second_line.pop(0))  # Move words to first line
 
                 return " ".join(first_line) + ("\n" + " ".join(second_line) if second_line else "")
-
 
             if self.text_file_instance.resolution=='9:16':
 
