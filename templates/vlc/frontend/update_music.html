@@ -289,7 +289,67 @@
     //     });
     //   });
     // }
-    function addInputValidation(number) {
+//     function addInputValidation(number) {
+//     const startTimeInput = document.getElementById(`from_when_{{textfile_id}}_${number}`);
+//     const endTimeInput = document.getElementById(`to_when_{{textfile_id}}_${number}`);
+
+//     [startTimeInput, endTimeInput].forEach(input => {
+//         input.addEventListener('input', function() {
+//             let value = input.value;
+//             let cursorPosition = input.selectionStart;
+
+//             value = value.replace(/[^0-9:]/g, '');
+
+//             if (value.length === 2 && !value.includes(':')) {
+//                 value += ':';
+//                 if (cursorPosition === 2) {
+//                     cursorPosition = 3;
+//                 }
+//             }
+
+//             if (value.length > 5) {
+//                 value = value.substring(0, 5);
+//                 if (cursorPosition > 5) {
+//                     cursorPosition = 5;
+//                 }
+//             }
+
+//             const parts = value.split(':');
+//             if (parts[0] && parseInt(parts[0], 10) > 59) {
+//                 value = `59:${parts[1] || ''}`;
+//                 if (cursorPosition > 2) {
+//                     cursorPosition = 3;
+//                 }
+//             }
+//             if (parts[1] && parseInt(parts[1], 10) > 59) {
+//                 value = `${parts[0] || ''}:59`;
+//                 if (cursorPosition > 5) {
+//                     cursorPosition = 5;
+//                 }
+//             }
+
+//             input.value = value;
+//             input.selectionStart = cursorPosition;
+//             input.selectionEnd = cursorPosition;
+//         });
+
+//         input.addEventListener('keydown', function(event) {
+//             if (event.key === 'Backspace') {
+//                 let cursorPosition = input.selectionStart;
+//                 let value = input.value;
+
+//                 if (cursorPosition > 0 && value[cursorPosition - 1] === ':') {
+//                     event.preventDefault(); // Prevent default backspace behavior
+//                     input.selectionStart = cursorPosition - 1;
+//                     input.selectionEnd = cursorPosition - 1;
+//                     input.value = value.substring(0, cursorPosition - 1) + value.substring(cursorPosition);
+//                 }
+//             }
+//         });
+//     });
+// }
+
+function addInputValidation(number) {
     const startTimeInput = document.getElementById(`from_when_{{textfile_id}}_${number}`);
     const endTimeInput = document.getElementById(`to_when_{{textfile_id}}_${number}`);
 
@@ -340,9 +400,11 @@
 
                 if (cursorPosition > 0 && value[cursorPosition - 1] === ':') {
                     event.preventDefault(); // Prevent default backspace behavior
-                    input.selectionStart = cursorPosition - 1;
-                    input.selectionEnd = cursorPosition - 1;
-                    input.value = value.substring(0, cursorPosition - 1) + value.substring(cursorPosition);
+                    if (cursorPosition > 1) { // Check if there's a character before the colon
+                      input.selectionStart = cursorPosition - 2;
+                      input.selectionEnd = cursorPosition - 2;
+                      input.value = value.substring(0, cursorPosition - 2) + value.substring(cursorPosition);
+                    }
                 }
             }
         });
