@@ -348,13 +348,19 @@
 //         });
 //     });
 // }
-
 function addInputValidation(number) {
     const startTimeInput = document.getElementById(`from_when_{{textfile_id}}_${number}`);
     const endTimeInput = document.getElementById(`to_when_{{textfile_id}}_${number}`);
 
     [startTimeInput, endTimeInput].forEach(input => {
+        let colonPrevented = false; // Flag to track colon prevention
+
         input.addEventListener('input', function() {
+            if (colonPrevented) {
+                colonPrevented = false;
+                return; // Skip input processing if colon deletion was prevented
+            }
+
             let value = input.value;
             let cursorPosition = input.selectionStart;
 
@@ -399,17 +405,19 @@ function addInputValidation(number) {
                 let value = input.value;
 
                 if (cursorPosition > 0 && value[cursorPosition - 1] === ':') {
-                    event.preventDefault(); // Prevent default backspace behavior
-                    if (cursorPosition > 1) { // Check if there's a character before the colon
-                      input.selectionStart = cursorPosition - 2;
-                      input.selectionEnd = cursorPosition - 2;
-                      input.value = value.substring(0, cursorPosition - 2) + value.substring(cursorPosition);
+                    event.preventDefault();
+                    if (cursorPosition > 1) {
+                        input.selectionStart = cursorPosition - 2;
+                        input.selectionEnd = cursorPosition - 2;
+                        input.value = value.substring(0, cursorPosition - 2) + value.substring(cursorPosition);
+                        colonPrevented = true; // Set the flag
                     }
                 }
             }
         });
     });
 }
+
     function checkInputs() {
       const inputs = document.querySelectorAll('.fileInput');
       const submitForm = document.getElementById('submit_form');
