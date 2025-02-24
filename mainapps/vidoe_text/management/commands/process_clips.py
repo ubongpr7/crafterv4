@@ -1915,7 +1915,7 @@ class Command(BaseCommand):
         text_width, text_height = draw.textbbox((0, 0), text, font=text_font)[2:]
 
         # Add padding for centering
-        padding = 18
+        padding = 19
         image_width = text_width + 2 * padding # add double the padding for both sides
 
         # Create the final image with transparent background
@@ -1947,7 +1947,7 @@ class Command(BaseCommand):
         text_clip_sizes = []
         box_padding = 16  
         apparent_padding = 0  
-        x_padding = 2
+        x_padding = 0
         box_radius = 10
 
         for line in lines:
