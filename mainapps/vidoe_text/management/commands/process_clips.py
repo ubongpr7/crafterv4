@@ -1989,13 +1989,13 @@ class Command(BaseCommand):
             if text_clip.size:
                 box_width, box_height = text_clip.size
                 total_text_height += box_height
-                text_clip_sizes.append((text_clip, box_width, box_height))
+                text_clip_sizes.append((text_clip, box_width, box_height,l_contain_emoji))
 
         first_text_top = int(video_height * 0.7 - 18)
         y_offset = first_text_top
         push_text_up=5
 
-        for idx, (text_clip, box_width, box_height) in enumerate(text_clip_sizes):
+        for idx, (text_clip, box_width, box_height,l_contain_emoji) in enumerate(text_clip_sizes):
             if idx > 0:
                 apparent_padding = 15  # Set apparent padding after the first text clip
 
@@ -2008,7 +2008,7 @@ class Command(BaseCommand):
 
             text_clip = text_clip.set_position((
                 "center", 
-                y_offset + (box_height / 2) - (text_clip.size[1] / 2) + box_padding / 2 + (apparent_padding / 2 - 5 if apparent_padding != 0 else 0)-push_text_up
+                y_offset + (box_height / 2) - (text_clip.size[1] / 2) + box_padding / 2 + (apparent_padding / 2 - 5 if apparent_padding != 0 else 0)-push_text_up if l_contain_emoji
 
             )).set_duration(clip.duration)
 
