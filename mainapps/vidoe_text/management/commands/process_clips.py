@@ -1966,7 +1966,7 @@ class Command(BaseCommand):
                 continue 
             l_contain_emoji=contains_emoji(line)
             if not l_contain_emoji:
-                x_padding=10
+                x_padding=20
                 # push_text_up=0
 
 
