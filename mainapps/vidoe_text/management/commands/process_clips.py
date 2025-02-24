@@ -1931,7 +1931,7 @@ class Command(BaseCommand):
         # Draw text with emojis
         with Pilmoji(image) as pilmoji:
             # Use the same font for both text and emojis
-            pilmoji.text((int(text_x), 0), text, fill=color, font=text_font, emoji_position_offset=(-10, 5))
+            pilmoji.text((int(text_x), 0), text, fill=color, font=text_font, emoji_position_offset=(0, 5))
 
         # Convert PIL image to numpy array for MoviePy
         return np.array(image)
