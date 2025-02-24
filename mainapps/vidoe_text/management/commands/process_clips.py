@@ -1949,23 +1949,38 @@ class Command(BaseCommand):
         apparent_padding = 0  
         x_padding = 0
         box_radius = 10
+        def contains_emoji(text):
+            import emoji
+            """
+            Check if the given string contains any emojis.
+            """
+            for character in text:
+                if character in emoji.UNICODE_EMOJI['en']:
+                    return True
+            return False
+
+
 
         for line in lines:
             if not line.strip():
                 continue 
+            if not contains_emoji(line):
 
-            # text_clip = TextClip(       
-            #     line, 
-            #     font='tiktokfont', 
-            #     fontsize=35, 
-            #     color=color, 
-            #     align="center",
-            # )
 
-            text_image = self.render_text_with_emoji(line.strip(), font_size=34, )
+                text_clip = TextClip(       
+                    line, 
+                    font='tiktokfont', 
+                    fontsize=35, 
+                    color=color, 
+                    align="center",
+                )
+            else:
 
-        # Create a TextClip from the rendered image
-            text_clip = ImageClip(text_image,ismask=False)
+
+                text_image = self.render_text_with_emoji(line.strip(), font_size=34, )
+
+            # Create a TextClip from the rendered image
+                text_clip = ImageClip(text_image,ismask=False)
 
 
             if text_clip.size:
