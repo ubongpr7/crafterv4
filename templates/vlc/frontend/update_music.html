@@ -289,6 +289,7 @@
     //     });
     //   });
     // }
+    
     function addInputValidation(number) {
     const startTimeInput = document.getElementById(`from_when_{{textfile_id}}_${number}`);
     const endTimeInput = document.getElementById(`to_when_{{textfile_id}}_${number}`);
@@ -305,11 +306,6 @@
                 if (cursorPosition === 2) {
                     cursorPosition = 3;
                 }
-            }else if(value.length ===3 && value.includes(':') ){
-              if (cursorPosition === 2){
-                cursorPosition = 3;
-
-              }
             }
 
             if (value.length > 5) {
