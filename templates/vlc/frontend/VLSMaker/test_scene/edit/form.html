@@ -152,52 +152,87 @@
     let clip_id
     let submitCheck
     $(document).ready(function () {
-        let tableBody = document.querySelector("#leadsTable tbody");
+    let tableBody = document.querySelector("#leadsTable tbody");
+    let scrollSpeed = 50; 
+    let scrollInterval; 
 
-        $("#leadsTable tbody").sortable({
-            axis: "y", 
-            containment: "parent",
-            handle: "td:first-child", 
-            placeholder: "ui-sortable-placeholder",
-            forcePlaceholderSize: true, 
-            tolerance: "pointer",
-            cursorAt: { top: 10 },
-            start: function (event, ui) {
-                console.log("Drag started");
-            },
-            update: function (event, ui) {
-                console.log("Drag ended, updating order");
-                updateSubtitleNumbers(tableBody);
-                updateBackendOrder();
-            },
-            stop: function (event, ui) {
-                console.log("Drag stopped");
-            }
-        });
-
-        // Add CSS for the placeholder
-        $("<style>")
-            .prop("type", "text/css")
-            .html(`
-          .ui-sortable-placeholder {
-            background: #f0f0f0;
-            border-left: 2px solid purple;
-            visibility: visible !important;
-            height: 50px; /* Adjust height to match row height */
-            margin: 0; /* Ensure no margin interferes with placement */
-            padding: 0; /* Ensure no padding interferes with placement */
-          }
-        `)
-            .appendTo("head");
+    $("#leadsTable tbody").sortable({
+        axis: "y",
+        containment: "parent",
+        handle: "td:first-child",
+        placeholder: "ui-sortable-placeholder",
+        forcePlaceholderSize: true,
+        tolerance: "pointer",
+        cursorAt: { top: 10 },
+        start: function (event, ui) {
+            console.log("Drag started");
+            // Start auto-scroll logic
+            scrollInterval = setInterval(function () {
+                autoScrollDuringDrag(ui.helper);
+            }, 50); 
+        },
+        update: function (event, ui) {
+            console.log("Drag ended, updating order");
+            updateSubtitleNumbers(tableBody);
+            updateBackendOrder();
+        },
+        stop: function (event, ui) {
+            console.log("Drag stopped");
+            // Stop auto-scroll logic
+            clearInterval(scrollInterval);
+        }
     });
 
-    function updateSubtitleNumbers(tableBody) {
-        let rows = tableBody.getElementsByTagName("tr");
-        for (let i = 0; i < rows.length; i++) {
-            let subtitleCell = rows[i].querySelector("td:first-child");
-            subtitleCell.textContent = `Subtitle ${i + 1}`;
+    // Function to handle auto-scrolling during drag
+    function autoScrollDuringDrag(draggedElement) {
+        let scrollThreshold = 50; 
+        let scrollContainer = window; 
+        let scrollPosition = scrollContainer.scrollY || scrollContainer.pageYOffset;
+        let viewportHeight = window.innerHeight;
+        let elementRect = draggedElement[0].getBoundingClientRect();
+
+        // Check if near the top of the viewport
+        if (elementRect.top < scrollThreshold) {
+            scrollContainer.scrollBy({ top: -scrollSpeed, behavior: "auto" });
+        }
+        // Check if near the bottom of the viewport
+        else if (elementRect.bottom > viewportHeight - scrollThreshold) {
+            scrollContainer.scrollBy({ top: scrollSpeed, behavior: "auto" }); 
         }
     }
+
+    // Add CSS for the placeholder
+    $("<style>")
+        .prop("type", "text/css")
+        .html(
+            `.ui-sortable-placeholder {
+                background: #f0f0f0;
+                border-left: 2px solid purple;
+                visibility: visible !important;
+                height: 50px; /* Adjust height to match row height */
+                margin: 0; /* Ensure no margin interferes with placement */
+                padding: 0; /* Ensure no padding interferes with placement */
+            }`
+        )
+        .appendTo("head");
+});
+
+// Function to update subtitle numbers
+function updateSubtitleNumbers(tableBody) {
+    let rows = tableBody.getElementsByTagName("tr");
+    for (let i = 0; i < rows.length; i++) {
+        let subtitleCell = rows[i].querySelector("td:first-child");
+        subtitleCell.textContent = `Subtitle ${i + 1}`; 
+    }
+}
+
+    // function updateSubtitleNumbers(tableBody) {
+    //     let rows = tableBody.getElementsByTagName("tr");
+    //     for (let i = 0; i < rows.length; i++) {
+    //         let subtitleCell = rows[i].querySelector("td:first-child");
+    //         subtitleCell.textContent = `Subtitle ${i + 1}`;
+    //     }
+    // }
 
     function updateBackendOrder() {
         let subtitles = [];

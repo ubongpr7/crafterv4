@@ -53,9 +53,7 @@ function deleteAllLi(cNumber) {
             wrapper.style.display = 'flex';
             edit_.style.display = 'flex';
             slide_span.textContent = textarea.value;
-            // toggleColumns(textarea, true)
 
-            // const check = await checkSubtitlesLength();
 
             if (true) {
 
@@ -137,6 +135,7 @@ function deleteAllLi(cNumber) {
             }
 
         }
+
     });
 }
 
