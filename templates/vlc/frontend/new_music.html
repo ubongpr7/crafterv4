@@ -573,7 +573,7 @@
                     event.preventDefault(); // Prevent default backspace behavior
                     input.selectionStart = cursorPosition - 1;
                     input.selectionEnd = cursorPosition - 1;
-                    input.value = value.substring(0, cursorPosition - 1) + value.substring(cursorPosition);
+                    input.value = value.substring(0, cursorPosition - 1);
                 }
             }
         });
