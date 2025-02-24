@@ -440,23 +440,6 @@ class Command(BaseCommand):
             clip = VideoFileClip(output_path)
 
             return clip             
-    def is_near_9_16(self,clip, tolerance=0.1):
-        """
-        Check if a video has an aspect ratio close to 9:16.
-        
-        Parameters:
-        - video_path (str): Path to the video file.
-        - tolerance (float): Allowed deviation from the 9:16 ratio (default: ±0.02).
-        
-        Returns:
-        - bool: True if the video is close to 9:16, False otherwise.
-        """
-        width, height = clip.size
-        aspect_ratio = width / height
-        target_ratio = 9 / 16  # 0.5625
-
-        # Check if aspect ratio is close to 9:16 within the tolerance
-        return abs(aspect_ratio - target_ratio) <= tolerance
 
    
     def crop_video_with_ffmpeg(self,input_video, output_resolution,clip,is_tiktok):
@@ -535,6 +518,7 @@ class Command(BaseCommand):
             subprocess.run(cmd, check=True)
 
             return VideoFileClip(output_path)
+    
     def get_video_resolution(self,input_video):
         """
         Uses FFmpeg to get the width and height of a video.
@@ -1949,6 +1933,7 @@ class Command(BaseCommand):
         apparent_padding = 0  
         x_padding = 0
         box_radius = 10
+        font_size=40
         def contains_emoji(text):
             import emoji
             """
@@ -1973,14 +1958,14 @@ class Command(BaseCommand):
                 text_clip = TextClip(       
                     line, 
                     font='tiktokfont', 
-                    fontsize=34, 
+                    fontsize=font_size, 
                     color=color, 
                     align="center",
                 )
             else:
 
 
-                text_image = self.render_text_with_emoji(line.strip(), font_size=34, )
+                text_image = self.render_text_with_emoji(line.strip(), font_size=font_size, )
 
             # Create a TextClip from the rendered image
                 text_clip = ImageClip(text_image,ismask=False)
