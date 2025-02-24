@@ -305,6 +305,11 @@
                 if (cursorPosition === 2) {
                     cursorPosition = 3;
                 }
+            }else if(value.length ===3 && value.includes(':') ){
+              if (cursorPosition === 2){
+                cursorPosition = 3;
+
+              }
             }
 
             if (value.length > 5) {
