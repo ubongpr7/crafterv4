@@ -1964,13 +1964,16 @@ class Command(BaseCommand):
         for line in lines:
             if not line.strip():
                 continue 
-            if not contains_emoji(line):
+            l_contain_emoji=contains_emoji(line)
+            if not l_contain_emoji:
+                x_padding=10
+                # push_text_up=0
 
 
                 text_clip = TextClip(       
                     line, 
                     font='tiktokfont', 
-                    fontsize=35, 
+                    fontsize=34, 
                     color=color, 
                     align="center",
                 )
