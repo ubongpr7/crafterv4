@@ -242,7 +242,6 @@
         error: function (xhr) {
                 // console.log("Error Status: ", xhr.status);
                 console.log("Error: ", xhr.responseText);
-                stopProcessingAnimation('#button-text');
 
                 try {
                     const response = JSON.parse(xhr.responseText);
