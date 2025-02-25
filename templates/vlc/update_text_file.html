@@ -264,16 +264,16 @@
         // Apply error messages to the correct field
         if (response.status === 402) {
             apiKeyInput.focus();
-            apiKeyError.text(errorMessage);
+            apiKeyError.textContent=errorMessage;
         } else if (response.status === 401) {
             apiKeyInput.focus();
-            apiKeyError.text(errorMessage);
+            apiKeyError.textContent=errorMessage;
         } else if (response.status === 400) {
             voiceIdInput.focus();
-            voiceIdError.text(errorMessage);
+            voiceIdError.textContent=errorMessage;
         } else {
             apiKeyInput.focus();
-            apiKeyError.text(errorMessage);
+            apiKeyError.textContent=errorMessage;
         }
     }
 };
