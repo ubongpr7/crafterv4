@@ -10,7 +10,72 @@ from django.http import JsonResponse
 import tempfile
 from django.db.models import F, Func, Value, CharField
 from django.views.decorators.csrf import csrf_exempt
+from django.http import FileResponse
+from .speed_up_video_ import process_video_speed  
 
+from django.http import FileResponse, JsonResponse
+import os
+
+
+
+@login_required
+def speed_up_video(request):
+    if request.method == "POST":
+        speed = float(request.POST.get("speed", 1.0))
+        video_file = request.FILES.get("file")
+
+        if video_file:
+            processed_video_path = process_video_speed(video_file, speed)
+
+            if processed_video_path:
+                try:
+                    response = FileResponse(
+                        open(processed_video_path, 'rb'), content_type='video/mp4'
+                    )
+                    response['Content-Disposition'] = 'attachment; filename="sped_up_video.mp4"'
+                    response['Content-Length'] = os.path.getsize(processed_video_path)  # Ensure correct file size
+
+                    # Cleanup AFTER response is sent
+                    response['X-Delete-File'] = processed_video_path  # Custom header for cleanup
+                    return response
+
+                except Exception as e:
+                    return JsonResponse({'error': str(e)}, status=500)
+
+    return render(request, 'speed_up_video.html', )
+
+# def speed_up_video(request):
+#     processing = False
+#     processed_video_url = None
+
+#     if request.method == "POST":
+#         speed = float(request.POST.get("speed", 1.0)) 
+#         video_file = request.FILES.get("file")
+
+#         if video_file:
+#             processing = True
+#             processed_video_path = process_video_speed(video_file, speed)
+
+#             if processed_video_path:
+#                 try:
+#                     with open(processed_video_path, 'rb') as f:
+#                         response = FileResponse(f, content_type='video/mp4')
+#                         response['Content-Disposition'] = 'attachment; filename="sped_up_video.mp4"'
+#                         cleanup_processed_video(processed_video_path) #cleanup after sending.
+#                         processing = False
+#                         return response
+#                 except FileNotFoundError:
+#                     processing = False
+#                     return render(request, 'speed_up_video.html', {'processing': processing, 'error': 'Processed video file not found.'})
+#                 except Exception as e:
+#                     processing = False
+#                     return render(request, 'speed_up_video.html', {'processing': processing, 'error': f'An error occurred: {e}'})
+
+#             else:
+#                 processing = False
+#                 return render(request, 'speed_up_video.html', {'processing': processing, 'error': 'Video processing failed.'})
+
+#     return render(request, 'speed_up_video.html', {'processing': processing})
 
 def rename_video_clip(request, video_id):
     video_clip = get_object_or_404(VideoClip, id=video_id)

@@ -13,6 +13,7 @@ urlpatterns = [
         views.category_view,
         name="category_view_video",
     ),
+    path('speed-up-video/', views.speed_up_video, name='speed_up_video'),
     path('api/video-categories/', views.fetch_video_categories, name='fetch_video_categories'),
     path(
         "categories/delete/<int:category_id>/",

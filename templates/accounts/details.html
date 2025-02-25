@@ -410,9 +410,9 @@
           <h1>${{ plans.0.price }}</h1>
           <span>/Month</span>
         </div>
-        <p id="p">Just ${{ plans.0.price_per_vsl }} per VSL</p>
+        <p id="p">Just ${{ plans.0.price_per_vsl }} per Videos</p>
         <p id="p" style="min-height: 70px;">
-          <i class="fa-solid fa-check"></i> Create up to {{ plans.0.vsl_limit }} VSLs per month
+          <i class="fa-solid fa-check"></i> Create up to {{ plans.0.vsl_limit }} Videos per month
         </p>
 
         {% if cur_plan.name|lower == 'growth' %}
@@ -435,9 +435,9 @@
         <h1>${{ plans.1.price }}</h1>
         <span>/Month</span>
       </div>
-      <p id="p">Just ${{ plans.1.price_per_vsl }} per VSL</p>
+      <p id="p">Just ${{ plans.1.price_per_vsl }} per Videos</p>
       <p id="p" style="min-height: 70px;">
-        <i class="fa-solid fa-check"></i> Create up to {{ plans.1.vsl_limit }} VSLs per month
+        <i class="fa-solid fa-check"></i> Create up to {{ plans.1.vsl_limit }} Videos per month
       </p>
       {% if cur_plan.name|lower == 'pro' %}
         <button type="button" class="cancel_button" id="up">
