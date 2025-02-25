@@ -303,40 +303,7 @@
             speedup.style.display = 'flex';
         }
     }
-//     function adjustVideoContainer() {
-//     player.on('loadedmetadata', function () {
-//         const video = player.el().querySelector("video");
-//         const aspectRatio = video.videoWidth / video.videoHeight;
-//         const container = document.getElementById("video-container-box");
-
-//         console.log("Video Loaded");
-//         console.log("Width:", video.videoWidth, "Height:", video.videoHeight);
-//         console.log("Aspect Ratio:", aspectRatio.toFixed(2));
-
-//         // Reset any previous styles to avoid conflicts
-//         container.style.width = "";
-//         container.style.height = "";
-//         container.style.maxWidth = "100%";
-//         container.style.maxHeight = "100vh"; // Ensure it never overflows the viewport
-
-//         if (aspectRatio > 1) {  
-//             container.style.width = "500px"; 
-//             // container.style.height = `500`;  
-//         } else {  
-//             // **Portrait & Square Videos (9:16, 4:5, 1:1)**
-//             container.style.width = `${(60 * aspectRatio)}vh`; 
-//             container.style.height = "60vh";
-//         }
-
-//         // Ensure video itself follows the container's size
-//         video.style.width = "100%";
-//         video.style.height = "100%";
-//         video.style.objectFit = "contain"; // ✅ Prevent cropping
-
-//         console.log(`Container Updated: Width=${container.style.width}, Height=${container.style.height}`);
-//     });
-// }
-function adjustVideoContainer() {
+    function adjustVideoContainer() {
     player.on('loadedmetadata', function () {
         const video = player.el().querySelector("video");
         const aspectRatio = video.videoWidth / video.videoHeight;
@@ -346,32 +313,32 @@ function adjustVideoContainer() {
         console.log("Width:", video.videoWidth, "Height:", video.videoHeight);
         console.log("Aspect Ratio:", aspectRatio.toFixed(2));
 
-        // Reset styles
+        // Reset any previous styles to avoid conflicts
         container.style.width = "";
         container.style.height = "";
         container.style.maxWidth = "100%";
-        container.style.maxHeight = "calc(100vh - 80px)"; // Prevent overlap with header
+        container.style.maxHeight = "100vh"; // Ensure it never overflows the viewport
 
         if (aspectRatio > 1) {  
-            // **Landscape (16:9)**
-            container.style.width = "80vw"; 
-            container.style.height = `${(80 / aspectRatio)}vw`;
+            container.style.width = "500px"; 
+            // container.style.height = `500`;  
         } else {  
-            // **Portrait & Square (9:16, 4:5, 1:1)**
+            // **Portrait & Square Videos (9:16, 4:5, 1:1)**
             container.style.width = `${(60 * aspectRatio)}vh`; 
             container.style.height = "60vh";
         }
 
-        // Ensure the video itself adjusts properly
+        // Ensure video itself follows the container's size
         video.style.width = "100%";
         video.style.height = "100%";
-        video.style.objectFit = "contain";
+        video.style.objectFit = "contain"; // ✅ Prevent cropping
 
         console.log(`Container Updated: Width=${container.style.width}, Height=${container.style.height}`);
     });
 }
 
-    playBtn.addEventListener('click', function () {
+
+playBtn.addEventListener('click', function () {
         if (player.paused()) {
             player.play();
             playIcon.classList.replace('ri-play-large-fill', 'ri-pause-circle-fill');
