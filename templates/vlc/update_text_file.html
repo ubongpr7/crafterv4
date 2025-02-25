@@ -4,9 +4,9 @@
         <div class="modal-header">
             <h2>Update TextFile</h2>
             <button class="close-btn" onclick="closePopup()">&times;</button>
-            <hr>
-            <p>Theres A Problem With Your ElevenLabs Key Please Insert A New Voice Over + API Key</p>
         </div>
+        <p>Theres A Problem With Your ElevenLabs Key Please Insert A New Voice Over + API Key</p>
+
         <div class="modal-body">
             <form id="updateTextFileForm" method="POST" action="/text/update_textfile/{{textfile.id}}/">
                 {% csrf_token %}
