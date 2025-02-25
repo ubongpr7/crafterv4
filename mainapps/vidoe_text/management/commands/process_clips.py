@@ -2072,7 +2072,7 @@ class Command(BaseCommand):
 
                 with open(temp_output_video.name, "rb") as temp_file:
                     text_file_instance.generated_watermarked_video.save(
-                        f"watermarked_output_{text_file_instance.id}.mp4",
+                        f"watermarked_output_{self.generate_random_string(5)}-{text_file_instance.id}.mp4",
                         ContentFile(temp_file.read()),
                     )
                     self.text_file_instance.track_progress(99)
