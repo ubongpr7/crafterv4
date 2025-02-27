@@ -388,10 +388,10 @@
             });
 
             function handleFileUpload(event) {
-                fileInput.files = event.files
                 const file = event.files ? event.files[0] : event.target.files[0];
 
                 if (file && file.type.startsWith('video/')) {
+                fileInput.files = event.files;
                     const videoURL = URL.createObjectURL(file);
                     player.src({ type: file.type, src: videoURL });
                     player.ready(() => {
