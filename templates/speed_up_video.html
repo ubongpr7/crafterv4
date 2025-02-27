@@ -357,7 +357,6 @@
                 preload: 'auto'
             });
 
-            dropArea.addEventListener('click', () => fileInput.click());
             reupload.addEventListener('click', () => {
 
                 videoContainer.style.display = 'none';
@@ -370,6 +369,8 @@
                 speedSlider.style.background = `linear-gradient(to right, #864AF9 0%, #864AF9 ${1}%, #ddd ${1}%, #ddd 100%)`;
                 player.pause()
             })
+            dropArea.addEventListener('click', () => fileInput.click());
+
             fileInput.addEventListener('change', handleFileUpload);
             dropArea.addEventListener('dragover', (e) => {
                 e.preventDefault();
@@ -384,13 +385,21 @@
             });
 
             function handleFileUpload(event) {
-                const file = event.files ? event.files[0] : event.target.files[0];
+                let file;
+
+                // Handle drag-and-drop vs. file input
+                if (event.dataTransfer) {
+                    file = event.dataTransfer.files[0]; // Drag and drop case
+                } else {
+                    file = event.target.files[0]; // File input click case
+                }
+
+                // const file = event.files ? event.files[0] : event.target.files[0];
 
                 if (file && file.type.startsWith('video/')) {
                     const videoURL = URL.createObjectURL(file);
                     player.src({ type: file.type, src: videoURL });
                     player.ready(() => {
-                        // player.play();
                         adjustVideoContainer();
                     });
 
@@ -400,6 +409,7 @@
                     speedup.style.display = 'flex';
                 }
             }
+
             function adjustVideoContainer() {
                 player.on('loadedmetadata', function () {
                     const video = player.el().querySelector("video");
