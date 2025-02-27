@@ -369,33 +369,79 @@
                 speedSlider.style.background = `linear-gradient(to right, #864AF9 0%, #864AF9 ${1}%, #ddd ${1}%, #ddd 100%)`;
                 player.pause()
             })
+           
             dropArea.addEventListener('click', () => fileInput.click());
 
-            fileInput.addEventListener('change', handleFileUpload);
+            // fileInput.addEventListener('change', handleFileUpload);
+            // dropArea.addEventListener('dragover', (e) => {
+            //     e.preventDefault();
+            //     dropArea.style.backgroundColor = '#e9e9e9';
+            // });
+
+            // dropArea.addEventListener('dragleave', () => dropArea.style.backgroundColor = '');
+            // dropArea.addEventListener('drop', function (e) {
+            //     e.preventDefault();
+            //     dropArea.style.backgroundColor = '';
+            //     handleFileUpload(e.dataTransfer);
+            // });
+
+            // function handleFileUpload(event) {
+            //     let file;
+
+            //     // Handle drag-and-drop vs. file input
+            //     if (event.dataTransfer) {
+            //         file = event.dataTransfer.files[0]; // Drag and drop case
+            //     } else {
+            //         file = event.target.files[0]; // File input click case
+            //     }
+
+            //     // const file = event.files ? event.files[0] : event.target.files[0];
+
+            //     if (file && file.type.startsWith('video/')) {
+            //         const videoURL = URL.createObjectURL(file);
+            //         player.src({ type: file.type, src: videoURL });
+            //         player.ready(() => {
+            //             adjustVideoContainer();
+            //         });
+
+            //         uploadContainer.style.display = 'none';
+            //         videoContainer.style.display = 'block';
+            //         controls.style.display = 'flex';
+            //         speedup.style.display = 'flex';
+            //     }
+            // }
             dropArea.addEventListener('dragover', (e) => {
                 e.preventDefault();
                 dropArea.style.backgroundColor = '#e9e9e9';
             });
 
             dropArea.addEventListener('dragleave', () => dropArea.style.backgroundColor = '');
+
             dropArea.addEventListener('drop', function (e) {
                 e.preventDefault();
                 dropArea.style.backgroundColor = '';
-                handleFileUpload(e.dataTransfer);
+
+                if (e.dataTransfer.items) {
+                    // Use DataTransferItemList interface to access the file(s)
+                    [...e.dataTransfer.items].forEach((item) => {
+                        if (item.kind === "file") {
+                            const file = item.getAsFile();
+                            handleFileUpload(file);
+                        }
+                    });
+                } else {
+                    // Use DataTransfer interface to access the file(s)
+                    [...e.dataTransfer.files].forEach((file) => {
+                        handleFileUpload(file);
+                    });
+                }
             });
 
-            function handleFileUpload(event) {
-                let file;
+            fileInput.addEventListener('change', (e) => {
+                handleFileUpload(e.target.files[0]);
+            });
 
-                // Handle drag-and-drop vs. file input
-                if (event.dataTransfer) {
-                    file = event.dataTransfer.files[0]; // Drag and drop case
-                } else {
-                    file = event.target.files[0]; // File input click case
-                }
-
-                // const file = event.files ? event.files[0] : event.target.files[0];
-
+            function handleFileUpload(file) {
                 if (file && file.type.startsWith('video/')) {
                     const videoURL = URL.createObjectURL(file);
                     player.src({ type: file.type, src: videoURL });
@@ -409,6 +455,7 @@
                     speedup.style.display = 'flex';
                 }
             }
+
 
             function adjustVideoContainer() {
                 player.on('loadedmetadata', function () {
