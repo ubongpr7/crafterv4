@@ -321,7 +321,6 @@ function handleSelection(cNumber) {
                         return
                     }
                     console.log('clipid: ', clip_Id)
-
                     const li = document.createElement("li");
                     li.innerText = selectedText;
                     li.dataset.id = cNumber;
