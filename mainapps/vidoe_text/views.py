@@ -486,7 +486,7 @@ def check_text_clip(request, textfile_id):
 
     for clip in textfile.video_clips.all():
         if clip.remaining.strip():  # Ensures remaining is not empty
-            subclip_text = ''.join(subclip.subtittle.strip() for subclip in clip.subclips.all())
+            subclip_text = ' '.join(subclip.subtittle.strip() for subclip in clip.subclips.all())
             print(subclip_text)
             if clip.slide.strip() == subclip_text.strip():
                 clip.remaining = ''
