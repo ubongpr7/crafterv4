@@ -214,7 +214,7 @@ class TextLineVideoClip(models.Model):
     subtitled_clip = models.FileField(upload_to='subtitled_clips/', null=True,blank=True)
     position = models.PositiveIntegerField(default=0) 
     def __str__(self):
-        return f"VideoClip for line {self.position} of {self.text_file}"
+        return f"VideoClip for line {self.position} of {self.text_file} {self.id}"
     def get_number_of_subclip(self):
         return len(self.subclips.all())
     class Meta:
