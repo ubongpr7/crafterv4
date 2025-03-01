@@ -174,7 +174,6 @@ def add_subclip(request, id):
             text_clip.remaining = remaining
             text_clip.save()
 
-            # Return the created SubClip data as JSON
             video_clip_id=''
             cat_id=''
             if subclip.video_clip:
@@ -303,16 +302,12 @@ def add_subcliphtmx(request, id):
             )
         return JsonResponse({"success": False, "error": "Failed to create subclip."}, status=400)
 
-    selected_text = request.GET.get("selectedText")
-    remaining_text = request.GET.get("remainingText")
     return render(
         request,
         "vlc/frontend/VLSMaker/test_scene/subclipform.html",
         {
             "clipId": id,
             "categories": video_categories,
-            "selected_text": selected_text,
-            "remaining_text": remaining_text,
         },
     )
 
@@ -485,13 +480,21 @@ def reset_subclip(request, id):
         return JsonResponse({'success': True})
     return JsonResponse({'success': False}, status=400)
 
-def check_text_clip(request,textfile_id):
-    textfile=TextFile.objects.get(id=textfile_id)
-    ids_of_no_subclip=[]
+def check_text_clip(request, textfile_id):
+    textfile = get_object_or_404(TextFile, id=textfile_id)
+    ids_of_no_subclip = []
+
     for clip in textfile.video_clips.all():
-        if not clip.remaining.strip()=='':
-            ids_of_no_subclip.append(clip.id)
-    return JsonResponse(ids_of_no_subclip,safe=False)
+        if clip.remaining.strip():  # Ensures remaining is not empty
+            subclip_text = ''.join(subclip.subtittle.strip() for subclip in clip.subclips.all())
+
+            if clip.slide.strip() == subclip_text.strip():
+                clip.remaining = ''
+                clip.save()
+            else:
+                ids_of_no_subclip.append(clip.id)
+
+    return JsonResponse(ids_of_no_subclip, safe=False)
 
 @require_http_methods(["DELETE"])
 def delete_background_music(request, id):

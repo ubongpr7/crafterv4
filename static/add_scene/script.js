@@ -30,7 +30,7 @@ function deleteAllLi(cNumber) {
 }
 //good
 
- function handleEnterToHide(currentNumber,) {
+ function handleEnterToHide(currentNumber) {
     edit = false
     const textarea = document.getElementById(`slide_text_${currentNumber}`);
 
@@ -52,16 +52,13 @@ function deleteAllLi(cNumber) {
             textarea.style.display = 'none';
             wrapper.style.display = 'flex';
             edit_.style.display = 'flex';
-            slide_span.textContent = textarea.value;
-
-
             if (true) {
-
+                
                 if (textarea.value) {
+                    slide_span.textContent = textarea.value;
 
                     const payload = JSON.stringify({
                         text: textarea.value,
-                        // position:rows.length+1
                     });
 
                     const xhr = new XMLHttpRequest();
@@ -133,7 +130,6 @@ function deleteAllLi(cNumber) {
                 }
 
             }
-
         }
 
     });
@@ -148,10 +144,9 @@ function EditeSlide(currentNumber) {
     const delete_ = document.getElementById(`edit_${currentNumber}`);
     textarea.style.display = 'flex';
     wrapper.style.display = 'flex'
-
     wrapper.style.display = 'none'
     toggleColumns(textarea, true)
-
+    // deleteAllLi(currentNumber)
 
 };
 
@@ -176,17 +171,15 @@ function clearErrorMessages() {
 
 function startProcessingAnimation() {
     const buttonText = $('#button-text');
-    const svgIcon = $('#proceed-svg'); // Reference to the SVG element
+    const svgIcon = $('#proceed-svg')
     let dots = 0;
 
-    // Hide the SVG icon when processing starts
     svgIcon.css('display', 'none'); 
 
-    // Fix the button text content and size before starting animation
     buttonText.css({
-        'white-space': 'nowrap', // Prevent text wrapping
-        'overflow': 'hidden',    // Hide any overflowed text if needed
-        'text-overflow': 'ellipsis', // Ensure ellipsis is applied if text overflows
+        'white-space': 'nowrap', 
+        'overflow': 'hidden',    
+        'text-overflow': 'ellipsis', 
     });
 
     if (buttonText.data('intervalId')) {
@@ -241,7 +234,7 @@ function highlightNoSubclipIcons(button) {
                         );
                         const matchingSpan = matchingTagBox.querySelector('ul span')
                         if (matchingSpan) {
-                            // matchingSpan.style.color='red'
+                            matchingSpan.focus()
                             console.log(matchingSpan.id.split('_').pop())
                             const errorMessage = document.getElementById(`error-message_${matchingSpan.id.split('_').pop()}`);
                             if (errorMessage) {
@@ -250,7 +243,7 @@ function highlightNoSubclipIcons(button) {
                                     errorMessage.textContent = 'Please Wait For Clip To Process'
 
                                 } else {
-                                    errorMessage.textContent = 'Assign Clips To All Of The Subtitle Text'
+                                    errorMessage.textContent = 'Assign Clips To All Of The Subtitle Text'
 
                                 }
                             }
@@ -350,10 +343,6 @@ function handleSelection(cNumber) {
                     span.innerText = remainingText;
                     openPopup(clip_Id, selectedText, remainingText, cNumber, li);
                     li.style.cursor = 'wait'
-
-
-
-
                 } else {
                     errorMessage.innerText = "Highlighting Must Start From The First Unassigned Word Of The Sentence.";
                 }
@@ -662,7 +651,6 @@ function saveInput(inputElement) {
 async function fetchVideoClips(selected) {
     id = selected.value;
     let video_id = `videoSelect`
-    // saveInput(selected)
     if (id) {
         saveInput(selected)
         populateVideoCategories(video_id, `/video/get_clip/${id}`)
