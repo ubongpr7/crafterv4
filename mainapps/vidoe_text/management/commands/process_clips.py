@@ -713,6 +713,7 @@ class Command(BaseCommand):
                         similarity_boost=0.66,
                         style=0.0,
                         use_speaker_boost=True,
+                        speed=1.1,
                     ),
                 ),
             )
