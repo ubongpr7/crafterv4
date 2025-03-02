@@ -1702,7 +1702,7 @@ class Command(BaseCommand):
                 if not words:
                     return "" # return if empty string
 
-                last_word = words.pop() 
+                # last_word = words.pop() 
                 # l_is_emoji=is_emoji(last_word)
                 first_line, second_line = [], []
                 char_count = 0
@@ -1719,12 +1719,12 @@ class Command(BaseCommand):
                         first_line.append(second_line.pop(0))  # Move words to first line
 
                 # Add the last word to the appropriate line
-                if second_line:
-                    second_line.append(last_word)
-                elif len(" ".join(first_line) + " " + last_word) <= 30:
-                    first_line.append(last_word)
-                else:
-                    second_line.append(last_word)
+                # if second_line:
+                    # second_line.append(last_word)
+                # elif len(" ".join(first_line) + " " + last_word) <= 30:
+                    # first_line.append(last_word)
+                # else:
+                    # second_line.append(last_word)
 
                 return " ".join(first_line) + ("\n" + " ".join(second_line) if second_line else "")
 

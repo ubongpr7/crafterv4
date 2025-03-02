@@ -266,6 +266,7 @@ function highlightNoSubclipIcons(button) {
         });
     } else {
         alert('You Need To Save or Delete The Current Text')
+        stopProcessingAnimation();
     }
 
 }
