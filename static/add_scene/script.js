@@ -168,7 +168,6 @@ function clearErrorMessages() {
 }
 
 
-
 function startProcessingAnimation() {
     const buttonText = $('#button-text');
     const svgIcon = $('#proceed-svg')
