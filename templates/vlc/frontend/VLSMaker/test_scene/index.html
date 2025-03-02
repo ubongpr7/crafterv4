@@ -436,7 +436,8 @@ const validateTextFile = async (file) => {
         const text = await file.text();
         const lines = text.split(/\r?\n/); 
         // const emojiRegex = emojiRegex();
-        if (emojiRegex.test(text)) {
+        const emojiMatches = [...text.matchAll(emojiRegex)];
+        if (emojiMatches.length > 0) {
             alert("The text file contains emojis. Please remove them before uploading.");
             return false;
         }
