@@ -124,6 +124,32 @@ padding: 5px;
       margin-bottom: 30px;
       box-sizing: border-box;
     }
+    
+[data-tooltip] {
+    position: relative;
+}
+
+[data-tooltip]:after {
+    content: attr(data-tooltip);
+    padding: 6px 8px;
+    position: absolute;
+    left: 50%;
+    bottom: 100%;
+    transform: translateX(-50%);
+    background-color: #000000aa;
+    width: max-content;
+    opacity: 0;
+    /* -webkit-transition: opacity 0.2s ease-out; */
+    color: #ffffff;
+    border-radius: 6px;
+    font-size: small;
+
+}
+
+[data-tooltip]:hover:after {
+    opacity: 1;
+}
+
 
     .card-text {
       text-align: left;
@@ -371,8 +397,7 @@ padding: 5px;
             </div>
           </div>
         </div>
-
-        <div class="box" data-resolution="9:16" style="display: flex;
+        <div data-tooltip="Coming Soon" disabled class="box" data-resolution="9:16" style="cursor: not-allowed;display: flex; background-color: #eeeeeebb; "
                       justify-content: center;
                       background: white;
                       text-align: center;
@@ -381,7 +406,7 @@ padding: 5px;
                       padding: 12px 8px;
                       cursor: pointer">
           <input type="radio" name="resolution" value="9:16" hidden />
-          <div style="display: flex; flex-direction: column; align-items: center;">
+          <div  style="display: flex; flex-direction: column; align-items: center;">
             <div style="font-size: 18px;
                           font-weight: 500;
                           line-height: 21.94px;

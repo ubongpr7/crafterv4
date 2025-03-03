@@ -233,7 +233,9 @@ function highlightNoSubclipIcons(button) {
                         );
                         const matchingSpan = matchingTagBox.querySelector('ul span')
                         if (matchingSpan) {
-                            matchingSpan.focus()
+                            matchingSpan.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+
+                            
                             console.log(matchingSpan.id.split('_').pop())
                             const errorMessage = document.getElementById(`error-message_${matchingSpan.id.split('_').pop()}`);
                             if (errorMessage) {
