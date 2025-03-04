@@ -1696,59 +1696,8 @@ class Command(BaseCommand):
                 # If the font size reaches the minimum and the text still doesn't fit, return the best effort
                 return "\n".join(lines),font_size
             
-            def is_emoji(word: str) -> bool:
-                """Checks if a word is an emoji using pilmoji."""
-                try:
-                    Pilmoji.replace_emoji(word)  # Try to replace emojis
-                    if Pilmoji.replace_emoji(word) != word:
-                        return True
-                    else:
-                        return False
-                except Exception:
-                    return False  # If Pilmoji encounters an error, it's not an emoji
 
-            # def split_text_two_lines(text: str) -> str:
-            #     """Splits text into two lines, ensuring the last word (with emoji) is kept together."""
-            #     if len(text) <= 30:
-            #         return text  # Return as a single line if ≤ 30 chars
-
-            #     words = text.split()
-            #     logging.info(f'List of words: {words}')
-
-            #     if not words:
-            #         return ""  # Return if empty string
-
-            #     # Initialize lines
-            #     first_line = []
-            #     second_line = []
-
-            #     # Track character count for the first line
-            #     char_count = 0
-
-            #     # Iterate through words and distribute them into two lines
-            #     for word in words:
-            #         # Check if adding the current word exceeds the limit for the first line
-            #         if char_count + len(word) + len(first_line) <= 30:  # Account for spaces
-            #             first_line.append(word)
-            #             char_count += len(word)
-            #         else:
-            #             second_line.append(word)
-
-            #     # Ensure the last word stays intact in the second line
-            #     if second_line:
-            #         # If the second line is too long, move words back to the first line
-            #         while len(" ".join(second_line)) > 25 and first_line:
-            #             # Move the last word from the first line to the second line
-            #             second_line.insert(0, first_line.pop())
-
-            #     # Join the lines with a newline character
-            #     result = " ".join(first_line)
-            #     if second_line:
-            #         result += "\n" + " ".join(second_line)
-
-            #     return result
-            
-            def split_text_two_lines(text: str, max_line_width: int=30) -> str:
+            def split_text_two_lines(text: str, max_line_width: int=35) -> str:
                 words = text.split()
                 lines = []
                 current_line = []
