@@ -1697,7 +1697,7 @@ class Command(BaseCommand):
                 return "\n".join(lines),font_size
             
 
-            def split_text_two_lines(text: str, max_line_width: int=34) -> str:
+            def split_text_two_lines(text: str, max_line_width: int=32) -> str:
                 words = text.split()
                 lines = []
                 current_line = []
