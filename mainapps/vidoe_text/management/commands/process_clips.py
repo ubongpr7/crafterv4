@@ -448,12 +448,12 @@ class Command(BaseCommand):
                 # Try the first command
                 subprocess.run(cmd1, check=True)
             except subprocess.CalledProcessError as e:
-                print(f"First command failed with error: {e}")
+                logging.error(f"First command failed with error: {e}")
                 try:
                     # If the first command fails, try the second command
                     subprocess.run(cmd2, check=True)
                 except subprocess.CalledProcessError as e:
-                    print(f"Second command also failed with error: {e}")
+                    logging.error(f"Second command also failed with error: {e}")
                     raise  # Re-raise the exception if both commands fail
 
             clip = VideoFileClip(output_path)
