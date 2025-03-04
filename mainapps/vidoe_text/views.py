@@ -275,7 +275,7 @@ def add_subcliphtmx(request, id):
         elif asset_clip_id:
             video = get_object_or_404(VideoClip, id=asset_clip_id)
             subclip = SubClip.objects.create(
-                subtittle=text,
+                subtittle=text.strip(),
                 video_clip=video,
                 main_line=text_clip,
             )
@@ -287,7 +287,7 @@ def add_subcliphtmx(request, id):
 
 
         if subclip:
-            text_clip.remaining = remaining
+            text_clip.remaining = remaining.strip()
             text_clip.save()
         
 
