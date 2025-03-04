@@ -427,7 +427,7 @@ class Command(BaseCommand):
         with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_output:
             output_path = temp_output.name
 
-            cmd = [
+            cmd1 = [
                 "ffmpeg", "-y", "-i", video_url,  
                 "-vf", "scale=-2:1280,crop=720:1280",  # Scale height to 1280, then crop width to 720
                 "-c:v", "libx264", "-preset", "fast", "-crf", "23", 
@@ -435,13 +435,30 @@ class Command(BaseCommand):
                 output_path
             ]
 
-            subprocess.run(cmd, check=True)
+            # Second attempt with a different set of parameters
+            cmd2 = [
+                "ffmpeg", "-y", "-i", video_url,  
+                "-vf", "scale=720:1280",  # Directly scale to 720x1280 without cropping
+                "-c:v", "libx264", "-preset", "fast", "-crf", "23", 
+                "-c:a", "copy", 
+                output_path
+            ]
+
+            try:
+                # Try the first command
+                subprocess.run(cmd1, check=True)
+            except subprocess.CalledProcessError as e:
+                print(f"First command failed with error: {e}")
+                try:
+                    # If the first command fails, try the second command
+                    subprocess.run(cmd2, check=True)
+                except subprocess.CalledProcessError as e:
+                    print(f"Second command also failed with error: {e}")
+                    raise  # Re-raise the exception if both commands fail
 
             clip = VideoFileClip(output_path)
-
-            return clip             
-
-   
+            return clip
+    
     def crop_video_with_ffmpeg(self,input_video, output_resolution,clip,is_tiktok):
         """
         Crops a video to the desired resolution without stretching.
