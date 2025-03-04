@@ -287,8 +287,15 @@ def add_subcliphtmx(request, id):
 
 
         if subclip:
-            text_clip.remaining = remaining.strip()
-            text_clip.save()
+            subclip_text = ' '.join(subclip.subtittle.strip() for subclip in text_clip.subclips.all())
+            print(subclip_text)
+            if text_clip.slide.strip() == subclip_text.strip():
+                text_clip.remaining = ''
+                text_clip.save()
+            else:
+                text_clip.remaining = remaining.strip()
+                text_clip.save()
+
         
 
             return JsonResponse(
