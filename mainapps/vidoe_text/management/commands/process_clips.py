@@ -690,6 +690,75 @@ class Command(BaseCommand):
 
         return sped_up_video
 
+    # def convert_text_to_speech(
+    #     self, text_file_path, voice_id, api_key, output_audio_file
+    # ):
+    #     """
+    #     Converts a text file to speech using ElevenLabs and saves the audio in the specified output directory.
+
+    #     Args:
+    #         text_file_path (str): Path to the text file.
+    #         voice_id (str): The voice ID for speech synthesis.
+    #         api_key (str): API key for ElevenLabs authentication.
+    #         output_audio_file (str): Path where the output audio file will be saved.
+
+    #     Returns:
+    #         str: Presigned URL of the uploaded audio file or None if an error occurred.
+    #     """
+    #     try:
+    #         # Read the text from the file
+    #         with text_file_path.open("r") as f:
+    #             text = f.read().strip()
+    #             logging.info(
+    #                 f"Read text for TTS: {text[:50]}..."
+    #             )  # Log first 50 characters
+    #             self.text_file_instance.track_progress(5)
+
+    #         # Initialize the ElevenLabs client
+    #         client = ElevenLabs(api_key=api_key)
+
+    #         # Generate speech from the text using the specified voice
+    #         audio_data_generator = client.generate(
+    #             text=text,
+    #             voice=Voice(
+    #                 voice_id=voice_id,
+    #                 settings=VoiceSettings(
+    #                     stability=1.0,
+    #                     similarity_boost=0.66,
+    #                     style=0.0,
+    #                     use_speaker_boost=True,
+    #                     speed=1.1,
+    #                 ),
+    #             ),
+    #         )
+    #         self.text_file_instance.track_progress(7)
+
+    #         # Convert the generator to bytes
+    #         audio_data = b"".join(audio_data_generator)
+
+    #         # Instead of manually saving the file, save it using Django's FileField
+    #         # Check if the generated_audio field already contains a file, and delete it if it does
+    #         if self.text_file_instance.generated_audio:
+    #             self.text_file_instance.generated_audio.delete(
+    #                 save=False
+    #             )  # Delete the old file, don't save yet
+
+    #         # Create a new file name for the audio (no leading /)
+    #         audio_file_name = f"{timestamp}_{self.text_file_instance.id}_audio.mp3"
+
+    #         # Save the new file to Django's FileField (linked to S3 storage)
+    #         self.text_file_instance.generated_audio.save(
+    #             audio_file_name, ContentFile(audio_data)
+    #         )
+    #         self.text_file_instance.track_progress(8)
+    #         time.sleep(2)
+    #         # Return the URL to
+    #         return (
+    #             self.text_file_instance.generated_audio
+    #         )  # This will return the URL managed by Django's FileField
+    #     except Exception as e:
+    #         print(e)
+    #         return None
     def convert_text_to_speech(
         self, text_file_path, voice_id, api_key, output_audio_file
     ):
@@ -707,10 +776,12 @@ class Command(BaseCommand):
         """
         try:
             # Read the text from the file
-            with text_file_path.open("r") as f:
-                text = f.read().strip()
+            with open(text_file_path, "r") as f:
+                lines = f.readlines()
+                # Combine lines into a single paragraph
+                text = " ".join(line.strip() for line in lines)
                 logging.info(
-                    f"Read text for TTS: {text[:50]}..."
+                    f"Read text for TTS: {text}..."
                 )  # Log first 50 characters
                 self.text_file_instance.track_progress(5)
 
@@ -751,7 +822,7 @@ class Command(BaseCommand):
                 audio_file_name, ContentFile(audio_data)
             )
             self.text_file_instance.track_progress(8)
-            time.sleep(2)
+            # time.sleep(2)
             # Return the URL to
             return (
                 self.text_file_instance.generated_audio
@@ -759,7 +830,7 @@ class Command(BaseCommand):
         except Exception as e:
             print(e)
             return None
-
+            
     def convert_time(self, seconds):
         milliseconds = int((seconds - int(seconds)) * 1000)
         minutes, seconds = divmod(int(seconds), 60)
@@ -876,7 +947,7 @@ class Command(BaseCommand):
                     )
 
                     logging.info(f"SRT file saved to instance: {srt_file_name}")
-                    time.sleep(3)
+                    # time.sleep(3)
                     # self.text_file_instance.track_progress(24)
 
                     return text_file_instance.generated_subclips_srt
@@ -977,7 +1048,7 @@ class Command(BaseCommand):
                     )
 
                     logging.info(f"SRT file saved to instance: {srt_file_name}")
-                    time.sleep(3)
+                    # time.sleep(3)
                     self.text_file_instance.track_progress(24)
 
                     return text_file_instance.generated_srt
@@ -1144,11 +1215,11 @@ class Command(BaseCommand):
                     f"blank_output_{text_file_instance.id}.mp4",
                     ContentFile(video_content),
                 )
-                time.sleep(2)
+                # time.sleep(2)
                 logging.info(
                     f"Video generated successfully and saved as {text_file_instance.generated_blank_video.name}"
                 )
-                time.sleep(4)
+                # time.sleep(4)
 
                 return True
 
@@ -2042,7 +2113,7 @@ class Command(BaseCommand):
                     self.text_file_instance.track_progress(99)
 
             logging.info("Watermarked video generated successfully.")
-            time.sleep(5)
+            # time.sleep(5)
 
             self.text_file_instance.track_progress(100)
 
