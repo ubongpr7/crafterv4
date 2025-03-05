@@ -651,9 +651,6 @@ class Command(BaseCommand):
         characters = string.ascii_letters + string.digits
         return ''.join(random.choice(characters) for _ in range(length))
 
-    # Example usage
-    random_string = generate_random_string(12)  # Generate a string of length 12
-    print("Random String:", random_string)
 
     def save_final_video(self, clip):
         with tempfile.NamedTemporaryFile(
