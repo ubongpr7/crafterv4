@@ -258,13 +258,15 @@ def add_video_clips(request, textfile_id):
 
         if  request.POST.get("purpose") == "process":
             if text_file.text_file:
-                text_file.text_file.delete(save=False)
+                text_file.text_file.delete(save=True)
             if text_file.video_clips.all():
+                text_file.text_file.delete(save=True)
                 with tempfile.NamedTemporaryFile(mode="w+", delete=False) as temp_file:
                     for clip in text_file.video_clips.all():
                         for subclip in clip.subclips.all():
-                            if subclip.subtittle:
-                                temp_file.write(subclip.subtittle.strip() + "\n")
+                            if subclip.subtittle.strip() == "":
+                                continue
+                            temp_file.write(subclip.subtittle.strip() + "\n")
                     
                     temp_file.flush() 
 
@@ -275,9 +277,9 @@ def add_video_clips(request, textfile_id):
             
                 with tempfile.NamedTemporaryFile(mode="w+", delete=False) as temp_file:
                     for clip in text_file.video_clips.all():
-                            if clip.slide:
-                               
-                                temp_file.write(clip.slide.strip() + "\n")
+                            if clip.slide.strip() == "":
+                                continue
+                            temp_file.write(clip.slide.strip() + "\n")
                     
                     temp_file.flush() 
 
@@ -288,6 +290,50 @@ def add_video_clips(request, textfile_id):
             
 
                 return redirect(f"/text/process-textfile/{textfile_id}")
+            return redirect(reverse("video:add_scenes", args=[textfile_id]))
+
+
+        elif request.POST.get("purpose") == "text_file":
+            if request.FILES.get("text_file"):
+                if request.user.subscription.plan.name.lower() == "free":
+                    slides_count = 0
+                    for _ in request.FILES.get("text_file"):
+                        slides_count += 1
+
+                    if slides_count > 10:
+                        messages.error(
+                            request,
+                            "Adding More Than 10 Lines Is Only Available On Paid Plans. Please Delete Some Lines From Txt File",
+                        )
+                        return redirect(reverse("video:add_scenes", args=[textfile_id]))
+
+                if text_file.video_clips:
+                    for video_clip in TextLineVideoClip.objects.filter(
+                        text_file=text_file
+                    ):
+                        video_clip.delete()
+                        print("Deleted a video_clip")
+
+                text_file.text_file = request.FILES.get("text_file")
+                text_file.save()
+                lines =text_file.process_text_file()
+                video_clips=[] 
+                for i,line in enumerate(lines, start=1):
+                    if line.strip() == "":
+                        continue
+                    video_clip=TextLineVideoClip(
+                        text_file=text_file,
+                        slide=line.strip(),
+                        remaining=line.strip(),
+
+                    )
+                    video_clips.append(video_clip)
+                if video_clips:
+                    TextLineVideoClip.objects.bulk_create(video_clips)
+                return redirect(reverse("video:add_scenes", args=[textfile_id]))
+
+
+            messages.error(request, "You Did Not Upload Text File")
             return redirect(reverse("video:add_scenes", args=[textfile_id]))
 
     else:
