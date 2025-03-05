@@ -72,7 +72,7 @@ def add_text_clip_line(request, textfile_id):
     if request.method == "POST":
         try:
             data = json.loads(request.body) 
-            slide_text = data.get('text')  
+            slide_text = data.get('text').strip() 
             # position = data.get('position')  
 
             if not slide_text:
@@ -98,7 +98,7 @@ def edit_text_clip_line(request, id):
     if request.method == "POST":
         try:
             data = json.loads(request.body) 
-            slide_text = data.get('text') 
+            slide_text = data.get('text').strip()
 
             if not slide_text:
                 return JsonResponse({"success": False, "error": "Slide text is required"}, status=400)
@@ -236,7 +236,11 @@ def add_subcliphtmx(request, id):
         text = request.POST.get("slide_text")
         asset_clip_id = request.POST.get("selected_video")
         is_tiktok = request.POST.get("is_tiktok")
-
+        if not text:
+            return JsonResponse({"success": False, "error": "Slide text is required"}, status=400)
+        else:
+            text = text.strip()
+            remaining = remaining.strip()
         subclip = None
 
         if file_:

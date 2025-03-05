@@ -258,13 +258,13 @@ def add_video_clips(request, textfile_id):
 
         if  request.POST.get("purpose") == "process":
             if text_file.text_file:
-                text_file.text_file.delete(save=True)
+                text_file.text_file.delete(save=False)
             if text_file.video_clips.all():
-                text_file.text_file.delete(save=True)
                 with tempfile.NamedTemporaryFile(mode="w+", delete=False) as temp_file:
                     for clip in text_file.video_clips.all():
                         for subclip in clip.subclips.all():
-                            temp_file.write(subclip.subtittle + "\n")
+                            if subclip.subtittle:
+                                temp_file.write(subclip.subtittle.strip() + "\n")
                     
                     temp_file.flush() 
 
@@ -275,7 +275,9 @@ def add_video_clips(request, textfile_id):
             
                 with tempfile.NamedTemporaryFile(mode="w+", delete=False) as temp_file:
                     for clip in text_file.video_clips.all():
-                            temp_file.write(clip.slide + "\n")
+                            if clip.slide:
+                               
+                                temp_file.write(clip.slide.strip() + "\n")
                     
                     temp_file.flush() 
 
