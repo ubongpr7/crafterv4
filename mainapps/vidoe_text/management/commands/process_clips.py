@@ -776,7 +776,7 @@ class Command(BaseCommand):
         """
         try:
             # Read the text from the file
-            with open(text_file_path, "r") as f:
+            with text_file_path.open("r") as f:
                 lines = f.readlines()
                 # Combine lines into a single paragraph
                 text = " ".join(line.strip() for line in lines)
