@@ -78,8 +78,10 @@
                     }else {
 
                         let progress = data.progress;
+                        const head_process =document.getElementById('head_process');
                         const percent =document.getElementById('percent');
                         percent.innerText= progress +'%'
+                        head_process.innerText= progress +'%'
                         if (progress < 100) {
                             setTimeout(fetchProgress, 1000); // Poll every second
                         } 
