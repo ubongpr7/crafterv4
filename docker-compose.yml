@@ -1,7 +1,6 @@
 services:
   web:
-    # image: nas415/crafterv3:latest
-    image: nas415/crafterv5:latest
+    build: .
     env_file:
       - .env
     command: >

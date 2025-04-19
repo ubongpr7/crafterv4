@@ -621,6 +621,7 @@ class Command(BaseCommand):
                     audio_codec="aac",
                     fps=30,
                     
+                    
                 )
             else:
                 clip.write_videofile(
@@ -629,6 +630,8 @@ class Command(BaseCommand):
                     preset="ultrafast",
                     audio_codec="aac",
                     fps=30,
+                    
+
                     
                 )
 
@@ -664,6 +667,7 @@ class Command(BaseCommand):
                 preset="ultrafast",
                 audio_codec="aac",
                 fps=30,
+                
                 # temp_audiofile='temp-audio.m4a', 
                 # remove_temp=True
                 # ffmpeg_params=["-movflags", "+faststart"],
@@ -1131,6 +1135,7 @@ class Command(BaseCommand):
                     temp_output_video.name,
                     fps=30,
                     audio_codec="aac",
+                    
 
                 )
 
@@ -2016,16 +2021,14 @@ class Command(BaseCommand):
             with tempfile.NamedTemporaryFile(
                 suffix=".mp4", delete=False
             ) as temp_output_video:
-                # if self.text_file_instance.resolution=='9:16':
                 
-                    
-                # else:
                 watermarked.write_videofile(
                     temp_output_video.name,
                     codec='libx264',
                     preset="ultrafast",
                     audio_codec="aac",
                     fps=30,
+                    
                     # temp_audiofile='temp-audio.m4a', 
                     # remove_temp=True
                 )
